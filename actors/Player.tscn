@@ -1,0 +1,62 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://actors/Player.gd" type="Script" id=1]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 0.4
+
+[sub_resource type="QuadMesh" id=3]
+size = Vector2( 0.002, 0.002 )
+
+[sub_resource type="SpatialMaterial" id=4]
+flags_unshaded = true
+flags_no_depth_test = true
+
+[sub_resource type="CubeMesh" id=2]
+size = Vector3( 0.05, 0.05, 1 )
+
+[sub_resource type="SpatialMaterial" id=5]
+flags_transparent = true
+albedo_color = Color( 1, 1, 1, 0.356863 )
+
+[node name="Player" type="KinematicBody"]
+script = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.9, 0 )
+shape = SubResource( 1 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0 )
+far = 300.0
+
+[node name="AimRay" type="RayCast" parent="Camera"]
+enabled = true
+cast_to = Vector3( 0, 0, -400 )
+collision_mask = 258
+
+[node name="MeshInstance" type="MeshInstance" parent="Camera/AimRay"]
+transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, -0.103075 )
+mesh = SubResource( 3 )
+material/0 = SubResource( 4 )
+
+[node name="GrappleRay" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42834, 0 )
+enabled = true
+cast_to = Vector3( 0, 0, -200 )
+collision_mask = 256
+
+[node name="GrappleMesh" type="MeshInstance" parent="GrappleRay"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5 )
+mesh = SubResource( 2 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 5 )
+
+[node name="floaters" type="Node" parent="."]
+
+[node name="Grappletarg" type="Position3D" parent="floaters"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42834, 0 )
+
+[node name="GrappleCancel" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
