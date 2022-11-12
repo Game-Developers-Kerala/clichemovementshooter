@@ -10,18 +10,35 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
+"class": "BaseState",
+"language": "GDScript",
+"path": "res://scripts/enemy/states/base_state.gd"
+}, {
+"base": "KinematicBody",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://scripts/enemy/enemy.gd"
+}, {
+"base": "Node",
+"class": "StateManager",
+"language": "GDScript",
+"path": "res://scripts/enemy/states/state_manager.gd"
+}, {
+"base": "Node",
 "class": "cmn",
 "language": "GDScript",
 "path": "res://scripts/globals/cmn_class.gd"
 } ]
 _global_script_class_icons={
+"BaseState": "",
+"Enemy": "",
+"StateManager": "",
 "cmn": ""
 }
 
 [application]
 
 config/name="Clichemovementshooter"
-run/main_scene="res://levels/testarena.tscn"
 config/icon="res://icon.png"
 
 [gui]
@@ -75,6 +92,14 @@ slide={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":16777237,"unicode":0,"echo":false,"script":null)
  ]
 }
+
+[layer_names]
+
+3d_physics/layer_1="player"
+3d_physics/layer_6="hitbox"
+3d_physics/layer_8="Level"
+3d_physics/layer_9="level_porous"
+3d_physics/layer_10="level_seethrough"
 
 [physics]
 
