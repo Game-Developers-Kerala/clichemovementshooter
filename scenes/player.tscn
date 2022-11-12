@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://scenes/player_railshot.tscn" type="PackedScene" id=2]
@@ -22,6 +22,9 @@ size = Vector3( 0.05, 0.05, 1 )
 [sub_resource type="SpatialMaterial" id=5]
 flags_transparent = true
 albedo_color = Color( 1, 1, 1, 0.356863 )
+
+[sub_resource type="SphereShape" id=7]
+radius = 0.2
 
 [node name="Player" type="KinematicBody"]
 collision_mask = 258
@@ -85,5 +88,17 @@ one_shot = true
 margin_right = 40.0
 margin_bottom = 14.0
 
+[node name="wallsidecheckarea" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.19503, 0 )
+collision_layer = 0
+collision_mask = 256
+monitorable = false
+
+[node name="CollisionShape" type="CollisionShape" parent="wallsidecheckarea"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.45 )
+shape = SubResource( 7 )
+
 [connection signal="body_entered" from="WallArea" to="." method="_on_WallArea_body_entered"]
 [connection signal="body_exited" from="WallArea" to="." method="_on_WallArea_body_exited"]
+[connection signal="body_entered" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_entered"]
+[connection signal="body_exited" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_exited"]

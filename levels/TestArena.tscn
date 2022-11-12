@@ -45,6 +45,42 @@ width = 8.0
 height = 8.0
 depth = 2.34926
 
+[node name="CSGBox6" type="CSGBox" parent="CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.926, 13.2433, 4.54693 )
+width = 8.0
+height = 8.0
+depth = 2.34926
+
+[node name="CSGBox7" type="CSGBox" parent="CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.3262, 13.2433, -6.39787 )
+width = 8.0
+height = 8.0
+depth = 2.34926
+
+[node name="CSGBox8" type="CSGBox" parent="CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.15403, 13.2433, 4.54693 )
+width = 8.0
+height = 8.0
+depth = 2.34926
+
+[node name="CSGBox9" type="CSGBox" parent="CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6.44585, 13.2433, -6.39787 )
+width = 8.0
+height = 8.0
+depth = 2.34926
+
+[node name="CSGBox10" type="CSGBox" parent="CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -12.1115, 13.2433, 4.54693 )
+width = 8.0
+height = 8.0
+depth = 2.34926
+
+[node name="CSGBox11" type="CSGBox" parent="CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -20.7114, 13.2433, -6.39787 )
+width = 8.0
+height = 8.0
+depth = 2.34926
+
 [node name="CSGCombiner" type="CSGCombiner" parent="CSGCombiner"]
 
 [node name="CSGCylinder" type="CSGCylinder" parent="CSGCombiner/CSGCombiner"]
