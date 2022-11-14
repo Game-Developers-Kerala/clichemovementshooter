@@ -40,7 +40,7 @@ var health := 100
 
 var stats = {
 	"health":100,
-	"weapon_rail":false,
+	"weapon_rail":null,
 	"weapon_missilepack":false,
 	"powerup_spikecage":false,
 	}
@@ -219,22 +219,44 @@ func shoot():
 	var camfront = -$Camera.global_transform.basis.z
 	rkt.look_at_from_position(campos+camfront*0.25,campos+camfront*2,Vector3.UP)
 
+func shoot_rail():
+	if !is_instance_valid(stats.weapon_rail):
+		return
+	if !$RocketCooldown.is_stopped():
+		return
+	print(OS.get_ticks_msec()," shot rail")
+	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
+	stats.weapon_rail.shoot()
+
 func shoot_missile_pack():
+	if !stats.weapon_missilepack:
+		return
 	if !$RocketCooldown.is_stopped():
 		return
 	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
 	var mispak = MISSILE_PACK.instance()
 	$Camera.add_child(mispak)
+	stats.weapon_missilepack = false
 
 func pick_up(item:pickup):
 	var dict :Dictionary= item.get_pickup_info()
 	for key in dict.keys():
-		if dict[key] is bool:
-			stats[key] = dict[key]
-		else:
-			stats[key]+=dict[key]
-			if STAT_RANGES.has(key):
-				stats[key] = clamp(stats[key],STAT_RANGES[key]["min"],STAT_RANGES[key]["max"])
+		match key:
+			"health":
+				if stats.health >= STAT_RANGES.health.max:
+					return
+				stats[key] = clamp(stats[key]+dict[key],STAT_RANGES[key]["min"],STAT_RANGES[key]["max"])
+			"weapon_rail":
+				if is_instance_valid(stats[key]):
+					return
+				stats[key] = RAILSHOT.instance()
+				$Camera.add_child(stats[key])
+			"weapon_missilepack":
+				if stats[key]:
+					return
+				stats[key] = dict[key]
+			"powerup_spikecage":
+				pass
 	item.on_pickup()
 
 func get_hit(arg):
@@ -284,12 +306,7 @@ func get_pushed(push_dict:={}):
 	var push_force = push_dict.force/(push_dir.length()+0.01)
 	velocity += push_dir.normalized()*push_force
 
-func shoot_rail():
-	if !$RocketCooldown.is_stopped():
-		return
-	print(OS.get_ticks_msec()," shot rail")
-	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
-	$Camera/RailShot.shoot()
+
 
 
 func _on_GeneralArea_body_entered(body):

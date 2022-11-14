@@ -27,4 +27,4 @@ func shoot():
 	get_tree().current_scene.add_child(vfx)
 	var vfx_offset = global_transform.basis.x - global_transform.basis.y
 	vfx.init(from+vfx_offset*0.25,to)
-
+	queue_free()

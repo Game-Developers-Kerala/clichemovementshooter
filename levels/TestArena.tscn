@@ -111,7 +111,12 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.00887, 0, -6.2842 )
 
 [node name="player_pickup" parent="." instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 24.6313, 0 )
+type = 5
+respawning = true
+respawn_interval = 10.0
+
+[node name="player_pickup2" parent="." instance=ExtResource( 4 )]
+transform = Transform( 1.99805, 0, 0, 0, 1.99805, 0, 0, 0, 1.99805, -1.83557, 13.4928, -0.76955 )
 type = 6
 respawning = true
 respawn_interval = 10.0
-lifespan = 10
