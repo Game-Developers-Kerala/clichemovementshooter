@@ -128,7 +128,8 @@ func _physics_process(delta):
 				snap = -floornorm
 			else:
 				snap = Vector3.ZERO
-	if Input.is_action_pressed("jump") and !jumping and on_wall:
+	if Input.is_action_pressed("jump") and $JumpCoolDown.is_stopped() and on_wall:
+		$JumpCoolDown.start()
 		walljump()
 	
 	velocity = move_and_slide_with_snap(velocity,snap,Vector3.UP,true)
@@ -222,12 +223,17 @@ func get_hit(arg):
 func walljump():
 	jumping = true
 	snap = Vector3.ZERO
-	var perp_vec = -$wallsidecheckarea.global_transform.basis.z*Vector3(1,0,1)
+	var perp_vec :Vector3 = -$wallsidecheckarea.global_transform.basis.z*Vector3(1,0,1)
 	if wallsidecheck:
 		perp_vec = $wallsidecheckarea.global_transform.basis.z*Vector3(1,0,1)
-	print("perpvec:",perp_vec)
-	velocity.y = 0.0
-	velocity += Vector3.UP*6+perp_vec*10
+	if movestate == movestates.wall:
+		print("perpvec:",perp_vec)
+		velocity.y = 0.0
+		velocity += Vector3.UP*6+perp_vec*10
+	else:
+#		perp_vec = perp_vec.rotated(Vector3.UP,PI*(2-1*int(!wallsidecheck)))
+		print("perpvec:",perp_vec)
+		velocity += Vector3.UP*6+perp_vec*2
 	change_movestate(movestates.air,{auto_dir=true})
 
 func grapple():

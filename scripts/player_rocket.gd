@@ -25,9 +25,11 @@ func explode():
 	var explosion = EXPLOSION.instance()
 	get_tree().current_scene.add_child(explosion)
 	explosion.global_translation = global_translation
+	explosion.explode()
 	var vfx_explosion = VFX_EXPLOSION.instance()
 	get_tree().current_scene.add_child(vfx_explosion)
 	vfx_explosion.global_translation = global_translation
+	vfx_explosion.explode()
 	queue_free()
 
 func _on_Timer_timeout():

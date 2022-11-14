@@ -103,7 +103,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 12 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.03062, 0, 4.88668 )
 
 [node name="DummyEnemy2" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.00887, 0, 0.19302 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.86981, 0, 2.34485 )
 
 [node name="DummyEnemy3" parent="." instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.00887, 0, -6.2842 )

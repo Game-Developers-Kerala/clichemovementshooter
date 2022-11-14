@@ -11,11 +11,16 @@ export(float) var min_damage = 20.0
 onready var dmg_diff = max_damage - min_damage
 export(float) var push_force = 30.0
 export(float) var blast_duration = 0.2
-
+export(bool) var explode_on_ready = false # if on, will go off immediately on spawn.
+export(NodePath) var explosion_vfx
 
 var receivers := []
 
 func _ready():
+	if explode_on_ready:
+		explode()
+
+func explode():
 	if hurt_npc or push_npc:
 		set_collision_mask_bit(cmn.colliders.enemy_hurtbox,true)
 	if hurt_player or push_player:
@@ -25,8 +30,13 @@ func _ready():
 	scale = Vector3.ONE*blast_radius
 	$Timer.start(blast_duration)
 
-
 func _on_Timer_timeout():
+	if explosion_vfx:
+		var xpl_vfx = get_node(explosion_vfx)
+		remove_child(xpl_vfx)
+		get_tree().current_scene.add_child(xpl_vfx)
+		xpl_vfx.global_translation = global_translation
+		xpl_vfx.explode()
 	queue_free()
 
 

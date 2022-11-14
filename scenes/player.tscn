@@ -116,6 +116,10 @@ one_shot = true
 margin_right = 40.0
 margin_bottom = 14.0
 
+[node name="JumpCoolDown" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
 [connection signal="body_entered" from="WallArea" to="." method="_on_WallArea_body_entered"]
 [connection signal="body_exited" from="WallArea" to="." method="_on_WallArea_body_exited"]
 [connection signal="body_entered" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_entered"]
