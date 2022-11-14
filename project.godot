@@ -9,20 +9,10 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Node",
-"class": "BaseState",
-"language": "GDScript",
-"path": "res://scripts/enemy/states/base_state.gd"
-}, {
 "base": "KinematicBody",
 "class": "Enemy",
 "language": "GDScript",
 "path": "res://scripts/enemy/enemy.gd"
-}, {
-"base": "Node",
-"class": "StateManager",
-"language": "GDScript",
-"path": "res://scripts/enemy/states/state_manager.gd"
 }, {
 "base": "Node",
 "class": "cmn",
@@ -30,9 +20,7 @@ _global_script_classes=[ {
 "path": "res://scripts/globals/cmn_class.gd"
 } ]
 _global_script_class_icons={
-"BaseState": "",
 "Enemy": "",
-"StateManager": "",
 "cmn": ""
 }
 

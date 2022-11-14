@@ -1,0 +1,76 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://scripts/enemy/enemy_hurtbox.gd" type="Script" id=1]
+[ext_resource path="res://scripts/enemy/enemy.gd" type="Script" id=2]
+[ext_resource path="res://scenes/player_railshot.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Assets/shared/up-arrow-svgrepo-com.svg" type="Texture" id=4]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 0.4
+
+[sub_resource type="CapsuleMesh" id=2]
+radius = 0.4
+radial_segments = 8
+rings = 2
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_color = Color( 0.768627, 0.172549, 0.690196, 1 )
+
+[sub_resource type="SphereShape" id=4]
+
+[node name="Enemy" type="KinematicBody"]
+collision_layer = 2
+collision_mask = 258
+script = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.9, 0 )
+shape = SubResource( 1 )
+
+[node name="BodyRotationHelper" type="Spatial" parent="."]
+
+[node name="MeshInstance" type="MeshInstance" parent="BodyRotationHelper"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.9, 0 )
+mesh = SubResource( 2 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 3 )
+
+[node name="Label3D" type="Label3D" parent="BodyRotationHelper"]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.94683, 0 )
+modulate = Color( 0.4, 0.839216, 0.101961, 1 )
+
+[node name="Sprite3D" type="Sprite3D" parent="BodyRotationHelper"]
+transform = Transform( 3, 0, 0, 0, -1.31134e-07, 3, 0, -3, -1.31134e-07, 0, 0.251665, -0.887618 )
+modulate = Color( 0, 0, 0, 1 )
+texture = ExtResource( 4 )
+
+[node name="Aim" type="RayCast" parent="BodyRotationHelper"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.38719, -0.0791509 )
+enabled = true
+cast_to = Vector3( 0, 0, -6 )
+
+[node name="Hurtbox" type="Area" parent="."]
+monitoring = false
+script = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Hurtbox"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.9, 0 )
+shape = SubResource( 1 )
+
+[node name="NavigationAgent" type="NavigationAgent" parent="."]
+
+[node name="GunCoolDown" type="Timer" parent="."]
+
+[node name="Area" type="Area" parent="." groups=["enemy"]]
+transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 2.95322, 0 )
+collision_layer = 2
+collision_mask = 257
+monitorable = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Area"]
+shape = SubResource( 4 )
+
+[node name="RailShot" parent="." instance=ExtResource( 3 )]
+
+[connection signal="timeout" from="GunCoolDown" to="." method="_on_GunCoolDown_timeout"]
+[connection signal="body_entered" from="Area" to="." method="_on_Area_body_entered"]
