@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "cmn",
 "language": "GDScript",
 "path": "res://scripts/globals/cmn_class.gd"
+}, {
+"base": "Area",
+"class": "pickup",
+"language": "GDScript",
+"path": "res://scripts/player_pickup.gd"
 } ]
 _global_script_class_icons={
-"cmn": ""
+"cmn": "",
+"pickup": ""
 }
 
 [application]
@@ -90,6 +96,7 @@ homingmissile={
 
 3d_physics/layer_1="player"
 3d_physics/layer_2="enemy"
+3d_physics/layer_3="pickup"
 3d_physics/layer_4="grapple_breaker"
 3d_physics/layer_5="grapple_target"
 3d_physics/layer_6="enemy_hurtbox"

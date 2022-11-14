@@ -59,13 +59,13 @@ material/0 = SubResource( 4 )
 
 [node name="RailShot" parent="Camera" instance=ExtResource( 2 )]
 
-[node name="WallArea" type="Area" parent="."]
+[node name="GeneralArea" type="Area" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0 )
 collision_layer = 0
-collision_mask = 256
+collision_mask = 260
 monitorable = false
 
-[node name="CollisionShape" type="CollisionShape" parent="WallArea"]
+[node name="CollisionShape" type="CollisionShape" parent="GeneralArea"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
 shape = SubResource( 6 )
 
@@ -120,7 +120,8 @@ margin_bottom = 14.0
 wait_time = 0.5
 one_shot = true
 
-[connection signal="body_entered" from="WallArea" to="." method="_on_WallArea_body_entered"]
-[connection signal="body_exited" from="WallArea" to="." method="_on_WallArea_body_exited"]
+[connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
+[connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]
+[connection signal="body_exited" from="GeneralArea" to="." method="_on_GeneralArea_body_exited"]
 [connection signal="body_entered" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_entered"]
 [connection signal="body_exited" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_exited"]

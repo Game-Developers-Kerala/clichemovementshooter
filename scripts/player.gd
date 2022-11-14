@@ -1,5 +1,6 @@
 extends KinematicBody
 
+
 enum movestates {none,ground,wall,air,grapple}
 var movestate = movestates.ground
 
@@ -36,6 +37,16 @@ var last_velocity = Vector3.ZERO
 var air_auto_dir = false
 
 var health := 100
+
+var stats = {
+	"health":100,
+	"weapon_rail":false,
+	"weapon_missilepack":false,
+	"powerup_spikecage":false,
+	}
+const STAT_RANGES = {
+		"health":{"min":0,"max":100}
+		}
 
 const ROCKET_COOLDOWN_DUR = 0.7
 const ROCKET = preload("res://scenes/player_rocket.tscn")
@@ -128,7 +139,7 @@ func _physics_process(delta):
 				snap = -floornorm
 			else:
 				snap = Vector3.ZERO
-	if Input.is_action_pressed("jump") and $JumpCoolDown.is_stopped() and on_wall:
+	if Input.is_action_pressed("jump") and on_wall: #and  $JumpCoolDown.is_stopped():
 		$JumpCoolDown.start()
 		walljump()
 	
@@ -215,6 +226,16 @@ func shoot_missile_pack():
 	var mispak = MISSILE_PACK.instance()
 	$Camera.add_child(mispak)
 
+func pick_up(item:pickup):
+	var dict :Dictionary= item.get_pickup_info()
+	for key in dict.keys():
+		if dict[key] is bool:
+			stats[key] = dict[key]
+		else:
+			stats[key]+=dict[key]
+			if STAT_RANGES.has(key):
+				stats[key] = clamp(stats[key],STAT_RANGES[key]["min"],STAT_RANGES[key]["max"])
+	item.on_pickup()
 
 func get_hit(arg):
 	pass
@@ -227,13 +248,13 @@ func walljump():
 	if wallsidecheck:
 		perp_vec = $wallsidecheckarea.global_transform.basis.z*Vector3(1,0,1)
 	if movestate == movestates.wall:
-		print("perpvec:",perp_vec)
+		print("perpvec:",perp_vec, " movestate:",movestates.keys()[movestate])
 		velocity.y = 0.0
 		velocity += Vector3.UP*6+perp_vec*10
-	else:
-#		perp_vec = perp_vec.rotated(Vector3.UP,PI*(2-1*int(!wallsidecheck)))
-		print("perpvec:",perp_vec)
-		velocity += Vector3.UP*6+perp_vec*2
+#	else:
+##		perp_vec = perp_vec.rotated(Vector3.UP,PI*(2-1*int(!wallsidecheck)))
+#		print("perpvec:",perp_vec)
+#		velocity += Vector3.UP*6+perp_vec*2
 	change_movestate(movestates.air,{auto_dir=true})
 
 func grapple():
@@ -271,12 +292,12 @@ func shoot_rail():
 	$Camera/RailShot.shoot()
 
 
-func _on_WallArea_body_entered(body):
+func _on_GeneralArea_body_entered(body):
 	on_wall = true
 
 
-func _on_WallArea_body_exited(body):
-	if !$WallArea.get_overlapping_bodies():
+func _on_GeneralArea_body_exited(body):
+	if !$GeneralArea.get_overlapping_bodies():
 		on_wall = false
 
 
@@ -287,3 +308,8 @@ func _on_wallsidecheckarea_body_entered(body):
 func _on_wallsidecheckarea_body_exited(body):
 	if !$wallsidecheckarea.get_overlapping_bodies():
 		wallsidecheck = false
+
+
+func _on_GeneralArea_area_entered(area):
+	if area.get_collision_layer_bit(cmn.colliders.pickup):
+		pick_up(area)
