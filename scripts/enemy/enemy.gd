@@ -90,7 +90,7 @@ func get_state():
 
 
 func _on_GunCoolDown_timeout() -> void:
-	$RailShot.shoot()
+	$BodyRotationHelper/RailShot.shoot()
 
 
 func _on_Area_body_entered(body: Node) -> void:

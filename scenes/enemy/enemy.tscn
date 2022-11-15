@@ -49,6 +49,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.38719, -0.0791509 )
 enabled = true
 cast_to = Vector3( 0, 0, -6 )
 
+[node name="RailShot" parent="BodyRotationHelper" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.39667, 0 )
+
 [node name="Hurtbox" type="Area" parent="."]
 monitoring = false
 script = ExtResource( 1 )
@@ -69,8 +72,6 @@ monitorable = false
 
 [node name="CollisionShape" type="CollisionShape" parent="Area"]
 shape = SubResource( 4 )
-
-[node name="RailShot" parent="." instance=ExtResource( 3 )]
 
 [connection signal="timeout" from="GunCoolDown" to="." method="_on_GunCoolDown_timeout"]
 [connection signal="body_entered" from="Area" to="." method="_on_Area_body_entered"]
