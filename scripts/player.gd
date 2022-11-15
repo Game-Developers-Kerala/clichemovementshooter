@@ -244,7 +244,7 @@ func pick_up(item:pickup):
 			"health":
 				if stats.health >= STAT_RANGES.health.max:
 					return
-				stats[key] = clamp(stats[key]+dict[key],STAT_RANGES[key]["min"],STAT_RANGES[key]["max"])
+				adjust_health(dict[key])
 			"weapon_rail":
 				if is_instance_valid(stats[key]):
 					return
@@ -260,9 +260,37 @@ func pick_up(item:pickup):
 				pass
 	item.on_pickup()
 
-func get_hit(arg):
+func get_hit(args:={}):
+	print("Plyr got hit at:",OS.get_ticks_msec(),"=====\n",args)
+	if args.has("dmg"):
+		adjust_health(-args.dmg)
+	if args.has("force"):
+		if args.has("push_dir"):
+			if args.has("dir_replace"):
+				velocity = Vector3.ZERO
+			var push_multiplier := 1.0
+			if args.has("caused_by_player"):
+				push_multiplier = 2.0
+			velocity += args.push_dir*args.force*push_multiplier
+			jumping = true
+			snap = Vector3.ZERO
+	if args.has("origin"):
+		#do something with the origin info
+		return
+
+func adjust_health(in_val):
+	stats.health = ceil(stats.health+in_val)
+	stats.health = clamp(stats.health,STAT_RANGES.health.min,STAT_RANGES.health.max)
+	$HUD/Mrgn/Health.text = "Health " + str(int(stats.health)) 
 	pass
 
+func get_pushed(push_dict:={}):
+	print("got pushed")
+	jumping = true
+	snap = Vector3.ZERO
+	var push_dir:Vector3 = (global_translation+Vector3.UP)-push_dict.origin
+	var push_force = push_dict.force/(push_dir.length()+0.01)
+	velocity += push_dir.normalized()*push_force
 
 func walljump():
 	jumping = true
@@ -298,16 +326,6 @@ func grapple_stop():
 	grappling = false
 	$floaters/GrappleRay/GrappleMesh.hide()
 	$GrappleCancel.start()
-
-func get_pushed(push_dict:={}):
-	print("got pushed")
-	jumping = true
-	snap = Vector3.ZERO
-	var push_dir:Vector3 = (global_translation+Vector3.UP)-push_dict.origin
-	var push_force = push_dict.force/(push_dir.length()+0.01)
-	velocity += push_dir.normalized()*push_force
-
-
 
 
 func _on_GeneralArea_body_entered(body):

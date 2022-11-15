@@ -1,5 +1,6 @@
 extends Area
 
+export(bool) var caused_by_player = false
 export(bool) var hurt_npc = true
 export(bool) var hurt_player = false
 export(bool) var push_npc = true
@@ -29,14 +30,14 @@ func explode():
 	force_update_transform()
 	scale = Vector3.ONE*blast_radius
 	$Timer.start(blast_duration)
-
-func _on_Timer_timeout():
 	if explosion_vfx:
 		var xpl_vfx = get_node(explosion_vfx)
 		remove_child(xpl_vfx)
 		get_tree().current_scene.add_child(xpl_vfx)
 		xpl_vfx.global_translation = global_translation
 		xpl_vfx.explode()
+
+func _on_Timer_timeout():
 	queue_free()
 
 
@@ -45,21 +46,31 @@ func _on_Explosion_area_entered(area):
 		for node in receivers:
 			if area.hit_receiver == node:
 				return
-		receivers.push_front(area.hit_receiver)
-		var force_vec :Vector3 = area.hit_receiver.global_translation+Vector3.UP-global_translation
-		var dist = force_vec.length()
+		var npc = area.hit_receiver
+		receivers.push_front(npc)
+		var atk_dict :Dictionary= {}
+		var force_vec :Vector3 = npc.global_translation+npc.CENTER_OF_MASS-global_translation
+		var dist = min(force_vec.length(),blast_radius)
+		var falloff = 1.0 - (dist/float(blast_radius))
 		if hurt_npc:
-			var dmg = min_damage + (dmg_diff*(1.0-clamp(dist/float(blast_radius),0,1)))
-			print("enemy hurt by explosion:",dmg)
+			atk_dict["dmg"] = min_damage + dmg_diff*falloff
 		if push_npc:
-			var push_dict = {push_dir = force_vec.normalized(), force = 30.0}
-			print("enemy pushed by explosion:")
+			atk_dict["push_dir"] = force_vec.normalized()
+			atk_dict["force"] = push_force * falloff
+			atk_dict["origin"] = global_translation
+		npc.get_hit(atk_dict)
 
 func _on_Explosion_body_entered(body):
 	if body.get_collision_layer_bit(cmn.colliders.player):
-		if push_player:
-			var push_dict = {origin = global_translation, force = push_force}
-			body.get_pushed(push_dict)
-			print("player pushed by explosion:",OS.get_ticks_msec())
+		var atk_dict :Dictionary= {}
+		var force_vec :Vector3 = body.global_translation+body.CENTER_OF_MASS-global_translation
+		var dist = min(force_vec.length(),blast_radius)
+		var falloff = 1.0 - (dist/float(blast_radius))
 		if hurt_player:
-			print("player hurt by explosion")
+			atk_dict["dmg"] = min_damage + dmg_diff*falloff
+		if push_player:
+			atk_dict["push_dir"] = force_vec.normalized()
+			atk_dict["force"] = push_force * falloff
+			atk_dict["origin"] = global_translation
+			atk_dict["caused_by_player"] = caused_by_player
+		body.get_hit(atk_dict)
