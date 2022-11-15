@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://levels/ceiling_tile.png" type="Texture" id=1]
-[ext_resource path="res://scenes/enemy/enemy.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/enemy/arc_shooter.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/player.tscn" type="PackedScene" id=3]
 
 [sub_resource type="NavigationMesh" id=2]
@@ -83,8 +83,11 @@ height = 4.0
 sides = 24
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.71012, 8.55469, 18.7134 )
+transform = Transform( 0.181274, 0, -0.983433, 0, 1, 0, 0.983433, 0, 0.181274, -9.71012, 8.55469, 18.5066 )
 
-[node name="Enemy" parent="." instance=ExtResource( 2 )]
-transform = Transform( -0.486823, 0, -0.873501, 0, 1, 0, 0.873501, 0, -0.486823, -10.0469, 0, -4.52828 )
+[node name="ArcShooter" parent="." instance=ExtResource( 2 )]
+path_to_player = NodePath("../Player")
+
+[node name="ArcShooter2" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25.1186, 0, 4.64444 )
 path_to_player = NodePath("../Player")
