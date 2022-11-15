@@ -49,7 +49,8 @@ far = 300.0
 [node name="AimRay" type="RayCast" parent="Camera"]
 enabled = true
 cast_to = Vector3( 0, 0, -400 )
-collision_mask = 258
+collision_mask = 288
+collide_with_areas = true
 
 [node name="MeshInstance" type="MeshInstance" parent="Camera/AimRay"]
 transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, -0.103075 )
@@ -110,12 +111,71 @@ one_shot = true
 one_shot = true
 
 [node name="Label" type="Label" parent="."]
+visible = false
 margin_right = 40.0
 margin_bottom = 14.0
 
 [node name="JumpCoolDown" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Mrgn" type="MarginContainer" parent="HUD"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Help" type="Label" parent="HUD/Mrgn"]
+margin_left = 9.0
+margin_right = 1014.0
+margin_bottom = 14.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "MB1 Rocket | MB2 Click to grapple, MB2 again to cancel | WASD Aircontrol | Shift WallSlide & GroundSlide | Space Jump during wallslide | E Rail | Q Missiles"
+
+[node name="Health" type="Label" parent="HUD/Mrgn"]
+margin_top = 586.0
+margin_right = 78.0
+margin_bottom = 600.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "HEALTH 100"
+
+[node name="Powerups" type="HBoxContainer" parent="HUD/Mrgn"]
+margin_left = 892.0
+margin_top = 568.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="Rail" type="Control" parent="HUD/Mrgn/Powerups"]
+margin_right = 64.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 64, 32 )
+
+[node name="Label" type="Label" parent="HUD/Mrgn/Powerups/Rail"]
+visible = false
+margin_right = 64.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 64, 32 )
+text = "/  RAIL  \\
+\\ SHOT /"
+align = 1
+
+[node name="Missile" type="Control" parent="HUD/Mrgn/Powerups"]
+margin_left = 68.0
+margin_right = 132.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 64, 32 )
+
+[node name="Label" type="Label" parent="HUD/Mrgn/Powerups/Missile"]
+visible = false
+margin_right = 60.0
+margin_bottom = 31.0
+text = "/MISSILE\\
+\\  PACK  /"
+align = 1
 
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]

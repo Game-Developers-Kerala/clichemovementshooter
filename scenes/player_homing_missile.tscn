@@ -1,8 +1,9 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://scenes/homing_projectile.tscn" type="PackedScene" id=1]
-[ext_resource path="res://scenes/explosion.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scenes/vfx_explosion.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/shared/homing_projectile.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/shared/explosion.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/shared/vfx_explosion.tscn" type="PackedScene" id=3]
+
 
 [node name="homing_projectile" instance=ExtResource( 1 )]
 explosion = NodePath("Explosion")

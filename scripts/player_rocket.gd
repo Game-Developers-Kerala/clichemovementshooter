@@ -7,8 +7,8 @@ var direct_hit_receiver :Node = null
 var receivers = []
 
 
-const EXPLOSION = preload("res://scenes/explosion.tscn")
-const VFX_EXPLOSION = preload("res://scenes/vfx_explosion.tscn")
+const EXPLOSION = preload("res://scenes/shared/explosion.tscn")
+const VFX_EXPLOSION = preload("res://scenes/shared/vfx_explosion.tscn")
 
 func _ready():
 	$Timer.start(LIFESPAN)

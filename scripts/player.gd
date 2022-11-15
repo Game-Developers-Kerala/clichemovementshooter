@@ -222,11 +222,9 @@ func shoot():
 func shoot_rail():
 	if !is_instance_valid(stats.weapon_rail):
 		return
-	if !$RocketCooldown.is_stopped():
-		return
 	print(OS.get_ticks_msec()," shot rail")
-	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
 	stats.weapon_rail.shoot()
+	$HUD/Mrgn/Powerups/Rail/Label.hide()
 
 func shoot_missile_pack():
 	if !stats.weapon_missilepack:
@@ -237,6 +235,7 @@ func shoot_missile_pack():
 	var mispak = MISSILE_PACK.instance()
 	$Camera.add_child(mispak)
 	stats.weapon_missilepack = false
+	$HUD/Mrgn/Powerups/Missile/Label.hide()
 
 func pick_up(item:pickup):
 	var dict :Dictionary= item.get_pickup_info()
@@ -251,10 +250,12 @@ func pick_up(item:pickup):
 					return
 				stats[key] = RAILSHOT.instance()
 				$Camera.add_child(stats[key])
+				$HUD/Mrgn/Powerups/Rail/Label.show()
 			"weapon_missilepack":
 				if stats[key]:
 					return
 				stats[key] = dict[key]
+				$HUD/Mrgn/Powerups/Missile/Label.show()
 			"powerup_spikecage":
 				pass
 	item.on_pickup()
