@@ -33,6 +33,7 @@ size = Vector3( 0.05, 0.05, 1 )
 
 [sub_resource type="SpatialMaterial" id=5]
 flags_transparent = true
+params_cull_mode = 1
 albedo_color = Color( 1, 1, 1, 0.356863 )
 
 [node name="Player" type="KinematicBody" groups=["player"]]
@@ -257,6 +258,9 @@ pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
+
+[node name="PredictionSuspend" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]

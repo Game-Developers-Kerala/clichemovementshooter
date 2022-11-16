@@ -22,6 +22,8 @@ const FRICTION_DAMPING = 0.9
 var velocity : Vector3 = Vector3.ZERO
 var snap := Vector3.ZERO
 
+var grapplevec = Vector3.ZERO
+var grapplelength = 0.0
 var grappled_enemy :Node = null
 var grappling_enemy :bool = false
 onready var grapple_targ = $floaters/GrappleTargArea
@@ -62,6 +64,7 @@ var predict_past_pos :PoolVector3Array = []
 var predict_past_vel :PoolVector3Array = []
 var predict_future_pos :PoolVector3Array = []
 onready var predict_blink_timer = $PredictionBlink
+var prediction_suspend_time := 0.5
 
 func _ready():
 	predict_past_pos.resize(4)
@@ -96,8 +99,8 @@ func _physics_process(delta):
 	var dir = Vector3.ZERO
 	var floornorm = get_floor_normal()
 	var speed = GRAPPLESPEED
-	var grapplevec = Vector3.ZERO
-	var grapplelength = 0.0
+#	var grapplevec = Vector3.ZERO
+#	var grapplelength = 0.0
 	
 	set_move_state()
 
@@ -220,8 +223,12 @@ func set_move_state():
 	change_movestate(movestates.air)
 
 func change_movestate(to_state,args:={}):
+	if movestate == to_state:
+		return
 	match to_state:
 		movestates.air:
+			if $PredictionSuspend.is_stopped():
+				$PredictionSuspend.start(prediction_suspend_time)
 			if movestate == movestates.ground and !jumping:
 				air_auto_dir = true
 			if args.has("auto_dir"):
@@ -229,6 +236,7 @@ func change_movestate(to_state,args:={}):
 			air_accel = 4.0
 		_:
 			air_auto_dir = false
+			$PredictionSuspend.stop()
 	movestate = to_state
 
 func shoot():
@@ -381,6 +389,12 @@ func _on_GeneralArea_area_entered(area):
 
 
 func _on_PredictionBlink_timeout():
+	if $PredictionSuspend.time_left:
+		predict_future_pos.remove(0)
+		var size = predict_future_pos.size()
+		print("suspended prediction: array size", size)
+		predict_future_pos.append(predict_future_pos[size-1])
+		return
 	var curPos = global_translation+CENTER_OF_MASS
 	var predi
 	var interval = $PredictionBlink.wait_time
@@ -394,8 +408,11 @@ func _on_PredictionBlink_timeout():
 				predict_future_pos[i] = curPos + velocity*(i+1)*interval
 				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		movestates.grapple:
+			predict_future_pos.fill(grapple_targ.global_translation)
+			var eta = grapplelength/float(GRAPPLESPEED)
 			for i in predict_future_pos.size():
-				predict_future_pos[i] = curPos + velocity*(i+1)*interval
+				if !(i+1)*interval > eta:
+					predict_future_pos[i] = curPos + velocity*(i+1)*interval
 				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		movestates.wall:
 			for i in predict_future_pos.size():
