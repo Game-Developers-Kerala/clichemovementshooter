@@ -32,12 +32,19 @@ func _process(delta):
 func process_extend(delta):
 	pass
 
-func explode(node_path):
-	var explosion_node = get_node(node_path)
+func explode():
+	var explosion_node = get_node(explosion)
 	remove_child(explosion_node)
 	get_tree().current_scene.add_child(explosion_node)
 	explosion_node.global_translation = global_translation
 	explosion_node.explode()
+
+func explode_vfx(normal_vec:Vector3=Vector3.ZERO):
+	var explosion_node = get_node(explosion_vfx)
+	remove_child(explosion_node)
+	get_tree().current_scene.add_child(explosion_node)
+	explosion_node.global_translation = global_translation
+	explosion_node.explode(normal_vec)
 
 func stop_trail():
 	var trail_node = get_node(trail)
@@ -47,5 +54,4 @@ func stop_trail():
 	trail_node.stop()
 
 func _on_Timer_timeout():
-	print("projectile timedout")
 	queue_free()

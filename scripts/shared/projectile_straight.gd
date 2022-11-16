@@ -23,13 +23,12 @@ func phys_process_extend(delta):
 			if $RayCast.get_collider().get_collision_layer_bit(cmn.colliders.player):
 				get_node(direct_hit).hit($RayCast.get_collider())
 		if explosion:
-			explode(explosion)
+			explode()
 		if explosion_vfx:
-			explode(explosion_vfx)
+			explode_vfx($RayCast.get_collision_normal())
 		if trail:
 			stop_trail()
 		queue_free()
 
 func _on_Timer_timeout():
-	print("straight projectile timedout")
 	queue_free()

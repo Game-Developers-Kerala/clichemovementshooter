@@ -38,9 +38,9 @@ func terminate(recepient:Node=null):
 	if direct_hit and is_instance_valid(recepient):
 		get_node(direct_hit).hit(recepient)
 	if explosion:
-		explode(explosion)
+		explode()
 	if explosion_vfx:
-		explode(explosion_vfx)
+		explode_vfx()
 	if trail:
 		stop_trail()
 	queue_free()

@@ -47,6 +47,7 @@ max_damage = 75.0
 min_damage = 25.0
 
 [node name="Vfx_Explosion" parent="." index="4" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.149977 )
 
 [node name="single_direct_hit" parent="." index="5" instance=ExtResource( 2 )]
 caused_by_player = true
