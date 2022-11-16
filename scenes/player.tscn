@@ -1,7 +1,6 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
-[ext_resource path="res://scenes/player_railshot.tscn" type="PackedScene" id=2]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.4
@@ -15,6 +14,18 @@ flags_no_depth_test = true
 
 [sub_resource type="SphereShape" id=6]
 radius = 0.5
+
+[sub_resource type="SphereShape" id=7]
+radius = 0.2
+
+[sub_resource type="SphereShape" id=8]
+radius = 0.25
+
+[sub_resource type="SphereMesh" id=9]
+radius = 0.25
+height = 0.5
+radial_segments = 12
+rings = 6
 
 [sub_resource type="CubeMesh" id=2]
 size = Vector3( 0.05, 0.05, 1 )
@@ -38,41 +49,59 @@ far = 300.0
 [node name="AimRay" type="RayCast" parent="Camera"]
 enabled = true
 cast_to = Vector3( 0, 0, -400 )
-collision_mask = 258
+collision_mask = 288
+collide_with_areas = true
 
 [node name="MeshInstance" type="MeshInstance" parent="Camera/AimRay"]
 transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, -0.103075 )
 mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
-[node name="RailShot" parent="Camera" instance=ExtResource( 2 )]
-
-[node name="WallArea" type="Area" parent="."]
+[node name="GeneralArea" type="Area" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0 )
+collision_layer = 0
+collision_mask = 260
+monitorable = false
+
+[node name="CollisionShape" type="CollisionShape" parent="GeneralArea"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
+shape = SubResource( 6 )
+
+[node name="wallsidecheckarea" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.19503, 0 )
 collision_layer = 0
 collision_mask = 256
 monitorable = false
 
-[node name="CollisionShape" type="CollisionShape" parent="WallArea"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
-shape = SubResource( 6 )
-
-[node name="GrappleRay" type="RayCast" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42834, 0 )
-enabled = true
-cast_to = Vector3( 0, 0, -200 )
-collision_mask = 256
-
-[node name="GrappleMesh" type="MeshInstance" parent="GrappleRay"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5 )
-mesh = SubResource( 2 )
-skeleton = NodePath("../..")
-material/0 = SubResource( 5 )
+[node name="CollisionShape" type="CollisionShape" parent="wallsidecheckarea"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.45 )
+shape = SubResource( 7 )
 
 [node name="floaters" type="Node" parent="."]
 
-[node name="Grappletarg" type="Position3D" parent="floaters"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42834, 0 )
+[node name="GrappleTargArea" type="Area" parent="floaters"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42834, 0.0638083 )
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="floaters/GrappleTargArea"]
+shape = SubResource( 8 )
+
+[node name="MeshInstance" type="MeshInstance" parent="floaters/GrappleTargArea"]
+mesh = SubResource( 9 )
+
+[node name="GrappleRay" type="RayCast" parent="floaters"]
+enabled = true
+cast_to = Vector3( 0, 0, -200 )
+collision_mask = 272
+collide_with_areas = true
+
+[node name="GrappleMesh" type="MeshInstance" parent="floaters/GrappleRay"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5 )
+mesh = SubResource( 2 )
+skeleton = NodePath("../../..")
+material/0 = SubResource( 5 )
 
 [node name="GrappleCancel" type="Timer" parent="."]
 wait_time = 0.2
@@ -82,8 +111,74 @@ one_shot = true
 one_shot = true
 
 [node name="Label" type="Label" parent="."]
+visible = false
 margin_right = 40.0
 margin_bottom = 14.0
 
-[connection signal="body_entered" from="WallArea" to="." method="_on_WallArea_body_entered"]
-[connection signal="body_exited" from="WallArea" to="." method="_on_WallArea_body_exited"]
+[node name="JumpCoolDown" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Mrgn" type="MarginContainer" parent="HUD"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Help" type="Label" parent="HUD/Mrgn"]
+margin_left = 9.0
+margin_right = 1014.0
+margin_bottom = 14.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "MB1 Rocket | MB2 Click to grapple, MB2 again to cancel | WASD Aircontrol | Shift WallSlide & GroundSlide | Space Jump during wallslide | E Rail | Q Missiles"
+
+[node name="Health" type="Label" parent="HUD/Mrgn"]
+margin_top = 586.0
+margin_right = 78.0
+margin_bottom = 600.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "HEALTH 100"
+
+[node name="Powerups" type="HBoxContainer" parent="HUD/Mrgn"]
+margin_left = 892.0
+margin_top = 568.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="Rail" type="Control" parent="HUD/Mrgn/Powerups"]
+margin_right = 64.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 64, 32 )
+
+[node name="Label" type="Label" parent="HUD/Mrgn/Powerups/Rail"]
+visible = false
+margin_right = 64.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 64, 32 )
+text = "/  RAIL  \\
+\\ SHOT /"
+align = 1
+
+[node name="Missile" type="Control" parent="HUD/Mrgn/Powerups"]
+margin_left = 68.0
+margin_right = 132.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 64, 32 )
+
+[node name="Label" type="Label" parent="HUD/Mrgn/Powerups/Missile"]
+visible = false
+margin_right = 60.0
+margin_bottom = 31.0
+text = "/MISSILE\\
+\\  PACK  /"
+align = 1
+
+[connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
+[connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]
+[connection signal="body_exited" from="GeneralArea" to="." method="_on_GeneralArea_body_exited"]
+[connection signal="body_entered" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_entered"]
+[connection signal="body_exited" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_exited"]

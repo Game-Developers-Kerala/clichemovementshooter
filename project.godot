@@ -18,10 +18,16 @@ _global_script_classes=[ {
 "class": "cmn",
 "language": "GDScript",
 "path": "res://scripts/globals/cmn_class.gd"
+}, {
+"base": "Area",
+"class": "pickup",
+"language": "GDScript",
+"path": "res://scripts/player_pickup.gd"
 } ]
 _global_script_class_icons={
 "BaseEnemy": "",
-"cmn": ""
+"cmn": "",
+"pickup": ""
 }
 
 [application]

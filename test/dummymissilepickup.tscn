@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 0.2, 0.2, 0.4 )
+
+[node name="dummyrailpickup" type="MeshInstance"]
+transform = Transform( 0.61518, 0.788387, 0, -0.788387, 0.61518, 0, 0, 0, 1, 0, 0, 0 )
+mesh = SubResource( 1 )

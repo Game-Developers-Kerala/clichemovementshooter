@@ -6,20 +6,25 @@ func _ready():
 	$Area.translate(Vector3.ZERO)
 
 func shoot():
-	var receivers = $Area.get_overlapping_bodies()
+	var areas = $Area.get_overlapping_areas()
+	var receivers = []
 	var from = global_translation
 	var to = -global_transform.basis.z*(cast_to.length())
 	if is_colliding():
 		to = get_collision_point()
 	var length = (to-from).length()
-	if receivers:
-		for body in receivers:
-			var bodydist = ((body.global_translation+Vector3.UP)-from).length()
-			if bodydist>length:
-				continue
-			print(OS.get_ticks_msec(),":",body," got hit by rail")
+	print("wall at:",length)
+	if areas:
+		for area in areas:
+			if !receivers.has(area.hit_receiver):
+				receivers.push_front(area.hit_receiver)
+				var bodydist = (area.global_translation-from).length()
+				if bodydist>length:
+					print(area.hit_receiver.name," behind wall at:", bodydist)
+				else:
+					print(area.hit_receiver.name," hit at:",bodydist)
 	var vfx = RAIL_VFX.instance()
 	get_tree().current_scene.add_child(vfx)
 	var vfx_offset = global_transform.basis.x - global_transform.basis.y
 	vfx.init(from+vfx_offset*0.25,to)
-
+	queue_free()

@@ -1,17 +1,22 @@
 extends KinematicBody
 
+
 enum movestates {none,ground,wall,air,grapple}
 var movestate = movestates.ground
 
+const CENTER_OF_MASS = Vector3.UP
+
 var mouse_sens = 0.1
-const GRAPPLESPEED = 40
+const GRAPPLESPEED = 30
 const GRAPPLEAIRCONTROL = 10
 const AIRCONTROL = 15
+var air_accel = 0.0
+const AIRACCEL = 10
+const AIRACCEL_LERPRATE = 100
 const GRAPPLEACCEL = 20
 const GROUNDACCEL = 10
-const AIRACCEL = 10
 const GRAVITY = 20
-const SLIDESPEED = 10
+const SLIDESPEED = 20
 const FRICTION_DAMPING = 0.9
 
 var velocity : Vector3 = Vector3.ZERO
@@ -19,22 +24,37 @@ var snap := Vector3.ZERO
 
 onready var cam = $Camera
 
+var auto_slide = false
+
 var grappling = false
 var braking = false
 var jumping = false
 var on_wall = false
-var in_slide_raw = false
-var in_slide = false
+var wallsidecheck = false
+onready var in_slide = auto_slide
+var in_jump = false
 var last_velocity = Vector3.ZERO
+var air_auto_dir = false
 
 var health := 100
+
+var stats = {
+	"health":100,
+	"weapon_rail":null,
+	"weapon_missilepack":false,
+	"powerup_spikecage":false,
+	}
+const STAT_RANGES = {
+		"health":{"min":0,"max":100}
+		}
 
 const ROCKET_COOLDOWN_DUR = 0.7
 const ROCKET = preload("res://scenes/player_rocket.tscn")
 const RAILSHOT = preload("res://scenes/player_railshot.tscn")
+const MISSILE_PACK = preload("res://scenes/player_lockon_missile_pack.tscn")
 
 func _ready():
-	$GrappleRay/GrappleMesh.hide()
+	$floaters/GrappleRay/GrappleMesh.hide()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event):
@@ -44,12 +64,13 @@ func _input(event):
 		cam.rotation.x = clamp(cam.rotation.x,deg2rad(-88),deg2rad(88))
 
 func _unhandled_key_input(event):
+	#if auto slide is off pressing slide will enable slide
+	#if auto slide is on pressing slide will disable slide
 	if event.is_action_pressed("slide"):
-		in_slide_raw = true
-		in_slide = true
+		in_slide = !auto_slide
 	if event.is_action_released("slide"):
-		in_slide = false
-		in_slide_raw = false
+		in_slide = auto_slide
+
 
 #====================================
 
@@ -62,7 +83,7 @@ func _physics_process(delta):
 	var grapplelength = 0.0
 	
 	set_move_state()
-	
+
 	match movestate:
 		movestates.none:
 			velocity = lerp(velocity,Vector3.ZERO,GROUNDACCEL*delta)
@@ -73,20 +94,33 @@ func _physics_process(delta):
 			else:
 				snap = Vector3.ZERO
 		movestates.grapple:
-			$GrappleRay.look_at($floaters/Grappletarg.global_translation,Vector3.UP)
-			grapplevec = $floaters/Grappletarg.global_translation-$GrappleRay.global_translation
+			var grappletarg = $floaters/GrappleTargArea.global_translation
+			var grappleorigin = global_translation+Vector3.UP*1.42
+			$floaters/GrappleRay.look_at_from_position(grappleorigin,grappletarg,Vector3.UP)
+			$floaters/GrappleRay.force_update_transform()
+			$floaters/GrappleRay.force_raycast_update()
+			grapplevec = $floaters/GrappleTargArea.global_translation-$floaters/GrappleRay.global_translation
 			grapplelength = grapplevec.length()
 			grapplevec = grapplevec.normalized()
 			var aircontrol = Vector3.ZERO
 			aircontrol.y = -in_dir.y
 			aircontrol += $Camera.global_transform.basis.x*in_dir.x
-			$GrappleRay/GrappleMesh.scale = Vector3(1,1,grapplelength)
+			$floaters/GrappleRay/GrappleMesh.scale.z = grapplelength
 			if grapplelength < 1.8:
 				grapple_stop()
-			velocity = lerp(velocity,grapplevec*speed+aircontrol*GRAPPLEAIRCONTROL,GRAPPLEACCEL*delta)
+			if $floaters/GrappleRay.is_colliding():
+				var targ = $floaters/GrappleRay.get_collider()
+				if !targ.get_collision_layer_bit(4):
+					grapple_stop()
+			velocity = lerp(velocity,grapplevec*GRAPPLESPEED+aircontrol*GRAPPLEAIRCONTROL,GRAPPLEACCEL*delta)
 			snap = Vector3.ZERO
 		movestates.air:
-			dir = Vector3(in_dir.x,0,in_dir.y).normalized().rotated(Vector3.UP,global_rotation.y)
+			if in_dir.length():
+				dir = Vector3(in_dir.x,0,in_dir.y).normalized().rotated(Vector3.UP,global_rotation.y)
+				air_auto_dir = false
+			else:
+				if air_auto_dir:
+					dir = (velocity*Vector3(1,0,1)).normalized()
 			velocity.x = lerp(velocity.x,dir.x*AIRCONTROL,AIRACCEL*delta)
 			velocity.z = lerp(velocity.z,dir.z*AIRCONTROL,AIRACCEL*delta)
 			velocity.y -= GRAVITY*delta
@@ -105,8 +139,14 @@ func _physics_process(delta):
 				snap = -floornorm
 			else:
 				snap = Vector3.ZERO
-
+	if Input.is_action_pressed("jump") and on_wall: #and  $JumpCoolDown.is_stopped():
+		$JumpCoolDown.start()
+		walljump()
+	
 	velocity = move_and_slide_with_snap(velocity,snap,Vector3.UP,true)
+	var lookdir = (velocity.rotated(Vector3.UP,PI*0.5)*Vector3(1,0,1)).normalized()
+	if lookdir:
+		$wallsidecheckarea.look_at($wallsidecheckarea.global_translation+lookdir,Vector3.UP)
 	last_velocity = velocity
 	jumping = false
 
@@ -116,44 +156,58 @@ func _physics_process(delta):
 		grapple()
 	if Input.is_action_pressed("use"):
 		shoot_rail()
+	if Input.is_action_pressed("homingmissile"):
+		shoot_missile_pack()
 	if Input.is_action_just_pressed("ui_page_down"):
-		print("Wall area overlapping bodies:",$WallArea.get_overlapping_bodies())
+		pass
 	$Label.text = movestates.keys()[movestate]
-	$Label.text +="\nInput Slide:"+str(in_slide)
+	$Label.text = "\nWallray colliding:"+str(wallsidecheck)
 
 func set_move_state():
 	if grappling:
-		movestate = movestates.grapple
+		change_movestate(movestates.grapple)
 		return
 	if is_on_floor():
 		match movestate:
 			movestates.none:
 				if jumping:
-					movestate = movestates.air
+					change_movestate(movestates.air)
 					return
-				if velocity.length()>0.001 and in_slide:
-					movestate = movestates.ground
+				if velocity.length()>1 and in_slide:
+					change_movestate(movestates.ground)
 				return
 			movestates.ground:
 				if jumping:
-					movestate = movestates.air
+					change_movestate(movestates.air)
 					return
 				if !in_slide:
-					movestate = movestates.none
+					change_movestate(movestates.none)
 					return
 			_:
 				if in_slide:
-					movestate = movestates.ground
+					change_movestate(movestates.ground)
 					return
-				movestate = movestates.none
+				change_movestate(movestates.none)
 		return
 	if on_wall:
 		if in_slide:
-			movestate = movestates.wall
+			change_movestate(movestates.wall)
 		else:
-			movestate = movestates.air
+			change_movestate(movestates.air)
 		return
-	movestate = movestates.air
+	change_movestate(movestates.air)
+
+func change_movestate(to_state,args:={}):
+	match to_state:
+		movestates.air:
+			if movestate == movestates.ground and !jumping:
+				air_auto_dir = true
+			if args.has("auto_dir"):
+				air_auto_dir = true
+			air_accel = 4.0
+		_:
+			air_auto_dir = false
+	movestate = to_state
 
 func shoot():
 	if !$RocketCooldown.is_stopped():
@@ -165,8 +219,66 @@ func shoot():
 	var camfront = -$Camera.global_transform.basis.z
 	rkt.look_at_from_position(campos+camfront*0.25,campos+camfront*2,Vector3.UP)
 
+func shoot_rail():
+	if !is_instance_valid(stats.weapon_rail):
+		return
+	print(OS.get_ticks_msec()," shot rail")
+	stats.weapon_rail.shoot()
+	$HUD/Mrgn/Powerups/Rail/Label.hide()
+
+func shoot_missile_pack():
+	if !stats.weapon_missilepack:
+		return
+	if !$RocketCooldown.is_stopped():
+		return
+	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
+	var mispak = MISSILE_PACK.instance()
+	$Camera.add_child(mispak)
+	stats.weapon_missilepack = false
+	$HUD/Mrgn/Powerups/Missile/Label.hide()
+
+func pick_up(item:pickup):
+	var dict :Dictionary= item.get_pickup_info()
+	for key in dict.keys():
+		match key:
+			"health":
+				if stats.health >= STAT_RANGES.health.max:
+					return
+				stats[key] = clamp(stats[key]+dict[key],STAT_RANGES[key]["min"],STAT_RANGES[key]["max"])
+			"weapon_rail":
+				if is_instance_valid(stats[key]):
+					return
+				stats[key] = RAILSHOT.instance()
+				$Camera.add_child(stats[key])
+				$HUD/Mrgn/Powerups/Rail/Label.show()
+			"weapon_missilepack":
+				if stats[key]:
+					return
+				stats[key] = dict[key]
+				$HUD/Mrgn/Powerups/Missile/Label.show()
+			"powerup_spikecage":
+				pass
+	item.on_pickup()
+
 func get_hit(arg):
 	pass
+
+
+func walljump():
+	jumping = true
+	snap = Vector3.ZERO
+	var perp_vec :Vector3 = -$wallsidecheckarea.global_transform.basis.z*Vector3(1,0,1)
+	if wallsidecheck:
+		perp_vec = $wallsidecheckarea.global_transform.basis.z*Vector3(1,0,1)
+	if movestate == movestates.wall:
+		print("perpvec:",perp_vec, " movestate:",movestates.keys()[movestate])
+		velocity.y = 0.0
+		velocity += Vector3.UP*6+perp_vec*10
+#	else:
+##		perp_vec = perp_vec.rotated(Vector3.UP,PI*(2-1*int(!wallsidecheck)))
+#		print("perpvec:",perp_vec)
+#		velocity += Vector3.UP*6+perp_vec*2
+	change_movestate(movestates.air,{auto_dir=true})
 
 func grapple():
 	if grappling:
@@ -177,14 +289,14 @@ func grapple():
 		return
 	if $Camera/AimRay.is_colliding():
 		var point = $Camera/AimRay.get_collision_point()
-		$floaters/Grappletarg.global_translation = point
+		$floaters/GrappleTargArea.global_translation = point
 		grappling = true
-		$GrappleRay/GrappleMesh.show()
+		$floaters/GrappleRay/GrappleMesh.show()
 		$GrappleCancel.start()
 
 func grapple_stop():
 	grappling = false
-	$GrappleRay/GrappleMesh.hide()
+	$floaters/GrappleRay/GrappleMesh.hide()
 	$GrappleCancel.start()
 
 func get_pushed(push_dict:={}):
@@ -195,18 +307,27 @@ func get_pushed(push_dict:={}):
 	var push_force = push_dict.force/(push_dir.length()+0.01)
 	velocity += push_dir.normalized()*push_force
 
-func shoot_rail():
-	if !$RocketCooldown.is_stopped():
-		return
-	print(OS.get_ticks_msec()," shot rail")
-	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
-	$Camera/RailShot.shoot()
 
 
-func _on_WallArea_body_entered(body):
+
+func _on_GeneralArea_body_entered(body):
 	on_wall = true
 
 
-func _on_WallArea_body_exited(body):
-	if !$WallArea.get_overlapping_bodies():
+func _on_GeneralArea_body_exited(body):
+	if !$GeneralArea.get_overlapping_bodies():
 		on_wall = false
+
+
+func _on_wallsidecheckarea_body_entered(body):
+	wallsidecheck = true
+
+
+func _on_wallsidecheckarea_body_exited(body):
+	if !$wallsidecheckarea.get_overlapping_bodies():
+		wallsidecheck = false
+
+
+func _on_GeneralArea_area_entered(area):
+	if area.get_collision_layer_bit(cmn.colliders.pickup):
+		pick_up(area)
