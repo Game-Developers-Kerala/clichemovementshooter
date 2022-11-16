@@ -23,6 +23,7 @@ var velocity : Vector3 = Vector3.ZERO
 var snap := Vector3.ZERO
 
 var grappled_enemy :Node = null
+var grappling_enemy :bool = false
 onready var grapple_targ = $floaters/GrappleTargArea
 
 
@@ -110,10 +111,12 @@ func _physics_process(delta):
 			else:
 				snap = Vector3.ZERO
 		movestates.grapple:
-			if is_instance_valid(grappled_enemy):
-				grapple_targ.global_translation = grappled_enemy.global_translation +grappled_enemy.CENTER_OF_MASS
-				$floaters/GrappleTargArea.glob
-			var grappletargPos = $floaters/GrappleTargArea.global_translation
+			if grappling_enemy:
+				if is_instance_valid(grappled_enemy):
+					grapple_targ.global_translation = grappled_enemy.global_translation +grappled_enemy.CENTER_OF_MASS
+				else:
+					grapple_stop()
+			var grappletargPos = grapple_targ.global_translation
 			var grappleorigin = global_translation+Vector3.UP*1.42
 			$floaters/GrappleRay.look_at_from_position(grappleorigin,grappletargPos,Vector3.UP)
 			$floaters/GrappleRay.force_update_transform()
@@ -336,15 +339,19 @@ func grapple():
 		return
 	if $Camera/AimRay.is_colliding():
 		var collider = $Camera/AimRay.get_collider()
-		var point = $Camera/AimRay.get_collision_point()
 		if collider.get_collision_layer_bit(cmn.colliders.enemy_hurtbox):
+			grappling_enemy = true
 			grappled_enemy = collider.hit_receiver
-		$floaters/GrappleTargArea.global_translation = point
+			grapple_targ.global_translation = grappled_enemy.global_translation +grappled_enemy.CENTER_OF_MASS
+		else:
+			grapple_targ.global_translation = $Camera/AimRay.get_collision_point()
 		grappling = true
 		$floaters/GrappleRay/GrappleMesh.show()
 		$GrappleCancel.start()
 
 func grapple_stop():
+	grappling_enemy = false
+	grappled_enemy = null
 	grappling = false
 	$floaters/GrappleRay/GrappleMesh.hide()
 	$GrappleCancel.start()
