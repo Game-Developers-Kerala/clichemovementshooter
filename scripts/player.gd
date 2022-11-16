@@ -96,7 +96,7 @@ func _physics_process(delta):
 		movestates.grapple:
 			var grappletarg = $floaters/GrappleTargArea.global_translation
 			var grappleorigin = global_translation+Vector3.UP*1.42
-			$floaters/GrappleRay.look_at_from_position(grappleorigin,grappletarg,Vector3.UP)
+			$floaters/GrappleRay.look_at(grappletarg,Vector3.UP)
 			$floaters/GrappleRay.force_update_transform()
 			$floaters/GrappleRay.force_raycast_update()
 			grapplevec = $floaters/GrappleTargArea.global_translation-$floaters/GrappleRay.global_translation

@@ -93,9 +93,10 @@ visible = false
 mesh = SubResource( 9 )
 
 [node name="GrappleRay" type="RayCast" parent="floaters"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -200 )
-collision_mask = 272
+collision_mask = 280
 collide_with_areas = true
 
 [node name="GrappleMesh" type="MeshInstance" parent="floaters/GrappleRay"]
@@ -177,6 +178,12 @@ margin_bottom = 31.0
 text = "/MISSILE\\
 \\  PACK  /"
 align = 1
+
+[node name="GrappleRemote" type="RemoteTransform" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42, 0 )
+remote_path = NodePath("../floaters/GrappleRay")
+update_rotation = false
+update_scale = false
 
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]
