@@ -89,6 +89,7 @@ monitoring = false
 shape = SubResource( 8 )
 
 [node name="MeshInstance" type="MeshInstance" parent="floaters/GrappleTargArea"]
+visible = false
 mesh = SubResource( 9 )
 
 [node name="GrappleRay" type="RayCast" parent="floaters"]

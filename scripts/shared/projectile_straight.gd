@@ -8,7 +8,11 @@ func ready_extend():
 		$RayCast.set_collision_mask_bit(cmn.colliders.enemy_hurtbox,true)
 	if detect_player:
 		$RayCast.set_collision_mask_bit(cmn.colliders.player,true)
-	pass
+	if detect_custom:
+		if shot_by_player:
+			$RayCast.set_collision_mask_bit(cmn.colliders.player_custom,true)
+		else:
+			$RayCast.set_collision_mask_bit(cmn.colliders.enemy_custom,true)
 
 func phys_process_extend(delta):
 	translate_object_local(Vector3.FORWARD*speed*delta) #move forwad

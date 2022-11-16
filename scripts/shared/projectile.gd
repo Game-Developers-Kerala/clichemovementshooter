@@ -1,11 +1,13 @@
 extends Spatial
 class_name projectile
 
+export(bool) var shot_by_player = false
 export(float) var speed = 25
 export(float) var lifespan = 5
 export(bool) var detect_npc = true
 export(bool) var detect_wall = true
 export(bool) var detect_player = false
+export(bool) var detect_custom = false
 export(NodePath) var explosion
 export(NodePath) var explosion_vfx
 export(NodePath) var direct_hit

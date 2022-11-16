@@ -25,6 +25,7 @@ is_hemisphere = true
 albedo_color = Color( 0.745098, 0.2, 0.2, 1 )
 
 [node name="projectile" instance=ExtResource( 1 )]
+shot_by_player = true
 speed = 30.0
 explosion = NodePath("Explosion")
 explosion_vfx = NodePath("Vfx_Explosion")

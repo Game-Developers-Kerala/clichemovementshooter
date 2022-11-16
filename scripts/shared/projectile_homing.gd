@@ -20,6 +20,11 @@ func ready_extend():
 		$Area.set_collision_mask_bit(cmn.colliders.enemy_hurtbox,true)
 	if detect_player:
 		$Area.set_collision_mask_bit(cmn.colliders.player,true)
+	if detect_custom:
+		if shot_by_player:
+			$Area.set_collision_mask_bit(cmn.colliders.player_custom,true)
+		else:
+			$Area.set_collision_mask_bit(cmn.colliders.enemy_custom,true)
 
 func process_extend(delta):
 	if launched and is_instance_valid(target):
@@ -46,14 +51,14 @@ func _on_Timer_timeout():
 func _on_Area_area_entered(area):
 	$Area.disconnect("area_entered",self,"_on_Area_area_entered")
 	var recepient:Node=null
-	if !area.get_collision_layer_bit(cmn.colliders.level):
+	if area.get_collision_layer_bit(cmn.colliders.enemy_hurtbox):
 		recepient = area.hit_receiver
 	terminate(recepient)
 
 func _on_Area_body_entered(body):
 	$Area.disconnect("body_entered",self,"_on_Area_body_entered")
 	var recepient:Node=null
-	if !body.get_collision_layer_bit(cmn.colliders.level):
+	if body.get_collision_layer_bit(cmn.colliders.player):
 		recepient = body
 	terminate(recepient)
 

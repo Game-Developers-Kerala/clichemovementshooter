@@ -12,6 +12,7 @@ radial_segments = 4
 rings = 0
 
 [node name="projectile" instance=ExtResource( 1 )]
+shot_by_player = true
 explosion = NodePath("Explosion")
 explosion_vfx = NodePath("Vfx_Explosion")
 
