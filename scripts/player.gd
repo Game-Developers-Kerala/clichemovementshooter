@@ -22,6 +22,10 @@ const FRICTION_DAMPING = 0.9
 var velocity : Vector3 = Vector3.ZERO
 var snap := Vector3.ZERO
 
+var grappled_enemy :Node = null
+onready var grapple_targ = $floaters/GrappleTargArea
+
+
 onready var cam = $Camera
 
 var auto_slide = false
@@ -53,7 +57,19 @@ const ROCKET = preload("res://scenes/player_rocket.tscn")
 const RAILSHOT = preload("res://scenes/player_railshot.tscn")
 const MISSILE_PACK = preload("res://scenes/player_lockon_missile_pack.tscn")
 
+var predict_past_pos :PoolVector3Array = []
+var predict_past_vel :PoolVector3Array = []
+var predict_future_pos :PoolVector3Array = []
+onready var predict_blink_timer = $PredictionBlink
+
 func _ready():
+	predict_past_pos.resize(4)
+	predict_past_pos.fill(global_translation+CENTER_OF_MASS)
+	predict_past_vel.resize(4)
+	predict_past_vel.fill(Vector3.ZERO)
+	predict_future_pos.resize(12)
+	predict_future_pos.fill(global_translation+CENTER_OF_MASS)
+	
 	$floaters/GrappleRay/GrappleMesh.hide()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
@@ -94,9 +110,12 @@ func _physics_process(delta):
 			else:
 				snap = Vector3.ZERO
 		movestates.grapple:
-			var grappletarg = $floaters/GrappleTargArea.global_translation
+			if is_instance_valid(grappled_enemy):
+				grapple_targ.global_translation = grappled_enemy.global_translation +grappled_enemy.CENTER_OF_MASS
+				$floaters/GrappleTargArea.glob
+			var grappletargPos = $floaters/GrappleTargArea.global_translation
 			var grappleorigin = global_translation+Vector3.UP*1.42
-			$floaters/GrappleRay.look_at(grappletarg,Vector3.UP)
+			$floaters/GrappleRay.look_at_from_position(grappleorigin,grappletargPos,Vector3.UP)
 			$floaters/GrappleRay.force_update_transform()
 			$floaters/GrappleRay.force_raycast_update()
 			grapplevec = $floaters/GrappleTargArea.global_translation-$floaters/GrappleRay.global_translation
@@ -316,7 +335,10 @@ func grapple():
 	if !$GrappleCancel.is_stopped():
 		return
 	if $Camera/AimRay.is_colliding():
+		var collider = $Camera/AimRay.get_collider()
 		var point = $Camera/AimRay.get_collision_point()
+		if collider.get_collision_layer_bit(cmn.colliders.enemy_hurtbox):
+			grappled_enemy = collider.hit_receiver
 		$floaters/GrappleTargArea.global_translation = point
 		grappling = true
 		$floaters/GrappleRay/GrappleMesh.show()
@@ -349,3 +371,32 @@ func _on_wallsidecheckarea_body_exited(body):
 func _on_GeneralArea_area_entered(area):
 	if area.get_collision_layer_bit(cmn.colliders.pickup):
 		pick_up(area)
+
+
+func _on_PredictionBlink_timeout():
+	var curPos = global_translation+CENTER_OF_MASS
+	var predi
+	var interval = $PredictionBlink.wait_time
+	match movestate:
+		movestates.none:
+			for i in predict_future_pos.size():
+				predict_future_pos[i] = curPos
+				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+		movestates.ground:
+			for i in predict_future_pos.size():
+				predict_future_pos[i] = curPos + velocity*(i+1)*interval
+				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+		movestates.grapple:
+			for i in predict_future_pos.size():
+				predict_future_pos[i] = curPos + velocity*(i+1)*interval
+				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+		movestates.wall:
+			for i in predict_future_pos.size():
+				predict_future_pos[i] = curPos + velocity*(i+1)*interval
+				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+		movestates.air:
+			var temp_vel = velocity
+			for i in predict_future_pos.size():
+				temp_vel -= Vector3.UP*GRAVITY*0.25
+				predict_future_pos[i] = curPos + temp_vel*(i+1)*interval
+				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]

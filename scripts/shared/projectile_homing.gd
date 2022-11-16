@@ -29,7 +29,7 @@ func ready_extend():
 func process_extend(delta):
 	if launched and is_instance_valid(target):
 		var looking_at = global_translation - global_transform.basis.z
-		target_pos = target.global_translation+Vector3.UP
+		target_pos = target.global_translation+target.CENTER_OF_MASS
 		look_dir = lerp(looking_at,target_pos,delta*steering)
 		look_at(target_pos,Vector3.UP)
 	translate_object_local(Vector3.FORWARD*speed*delta)
