@@ -69,6 +69,7 @@ func _on_Timer_timeout():
 				break
 	var missile = MISSILE.instance()
 	missile.target = targ
+	#org_local is local origin, the offset to the sides, every odd missile is offset to the opposite side
 	var org_local = global_transform.basis.x*(1-2*(missiles_fired%2))
 	var randlook = -global_transform.basis.z + org_local*randgen.randf_range(0.0,RANDOM_LOOK)
 	randlook += Vector3.UP*randgen.randf_range(-RANDOM_LOOK*0.5,RANDOM_LOOK)
@@ -79,6 +80,6 @@ func _on_Timer_timeout():
 	if missiles_fired == MISSILE_COUNT:
 #		print("all missiles fired")
 		for enemy in locked_enemies:
-			if enemy[0]:
+			if is_instance_valid(enemy[0]):
 				enemy[2].queue_free()
 		queue_free()

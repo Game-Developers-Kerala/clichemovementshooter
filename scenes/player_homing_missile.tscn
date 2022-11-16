@@ -1,15 +1,28 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://scenes/shared/homing_projectile.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/shared/projectile_homing.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/shared/explosion.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/shared/vfx_explosion.tscn" type="PackedScene" id=3]
 
+[sub_resource type="CylinderMesh" id=1]
+top_radius = 0.0
+bottom_radius = 0.1
+height = 0.4
+radial_segments = 4
+rings = 0
 
-[node name="homing_projectile" instance=ExtResource( 1 )]
+[node name="projectile" instance=ExtResource( 1 )]
+shot_by_player = true
 explosion = NodePath("Explosion")
-
-[node name="Explosion" parent="." index="0" instance=ExtResource( 2 )]
 explosion_vfx = NodePath("Vfx_Explosion")
 
-[node name="Vfx_Explosion" parent="Explosion" index="2" instance=ExtResource( 3 )]
-skeleton = NodePath("../..")
+[node name="Vfx_Explosion" parent="." index="3" instance=ExtResource( 3 )]
+
+[node name="Explosion" parent="." index="4" instance=ExtResource( 2 )]
+caused_by_player = true
+max_damage = 50.0
+min_damage = 30.0
+
+[node name="MeshInstance2" type="MeshInstance" parent="." index="5"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.187983 )
+mesh = SubResource( 1 )

@@ -22,6 +22,13 @@ const FRICTION_DAMPING = 0.9
 var velocity : Vector3 = Vector3.ZERO
 var snap := Vector3.ZERO
 
+var grapplevec = Vector3.ZERO
+var grapplelength = 0.0
+var grappled_enemy :Node = null
+var grappling_enemy :bool = false
+onready var grapple_targ = $floaters/GrappleTargArea
+
+
 onready var cam = $Camera
 
 var auto_slide = false
@@ -53,7 +60,20 @@ const ROCKET = preload("res://scenes/player_rocket.tscn")
 const RAILSHOT = preload("res://scenes/player_railshot.tscn")
 const MISSILE_PACK = preload("res://scenes/player_lockon_missile_pack.tscn")
 
+var predict_past_pos :PoolVector3Array = []
+var predict_past_vel :PoolVector3Array = []
+var predict_future_pos :PoolVector3Array = []
+onready var predict_blink_timer = $PredictionBlink
+var prediction_suspend_time := 0.5
+
 func _ready():
+	predict_past_pos.resize(4)
+	predict_past_pos.fill(global_translation+CENTER_OF_MASS)
+	predict_past_vel.resize(4)
+	predict_past_vel.fill(Vector3.ZERO)
+	predict_future_pos.resize(12)
+	predict_future_pos.fill(global_translation+CENTER_OF_MASS)
+	
 	$floaters/GrappleRay/GrappleMesh.hide()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
@@ -79,8 +99,8 @@ func _physics_process(delta):
 	var dir = Vector3.ZERO
 	var floornorm = get_floor_normal()
 	var speed = GRAPPLESPEED
-	var grapplevec = Vector3.ZERO
-	var grapplelength = 0.0
+#	var grapplevec = Vector3.ZERO
+#	var grapplelength = 0.0
 	
 	set_move_state()
 
@@ -94,9 +114,14 @@ func _physics_process(delta):
 			else:
 				snap = Vector3.ZERO
 		movestates.grapple:
-			var grappletarg = $floaters/GrappleTargArea.global_translation
+			if grappling_enemy:
+				if is_instance_valid(grappled_enemy):
+					grapple_targ.global_translation = grappled_enemy.global_translation +grappled_enemy.CENTER_OF_MASS
+				else:
+					grapple_stop()
+			var grappletargPos = grapple_targ.global_translation
 			var grappleorigin = global_translation+Vector3.UP*1.42
-			$floaters/GrappleRay.look_at_from_position(grappleorigin,grappletarg,Vector3.UP)
+			$floaters/GrappleRay.look_at_from_position(grappleorigin,grappletargPos,Vector3.UP)
 			$floaters/GrappleRay.force_update_transform()
 			$floaters/GrappleRay.force_raycast_update()
 			grapplevec = $floaters/GrappleTargArea.global_translation-$floaters/GrappleRay.global_translation
@@ -198,8 +223,12 @@ func set_move_state():
 	change_movestate(movestates.air)
 
 func change_movestate(to_state,args:={}):
+	if movestate == to_state:
+		return
 	match to_state:
 		movestates.air:
+			if $PredictionSuspend.is_stopped():
+				$PredictionSuspend.start(prediction_suspend_time)
 			if movestate == movestates.ground and !jumping:
 				air_auto_dir = true
 			if args.has("auto_dir"):
@@ -207,6 +236,7 @@ func change_movestate(to_state,args:={}):
 			air_accel = 4.0
 		_:
 			air_auto_dir = false
+			$PredictionSuspend.stop()
 	movestate = to_state
 
 func shoot():
@@ -244,7 +274,7 @@ func pick_up(item:pickup):
 			"health":
 				if stats.health >= STAT_RANGES.health.max:
 					return
-				stats[key] = clamp(stats[key]+dict[key],STAT_RANGES[key]["min"],STAT_RANGES[key]["max"])
+				adjust_health(dict[key])
 			"weapon_rail":
 				if is_instance_valid(stats[key]):
 					return
@@ -260,9 +290,37 @@ func pick_up(item:pickup):
 				pass
 	item.on_pickup()
 
-func get_hit(arg):
+func get_hit(args:={}):
+	print("Plyr got hit at:",OS.get_ticks_msec(),"=====\n",args)
+	if args.has("dmg"):
+		adjust_health(-args.dmg)
+	if args.has("force"):
+		if args.has("push_dir"):
+			if args.has("dir_replace"):
+				velocity = Vector3.ZERO
+			var push_multiplier := 1.0
+			if args.has("caused_by_player"):
+				push_multiplier = 2.0
+			velocity += args.push_dir*args.force*push_multiplier
+			jumping = true
+			snap = Vector3.ZERO
+	if args.has("origin"):
+		#do something with the origin info
+		return
+
+func adjust_health(in_val):
+	stats.health = ceil(stats.health+in_val)
+	stats.health = clamp(stats.health,STAT_RANGES.health.min,STAT_RANGES.health.max)
+	$HUD/Mrgn/Health.text = "Health " + str(int(stats.health)) 
 	pass
 
+func get_pushed(push_dict:={}):
+	print("got pushed")
+	jumping = true
+	snap = Vector3.ZERO
+	var push_dir:Vector3 = (global_translation+Vector3.UP)-push_dict.origin
+	var push_force = push_dict.force/(push_dir.length()+0.01)
+	velocity += push_dir.normalized()*push_force
 
 func walljump():
 	jumping = true
@@ -288,26 +346,23 @@ func grapple():
 	if !$GrappleCancel.is_stopped():
 		return
 	if $Camera/AimRay.is_colliding():
-		var point = $Camera/AimRay.get_collision_point()
-		$floaters/GrappleTargArea.global_translation = point
+		var collider = $Camera/AimRay.get_collider()
+		if collider.get_collision_layer_bit(cmn.colliders.enemy_hurtbox):
+			grappling_enemy = true
+			grappled_enemy = collider.hit_receiver
+			grapple_targ.global_translation = grappled_enemy.global_translation +grappled_enemy.CENTER_OF_MASS
+		else:
+			grapple_targ.global_translation = $Camera/AimRay.get_collision_point()
 		grappling = true
 		$floaters/GrappleRay/GrappleMesh.show()
 		$GrappleCancel.start()
 
 func grapple_stop():
+	grappling_enemy = false
+	grappled_enemy = null
 	grappling = false
 	$floaters/GrappleRay/GrappleMesh.hide()
 	$GrappleCancel.start()
-
-func get_pushed(push_dict:={}):
-	print("got pushed")
-	jumping = true
-	snap = Vector3.ZERO
-	var push_dir:Vector3 = (global_translation+Vector3.UP)-push_dict.origin
-	var push_force = push_dict.force/(push_dir.length()+0.01)
-	velocity += push_dir.normalized()*push_force
-
-
 
 
 func _on_GeneralArea_body_entered(body):
@@ -331,3 +386,41 @@ func _on_wallsidecheckarea_body_exited(body):
 func _on_GeneralArea_area_entered(area):
 	if area.get_collision_layer_bit(cmn.colliders.pickup):
 		pick_up(area)
+
+
+func _on_PredictionBlink_timeout():
+	if $PredictionSuspend.time_left:
+		predict_future_pos.remove(0)
+		var size = predict_future_pos.size()
+		print("suspended prediction: array size", size)
+		predict_future_pos.append(predict_future_pos[size-1])
+		return
+	var curPos = global_translation+CENTER_OF_MASS
+	var predi
+	var interval = $PredictionBlink.wait_time
+	match movestate:
+		movestates.none:
+			for i in predict_future_pos.size():
+				predict_future_pos[i] = curPos
+				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+		movestates.ground:
+			for i in predict_future_pos.size():
+				predict_future_pos[i] = curPos + velocity*(i+1)*interval
+				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+		movestates.grapple:
+			predict_future_pos.fill(grapple_targ.global_translation)
+			var eta = grapplelength/float(GRAPPLESPEED)
+			for i in predict_future_pos.size():
+				if !(i+1)*interval > eta:
+					predict_future_pos[i] = curPos + velocity*(i+1)*interval
+				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+		movestates.wall:
+			for i in predict_future_pos.size():
+				predict_future_pos[i] = curPos + velocity*(i+1)*interval
+				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+		movestates.air:
+			var temp_vel = velocity
+			for i in predict_future_pos.size():
+				temp_vel -= Vector3.UP*GRAVITY*0.25
+				predict_future_pos[i] = curPos + temp_vel*(i+1)*interval
+				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]

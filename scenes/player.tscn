@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.4
@@ -32,6 +33,7 @@ size = Vector3( 0.05, 0.05, 1 )
 
 [sub_resource type="SpatialMaterial" id=5]
 flags_transparent = true
+params_cull_mode = 1
 albedo_color = Color( 1, 1, 1, 0.356863 )
 
 [node name="Player" type="KinematicBody" groups=["player"]]
@@ -89,12 +91,14 @@ monitoring = false
 shape = SubResource( 8 )
 
 [node name="MeshInstance" type="MeshInstance" parent="floaters/GrappleTargArea"]
+visible = false
 mesh = SubResource( 9 )
 
 [node name="GrappleRay" type="RayCast" parent="floaters"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -200 )
-collision_mask = 272
+collision_mask = 280
 collide_with_areas = true
 
 [node name="GrappleMesh" type="MeshInstance" parent="floaters/GrappleRay"]
@@ -177,8 +181,90 @@ text = "/MISSILE\\
 \\  PACK  /"
 align = 1
 
+[node name="PredictionBlink" type="Timer" parent="."]
+wait_time = 0.25
+autostart = true
+
+[node name="PredictionDebugIcons" type="Node" parent="."]
+
+[node name="Sprite3D" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D2" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D3" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D4" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D5" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D6" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D7" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D8" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D9" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D10" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D11" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="Sprite3D12" type="Sprite3D" parent="PredictionDebugIcons"]
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+texture = ExtResource( 2 )
+
+[node name="PredictionSuspend" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]
 [connection signal="body_exited" from="GeneralArea" to="." method="_on_GeneralArea_body_exited"]
 [connection signal="body_entered" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_entered"]
 [connection signal="body_exited" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_exited"]
+[connection signal="timeout" from="PredictionBlink" to="." method="_on_PredictionBlink_timeout"]

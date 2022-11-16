@@ -23,11 +23,17 @@ _global_script_classes=[ {
 "class": "pickup",
 "language": "GDScript",
 "path": "res://scripts/player_pickup.gd"
+}, {
+"base": "Spatial",
+"class": "projectile",
+"language": "GDScript",
+"path": "res://scripts/shared/projectile.gd"
 } ]
 _global_script_class_icons={
 "BaseEnemy": "",
 "cmn": "",
-"pickup": ""
+"pickup": "",
+"projectile": ""
 }
 
 [application]
@@ -105,8 +111,10 @@ homingmissile={
 3d_physics/layer_4="grapple_breaker"
 3d_physics/layer_5="grapple_target"
 3d_physics/layer_6="enemy_hurtbox"
+3d_physics/layer_7="player_custom"
+3d_physics/layer_8="enemy_custom"
 3d_physics/layer_9="level"
-3d_physics/layer_10="level_poroua"
+3d_physics/layer_10="level_porous"
 3d_physics/layer_11="level_seethrough"
 
 [physics]

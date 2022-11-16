@@ -7,6 +7,7 @@ export(float) var size_start = 0.5
 export(float) var size_diff = 2.0
 export(float) var explosion_speed = 10
 export(bool) var explode_on_ready = false # if on, will go off immediately on spawn.
+export(bool) var orient_to_normal = false #So that vfx will be oriented according to hit wall normal
 
 func _ready():
 	if !explode_on_ready:
@@ -21,6 +22,8 @@ func _process(delta):
 	if exp_fac > 0.98:
 		queue_free()
 
-func explode():
+func explode(normal:=Vector3.ZERO):
+	if normal and orient_to_normal:
+		look_at(global_translation+normal,Vector3.UP)
 	show()
 	set_process(true)
