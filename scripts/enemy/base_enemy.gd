@@ -23,7 +23,6 @@ onready var player = get_node(path_to_player) as KinematicBody
 onready var weapon = get_node(path_to_weapon) as RayCast
 onready var nav_agent = get_node(path_to_nav_agent) as NavigationAgent
 onready var body = get_node(path_to_BodyRotationHelper) as Spatial
-onready var shoot_range = get_node(path_to_shootRange) as Area
 
 #getter and setter functions
 func set_state(new_state) -> void :
