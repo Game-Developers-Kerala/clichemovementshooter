@@ -305,7 +305,7 @@ func get_hit(args:={}):
 			jumping = true
 			snap = Vector3.ZERO
 	if args.has("origin"):
-		#do something with the origin info
+		$HUD/Mrgn/attack_indicators.new_attack(global_transform,$Camera.global_transform,args.origin)
 		return
 
 func adjust_health(in_val):
@@ -389,15 +389,27 @@ func _on_GeneralArea_area_entered(area):
 
 
 func _on_PredictionBlink_timeout():
-	if $PredictionSuspend.time_left:
-		predict_future_pos.remove(0)
-		var size = predict_future_pos.size()
-		print("suspended prediction: array size", size)
-		predict_future_pos.append(predict_future_pos[size-1])
-		return
 	var curPos = global_translation+CENTER_OF_MASS
-	var predi
 	var interval = $PredictionBlink.wait_time
+	predict_past_pos.remove(0)
+	predict_past_pos.append(curPos)
+	predict_past_vel.remove(0)
+	predict_past_vel.append(velocity)
+	if $PredictionSuspend.time_left:
+#		predict_future_pos.remove(0)
+#		var size = predict_future_pos.size()
+##		print("suspended prediction: array size", size)
+#		predict_future_pos.append(predict_future_pos[size-1])
+
+		var avg_vel = Vector3.ZERO
+		for vec in predict_past_vel:
+			avg_vel += vec
+		avg_vel = avg_vel / predict_past_vel.size()
+		for i in predict_future_pos.size():
+			predict_future_pos[i] = curPos + avg_vel*(i+1)*interval
+			$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+		return
+	
 	match movestate:
 		movestates.none:
 			for i in predict_future_pos.size():

@@ -18,6 +18,8 @@ const MISSILE = preload("res://scenes/player_homing_missile.tscn")
 var randgen  = RandomNumberGenerator.new()
 
 func _ready():
+	translation.y = -0.25
+	rotation.x = deg2rad(10)
 	randgen.randomize()
 	print("missile pack activated =========")
 	translate(Vector3.ZERO)
