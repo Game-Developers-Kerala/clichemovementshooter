@@ -31,4 +31,6 @@ func phys_process_extend(delta):
 		queue_free()
 
 func _on_Timer_timeout():
+	if trail:
+		stop_trail()
 	queue_free()

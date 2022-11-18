@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
 [ext_resource path="res://scripts/hud_attack_indicators.gd" type="Script" id=3]
+[ext_resource path="res://test/test_Pause.gd" type="Script" id=4]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.4
@@ -196,86 +197,30 @@ scale = Vector2( 0.5, 2 )
 texture = ExtResource( 2 )
 offset = Vector2( 400, 0 )
 
+[node name="FPSCounter" type="Label" parent="HUD/Mrgn"]
+margin_top = 293.0
+margin_right = 1024.0
+margin_bottom = 307.0
+text = "FPS"
+
 [node name="PredictionBlink" type="Timer" parent="."]
 wait_time = 0.25
 autostart = true
 
-[node name="PredictionDebugIcons" type="Node" parent="."]
-
-[node name="Sprite3D" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D2" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D3" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D4" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D5" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D6" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D7" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D8" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D9" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D10" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D11" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D12" type="Sprite3D" parent="PredictionDebugIcons"]
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
 [node name="PredictionSuspend" type="Timer" parent="."]
 one_shot = true
+
+[node name="Pause" type="CanvasLayer" parent="."]
+pause_mode = 2
+script = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="Pause"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 4
+text = "PAUSED"
+align = 1
+valign = 1
 
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]

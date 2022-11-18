@@ -185,8 +185,12 @@ func _physics_process(delta):
 		shoot_missile_pack()
 	if Input.is_action_just_pressed("ui_page_down"):
 		pass
+	if Input.is_action_just_pressed("ui_page_up"):
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		pass
 	$Label.text = movestates.keys()[movestate]
 	$Label.text = "\nWallray colliding:"+str(wallsidecheck)
+	$HUD/Mrgn/FPSCounter.text = "FPS\n" + str(Engine.get_frames_per_second())
 
 func set_move_state():
 	if grappling:
@@ -407,32 +411,32 @@ func _on_PredictionBlink_timeout():
 		avg_vel = avg_vel / predict_past_vel.size()
 		for i in predict_future_pos.size():
 			predict_future_pos[i] = curPos + avg_vel*(i+1)*interval
-			$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#			$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		return
 	
 	match movestate:
 		movestates.none:
 			for i in predict_future_pos.size():
 				predict_future_pos[i] = curPos
-				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		movestates.ground:
 			for i in predict_future_pos.size():
 				predict_future_pos[i] = curPos + velocity*(i+1)*interval
-				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		movestates.grapple:
 			predict_future_pos.fill(grapple_targ.global_translation)
 			var eta = grapplelength/float(GRAPPLESPEED)
 			for i in predict_future_pos.size():
 				if !(i+1)*interval > eta:
 					predict_future_pos[i] = curPos + velocity*(i+1)*interval
-				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		movestates.wall:
 			for i in predict_future_pos.size():
 				predict_future_pos[i] = curPos + velocity*(i+1)*interval
-				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		movestates.air:
 			var temp_vel = velocity
 			for i in predict_future_pos.size():
 				temp_vel -= Vector3.UP*GRAVITY*0.25
 				predict_future_pos[i] = curPos + temp_vel*(i+1)*interval
-				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
