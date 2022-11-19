@@ -268,6 +268,7 @@ func shoot_missile_pack():
 	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
 	var mispak = MISSILE_PACK.instance()
 	$Camera.add_child(mispak)
+	mispak.global_transform = $Camera.global_transform
 	stats.weapon_missilepack = false
 	$HUD/Mrgn/Powerups/Missile/Label.hide()
 

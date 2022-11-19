@@ -27,7 +27,7 @@ const PICKUP_MODELS = {
 				"health_large":"",
 				"health_super":"",
 				"weapon_rail":"res://test/dummyrailpickup.tscn",
-				"weapon_missilepack":"res://test/dummymissilepickup.tscn",
+				"weapon_missilepack":"res://assets/models/model_pickup_missile_pack.tscn",
 				"powerup_spikecage":"",
 				}
 
@@ -37,19 +37,27 @@ var pickup_ready :bool = true
 
 func set_type(new_type:int):
 	type = new_type
-	if pickup_model:
+	if is_instance_valid(pickup_model):
 		pickup_model.queue_free()
 	var modelfilepath = get_model_filepath()
 	if modelfilepath:
 		pickup_model = load(modelfilepath).instance()
 		add_child(pickup_model)
+#		pickup_model.global_translation = global_translation
 
 export(bool) var respawning = false
 export(float) var respawn_interval = 20
 export(bool) var despawning = false
 export(float) var lifespan = 10
 
+export(float) var rotation_speed = 0.0
+export(float) var bob_speed = 0.0
+export(float) var bob_amplitude = 0.2
 
+func _ready():
+	set_process(false)
+	if rotation_speed or bob_speed:
+		set_process(true)
 
 func get_pickup_info()->Dictionary:
 	return PICKUP_INFO[types.keys()[type]]
@@ -86,3 +94,8 @@ func _on_Timer_timeout():
 		despawn()
 	if respawning:
 		respawn()
+
+func _process(delta):
+	rotate_y(PI*delta*rotation_speed)
+	translation.y = sin(OS.get_ticks_msec()*bob_speed)*bob_amplitude
+	
