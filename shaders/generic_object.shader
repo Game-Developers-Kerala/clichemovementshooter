@@ -14,10 +14,11 @@ uniform float occlusion = 0.0;
 
 void fragment(){
 	vec3 RSM = texture(RSM_tex,UV).rgb;
-	ALBEDO = albedo.rgb * texture(albedo_tex,UV).rgb;
+	vec4 alb_sampled = texture(albedo_tex,UV);
+	ALBEDO = albedo.rgb * alb_sampled.rgb;
 	ROUGHNESS = roughness*RSM.r;
 	SPECULAR = specular*RSM.g;
 	METALLIC = metallic*RSM.b;
 	EMISSION = emission * texture(emission_tex,UV).rgb * emission_color.rgb;
-	
+	//ALPHA = albedo.a*alb_sampled.a;
 }

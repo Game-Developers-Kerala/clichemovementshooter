@@ -32,7 +32,7 @@ mesh = SubResource( 1 )
 
 [node name="vfx_projectile_trail" parent="." index="6" instance=ExtResource( 4 )]
 texture = ExtResource( 5 )
-modulate = Color( 0.47451, 0.866667, 0.945098, 1 )
+modulate = Color( 0.486275, 0.486275, 0.486275, 1 )
 puff_count = 16
 front_fade = 1
 interval = 0.025

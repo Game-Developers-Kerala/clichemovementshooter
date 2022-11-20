@@ -32,6 +32,7 @@ mesh = SubResource( 1 )
 
 [node name="single_direct_hit" parent="." index="3" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.01228 )
+damage = 35.0
 force = 2.0
 
 [node name="vfx_projectile_trail" parent="." index="4" instance=ExtResource( 4 )]

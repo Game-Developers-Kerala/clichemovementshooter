@@ -2,6 +2,8 @@ tool
 extends Area
 class_name pickup
 
+var origin = Vector3.ZERO
+
 # Type of the pickup, Add new items at the end
 # DONOT INSERT NEW ITEMS BETWEEN EXISTING ITEMS,
 # DONOT DELETE EXISTING ITEMS, EVEN IF UNUSED!
@@ -50,13 +52,18 @@ export(float) var respawn_interval = 20
 export(bool) var despawning = false
 export(float) var lifespan = 10
 
-export(float) var rotation_speed = 0.0
-export(float) var bob_speed = 0.0
-export(float) var bob_amplitude = 0.2
+export(bool) var anim_rotate = false
+export(float) var rotation_speed = 0.5
+export(bool) var anim_bob = false
+export(float) var bob_speed = 3.0
+export(float) var bob_amplitude = 0.1
+export(NodePath) var glow
+
 
 func _ready():
+	origin = global_translation
 	set_process(false)
-	if rotation_speed or bob_speed:
+	if anim_bob or anim_rotate:
 		set_process(true)
 
 func get_pickup_info()->Dictionary:
@@ -73,6 +80,8 @@ func on_pickup():
 
 func respawner_pickedup():
 	pickup_ready = false
+	if glow:
+		get_node(glow).hide()
 	$CollisionShape.disabled = true
 	if pickup_model:
 		pickup_model.hide()
@@ -80,6 +89,8 @@ func respawner_pickedup():
 
 func respawn():
 	pickup_ready = true
+	if glow:
+		get_node(glow).show()
 	$CollisionShape.disabled = false
 	translate(Vector3.ZERO)
 	force_update_transform()
@@ -96,6 +107,10 @@ func _on_Timer_timeout():
 		respawn()
 
 func _process(delta):
-	rotate_y(PI*delta*rotation_speed)
-	translation.y = sin(OS.get_ticks_msec()*bob_speed)*bob_amplitude
+	if Engine.editor_hint:
+		return
+	if anim_rotate:
+		rotate_y(PI*delta*rotation_speed)
+	if anim_bob:
+		global_translation.y = origin.y + sin(game.time*bob_speed)*bob_amplitude
 	

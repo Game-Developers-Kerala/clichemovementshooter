@@ -1,9 +1,11 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
 [ext_resource path="res://scripts/hud_attack_indicators.gd" type="Script" id=3]
 [ext_resource path="res://test/test_Pause.gd" type="Script" id=4]
+[ext_resource path="res://scripts/hud_announcement_label.gd" type="Script" id=5]
+[ext_resource path="res://gui/main.theme" type="Theme" id=6]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.4
@@ -130,28 +132,26 @@ one_shot = true
 [node name="Mrgn" type="MarginContainer" parent="HUD"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-
-[node name="Help" type="Label" parent="HUD/Mrgn"]
-margin_left = 9.0
-margin_right = 1014.0
-margin_bottom = 14.0
-size_flags_horizontal = 4
-size_flags_vertical = 0
-text = "MB1 Rocket | MB2 Click to grapple, MB2 again to cancel | WASD Aircontrol | Shift WallSlide & GroundSlide | Space Jump during wallslide | E Rail | Q Missiles"
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -8.0
+theme = ExtResource( 6 )
 
 [node name="Health" type="Label" parent="HUD/Mrgn"]
-margin_top = 586.0
-margin_right = 78.0
-margin_bottom = 600.0
+margin_top = 664.0
+margin_right = 97.0
+margin_bottom = 704.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
-text = "HEALTH 100"
+theme_type_variation = "TitleLabel"
+text = "100"
 
 [node name="Powerups" type="HBoxContainer" parent="HUD/Mrgn"]
-margin_left = 892.0
-margin_top = 568.0
-margin_right = 1024.0
-margin_bottom = 600.0
+margin_left = 1132.0
+margin_top = 672.0
+margin_right = 1264.0
+margin_bottom = 704.0
 size_flags_horizontal = 8
 size_flags_vertical = 8
 
@@ -184,10 +184,10 @@ text = "/MISSILE\\
 align = 1
 
 [node name="attack_indicators" type="Control" parent="HUD/Mrgn"]
-margin_left = 512.0
-margin_top = 300.0
-margin_right = 512.0
-margin_bottom = 300.0
+margin_left = 632.0
+margin_top = 352.0
+margin_right = 632.0
+margin_bottom = 352.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource( 3 )
@@ -198,10 +198,36 @@ texture = ExtResource( 2 )
 offset = Vector2( 400, 0 )
 
 [node name="FPSCounter" type="Label" parent="HUD/Mrgn"]
-margin_top = 293.0
-margin_right = 1024.0
-margin_bottom = 307.0
+margin_top = 345.0
+margin_right = 1264.0
+margin_bottom = 359.0
 text = "FPS"
+
+[node name="Announcements" type="Control" parent="HUD"]
+anchor_top = 0.15
+anchor_right = 1.0
+anchor_bottom = 0.15
+theme = ExtResource( 6 )
+
+[node name="CenterContainer" type="CenterContainer" parent="HUD/Announcements"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="HUD/Announcements/CenterContainer"]
+margin_left = 397.0
+margin_right = 882.0
+margin_bottom = 40.0
+size_flags_horizontal = 4
+theme_type_variation = "TitleLabel"
+text = "ANNOUNCEMENT"
+align = 1
+valign = 1
+script = ExtResource( 5 )
+
+[node name="Timer" type="Timer" parent="HUD/Announcements/CenterContainer/Label"]
+one_shot = true
 
 [node name="PredictionBlink" type="Timer" parent="."]
 wait_time = 0.25
@@ -214,17 +240,36 @@ one_shot = true
 pause_mode = 2
 script = ExtResource( 4 )
 
-[node name="Label" type="Label" parent="Pause"]
+[node name="Mrgn" type="MarginContainer" parent="Pause"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 6 )
+
+[node name="Paused" type="Label" parent="Pause/Mrgn"]
+margin_left = 521.0
+margin_top = 340.0
+margin_right = 759.0
+margin_bottom = 380.0
 size_flags_horizontal = 4
+theme_type_variation = "TitleLabel"
 text = "PAUSED"
 align = 1
 valign = 1
+
+[node name="Help" type="Label" parent="Pause/Mrgn"]
+margin_left = 137.0
+margin_right = 1142.0
+margin_bottom = 31.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "MB1 Rocket | MB2 Click to grapple, MB2 again to cancel | WASD Aircontrol | Shift WallSlide & GroundSlide | Space Jump during wallslide | E Rail | Q Missiles
+P Pause Menu | Click in window then pause and unpause to Re-Capture Mouse | Pause and unpause to hide help"
+align = 1
 
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]
 [connection signal="body_exited" from="GeneralArea" to="." method="_on_GeneralArea_body_exited"]
 [connection signal="body_entered" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_entered"]
 [connection signal="body_exited" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_exited"]
+[connection signal="timeout" from="HUD/Announcements/CenterContainer/Label/Timer" to="HUD/Announcements/CenterContainer/Label" method="_on_Timer_timeout"]
 [connection signal="timeout" from="PredictionBlink" to="." method="_on_PredictionBlink_timeout"]

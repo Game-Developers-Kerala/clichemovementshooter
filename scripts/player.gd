@@ -43,8 +43,6 @@ var in_jump = false
 var last_velocity = Vector3.ZERO
 var air_auto_dir = false
 
-var health := 100
-
 var stats = {
 	"health":100,
 	"weapon_rail":null,
@@ -311,13 +309,16 @@ func get_hit(args:={}):
 			snap = Vector3.ZERO
 	if args.has("origin"):
 		$HUD/Mrgn/attack_indicators.new_attack(global_transform,$Camera.global_transform,args.origin)
-		return
 
 func adjust_health(in_val):
 	stats.health = ceil(stats.health+in_val)
 	stats.health = clamp(stats.health,STAT_RANGES.health.min,STAT_RANGES.health.max)
 	$HUD/Mrgn/Health.text = "Health " + str(int(stats.health)) 
-	pass
+	if !stats.health:
+		set_process(false)
+		set_physics_process(false)
+		set_process_input(false)
+		game._on_player_death()
 
 func get_pushed(push_dict:={}):
 	print("got pushed")
