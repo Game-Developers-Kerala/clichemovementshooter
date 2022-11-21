@@ -10,12 +10,12 @@ enum states{
 
 }
 
+var player
 onready var label = $BodyRotationHelper/Label3D as Label3D
-
+onready var ARC = preload("res://scenes/enemy/arc_shooter/arc.tscn")
 
 func _ready() -> void:
 	set_state(states.CHASE)
-
 
 
 func _process(delta: float) -> void:
@@ -38,6 +38,7 @@ func _process(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	
 	match get_state():
+		
 		states.CHASE:
 			
 			#to make enemy look at player
@@ -59,15 +60,11 @@ func _physics_process(delta: float) -> void:
 			weapon.look_at(player.global_transform.origin, Vector3.UP)
 			body.rotation.x = 0
 			
-			nav_agent.set_target_location(player.global_transform.origin)
-			var target_pos = nav_agent.get_next_location()
-			var dir : Vector3 = (target_pos - global_transform.origin).normalized()
-			velocity = dir * attack_speed * delta
-			move_and_slide(velocity,Vector3.UP)
-			
 			if weapon.get_collider() == player:
-				if !player.grappling :
-					print("shoots enemy")
+				
+				if !player.grappling: 
+					if $ShootTimer.is_stopped():
+						_shoot()
 				else:
 					print("shoot grapple")
 					
@@ -76,7 +73,6 @@ func _physics_process(delta: float) -> void:
 
 
 #signals
-
 #emits when player is in-range
 func _on_ShootRange_body_entered(_body: Node) -> void:
 	
@@ -84,6 +80,9 @@ func _on_ShootRange_body_entered(_body: Node) -> void:
 		
 		print("player in range")
 		set_state(states.ATTACK)
+
+
+
 #emits when player is out of range
 func _on_ShootRange_body_exited(_body: Node) -> void:
 	
@@ -91,3 +90,11 @@ func _on_ShootRange_body_exited(_body: Node) -> void:
 		
 		print("player out of range")
 		set_state(states.CHASE)
+
+
+func _shoot():
+	
+		$ShootTimer.start()
+		var inst = ARC.instance()
+		get_tree().current_scene.add_child(inst)
+		inst.look_at_from_position(global_translation,player.global_translation,Vector3.UP)

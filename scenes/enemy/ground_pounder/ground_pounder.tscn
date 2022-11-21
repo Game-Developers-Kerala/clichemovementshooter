@@ -72,7 +72,7 @@ max_neighbors = 1
 monitorable = false
 
 [node name="CollisionShape" type="CollisionShape" parent="AttackArea"]
-transform = Transform( 10, 0, 0, 0, 1, 0, 0, 0, 10, 0, 0.953815, 0 )
+transform = Transform( 12, 0, 0, 0, 1, 0, 0, 0, 12, 0, 0.953815, 0 )
 shape = SubResource( 4 )
 
 [connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]

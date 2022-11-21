@@ -21,10 +21,9 @@ albedo_color = Color( 0.768627, 0.172549, 0.690196, 1 )
 collision_layer = 2
 collision_mask = 258
 script = ExtResource( 3 )
-path_to_weapon = NodePath("BodyRotationHelper/Aim")
+path_to_weapon = NodePath("BodyRotationHelper/RayCast")
 path_to_nav_agent = NodePath("NavigationAgent")
 path_to_BodyRotationHelper = NodePath("BodyRotationHelper")
-path_to_shootRange = NodePath("ShootRange")
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.9, 0 )
@@ -47,8 +46,8 @@ transform = Transform( 3, 0, 0, 0, -1.31134e-07, 3, 0, -3, -1.31134e-07, 0, 0.25
 modulate = Color( 0, 0, 0, 1 )
 texture = ExtResource( 2 )
 
-[node name="Aim" type="RayCast" parent="BodyRotationHelper"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.38719, -0.0791509 )
+[node name="RayCast" type="RayCast" parent="BodyRotationHelper"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.33705, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -200 )
 
@@ -70,13 +69,17 @@ neighbor_dist = 2000.0
 max_neighbors = 2
 
 [node name="ShootRange" type="Area" parent="." groups=["enemy"]]
-transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 2.95322, 0 )
+transform = Transform( 8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 2.95322, 0 )
 collision_layer = 2
 collision_mask = 257
 monitorable = false
 
 [node name="CollisionShape" type="CollisionShape" parent="ShootRange"]
 shape = SubResource( 4 )
+
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
 
 [connection signal="body_entered" from="ShootRange" to="." method="_on_ShootRange_body_entered"]
 [connection signal="body_exited" from="ShootRange" to="." method="_on_ShootRange_body_exited"]

@@ -28,7 +28,6 @@ func terminate(recepient:Node=null):
 	if trail:
 		stop_trail()
 	queue_free()
-
 func _on_Timer_timeout():
 	terminate()
 

@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=2]
-
-[ext_resource path="res://scripts/enemy/enemy_arc_gun.gd" type="Script" id=1]
-
-[node name="EnemyArcGun" type="RayCast"]
-cast_to = Vector3( 0, 0, -200 )
-script = ExtResource( 1 )
