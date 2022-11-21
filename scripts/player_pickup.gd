@@ -92,6 +92,7 @@ func respawn():
 	if glow:
 		get_node(glow).show()
 	$CollisionShape.disabled = false
+	yield(get_tree(),"idle_frame")
 	translate(Vector3.ZERO)
 	force_update_transform()
 	if pickup_model:

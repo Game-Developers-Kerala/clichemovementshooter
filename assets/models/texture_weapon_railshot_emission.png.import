@@ -1,0 +1,35 @@
+[remap]
+
+importer="texture"
+type="StreamTexture"
+path="res://.import/texture_weapon_railshot_emission.png-48eab35fdae096cc8c79ee7d06230fa7.stex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/models/texture_weapon_railshot_emission.png"
+dest_files=[ "res://.import/texture_weapon_railshot_emission.png-48eab35fdae096cc8c79ee7d06230fa7.stex" ]
+
+[params]
+
+compress/mode=0
+compress/lossy_quality=0.7
+compress/hdr_mode=0
+compress/bptc_ldr=0
+compress/normal_map=0
+flags/repeat=true
+flags/filter=false
+flags/mipmaps=false
+flags/anisotropic=false
+flags/srgb=2
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/HDR_as_SRGB=false
+process/invert_color=false
+process/normal_map_invert_y=false
+stream=false
+size_limit=0
+detect_3d=false
+svg/scale=1.0
