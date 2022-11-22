@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://scenes/vfx_glow_base.tscn" type="PackedScene" id=1]
+[ext_resource path="res://shaders/glow.shader" type="Shader" id=2]
+[ext_resource path="res://scripts/player_pickup.gd" type="Script" id=3]
+[ext_resource path="res://shaders/texture_gradient_beam_rgb_32.png" type="Texture" id=4]
+
+[sub_resource type="SphereShape" id=1]
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 2 )
+shader_param/opacity = 1.0
+shader_param/color1 = Color( 1, 0, 0, 0.235294 )
+shader_param/color2 = Color( 1, 0, 0, 0.270588 )
+shader_param/color3 = Color( 1, 1, 1, 0.670588 )
+shader_param/anim_size = 0.1
+shader_param/anim_speed = 3.0
+shader_param/gradient = ExtResource( 4 )
+
+[node name="player_pickup" type="Area"]
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0 )
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource( 3 )
+type = 5
+respawning = true
+respawn_interval = 10.0
+lifespan = 10
+anim_rotate = true
+glow = NodePath("vfx_glow")
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="vfx_glow" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.591801, 0, 0, 0, 0.591801, 0, 0, 0, 0.591801, 0, 0, 0 )
+material/0 = SubResource( 2 )
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

@@ -1,0 +1,58 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://shaders/generic_object.shader" type="Shader" id=1]
+[ext_resource path="res://assets/models/mesh_railshot.obj" type="ArrayMesh" id=2]
+[ext_resource path="res://assets/models/texture_weapon_railshot_color.png" type="Texture" id=3]
+[ext_resource path="res://assets/models/texture_weapon_railshot_emission.png" type="Texture" id=4]
+
+[sub_resource type="ShaderMaterial" id=1]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/emission_color = Color( 1, 1, 1, 1 )
+shader_param/emission = 1.0
+shader_param/roughness = 0.8
+shader_param/specular = 0.5
+shader_param/metallic = 0.0
+shader_param/occlusion = 0.0
+shader_param/albedo_tex = ExtResource( 3 )
+shader_param/emission_tex = ExtResource( 4 )
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends MeshInstance
+
+onready var mat = get_surface_material(0)
+
+enum emit_anims {none,idle,shoot}
+var emit_anim :int = emit_anims.idle
+var emission := 0.9
+
+func _ready():
+	pass
+
+func set_emit_anim(in_anim:int):
+	match in_anim:
+		emit_anims.none:
+			set_process(false)
+		emit_anims.idle:
+			set_process(true)
+		emit_anims.shoot:
+			emission = 2.0
+			mat.set_shader_param(\"emission\",emission)
+			set_process(true)
+
+func _process(delta):
+	if emit_anim == emit_anims.idle:
+		emission = 0.9+sin(game.time*4)*0.2
+		mat.set_shader_param(\"emission\",emission)
+		return
+	emission = max(emission-delta*2,0)
+	mat.set_shader_param(\"emission\",emission)
+	if !emission:
+		set_emit_anim(emit_anims.none)
+"
+
+[node name="railshot_model" type="MeshInstance"]
+mesh = ExtResource( 2 )
+material/0 = SubResource( 1 )
+script = SubResource( 2 )

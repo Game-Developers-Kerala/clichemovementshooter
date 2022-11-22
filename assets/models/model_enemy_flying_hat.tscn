@@ -6,7 +6,7 @@
 [ext_resource path="res://assets/models/mesh_enemy_flying_hat.obj" type="ArrayMesh" id=4]
 
 [sub_resource type="Animation" id=7]
-length = 0.001
+length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath("MeshHolder/MeshInstance:visible")
 tracks/0/interp = 1
@@ -22,7 +22,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=2]
 resource_name = "death"
-length = 5.0
+length = 2.5
 step = 0.05
 tracks/0/type = "transform"
 tracks/0/path = NodePath("MeshHolder")
@@ -138,7 +138,7 @@ anims/idle = SubResource( 5 )
 anims/idle_still = SubResource( 6 )
 
 [node name="MeshHolder" type="Spatial" parent="."]
-transform = Transform( 0.999272, -0.038161, 0, 0.038161, 0.999272, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 0.658953, -0.752184, 0, 0.752184, 0.658953, 0, 0, 0 )
 __meta__ = {
 "_edit_group_": true
 }

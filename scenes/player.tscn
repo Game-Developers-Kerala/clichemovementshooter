@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
@@ -10,6 +10,9 @@
 [ext_resource path="res://assets/models/texture_weapon_rocket_launcher_rsm.png" type="Texture" id=8]
 [ext_resource path="res://assets/models/texture_weapon_rocket_launcher_color.png" type="Texture" id=9]
 [ext_resource path="res://assets/models/mesh_rocket_launcher.obj" type="ArrayMesh" id=10]
+[ext_resource path="res://assets/models/model_railshot.tscn" type="PackedScene" id=11]
+[ext_resource path="res://assets/models/texture_weapon_railshot_color.png" type="Texture" id=12]
+[ext_resource path="res://assets/models/texture_weapon_railshot_emission.png" type="Texture" id=13]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.4
@@ -34,6 +37,19 @@ shader_param/occlusion = 0.0
 shader_param/albedo_tex = ExtResource( 9 )
 shader_param/RSM_tex = ExtResource( 8 )
 
+[sub_resource type="ShaderMaterial" id=13]
+resource_local_to_scene = true
+shader = ExtResource( 7 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/emission_color = Color( 1, 1, 1, 1 )
+shader_param/emission = 1.0
+shader_param/roughness = 0.8
+shader_param/specular = 0.5
+shader_param/metallic = 0.0
+shader_param/occlusion = 0.0
+shader_param/albedo_tex = ExtResource( 12 )
+shader_param/emission_tex = ExtResource( 13 )
+
 [sub_resource type="SphereShape" id=6]
 radius = 0.5
 
@@ -56,6 +72,27 @@ size = Vector3( 0.05, 0.05, 1 )
 flags_transparent = true
 params_cull_mode = 1
 albedo_color = Color( 1, 1, 1, 0.356863 )
+
+[sub_resource type="Animation" id=11]
+resource_name = "idle"
+tracks/0/type = "transform"
+tracks/0/path = NodePath("Camera/weapon_holder")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1 )
+
+[sub_resource type="Animation" id=12]
+resource_name = "shoot_rocket"
+step = 0.05
+tracks/0/type = "transform"
+tracks/0/path = NodePath("Camera/weapon_holder")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, -0.244977, -0.238044, 0.0510026, 0, 0, 0.998699, 1, 1, 1, 0.3, 1, 0, -0.242598, -0.261273, -0.0317073, 0, 0, 0.999497, 1, 1, 1, 0.7, 1, 0, -0.242598, -0.261273, 0.00846038, 0, 0, 0.999964, 1, 1, 1, 1, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1 )
 
 [node name="Player" type="KinematicBody" groups=["player"]]
 collision_mask = 258
@@ -80,11 +117,20 @@ transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0
 mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
-[node name="rocketlauncher" type="MeshInstance" parent="Camera"]
-transform = Transform( 0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, -0.206908, -0.370911 )
+[node name="weapon_holder" type="Spatial" parent="Camera"]
+transform = Transform( 1, 0, 0, 0, 0.999984, -0.00564469, 0, 0.00564469, 0.999984, 0, -0.242598, -0.261273 )
+
+[node name="rocketlauncher" type="MeshInstance" parent="Camera/weapon_holder"]
+transform = Transform( 0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.0356899, -0.109638 )
 cast_shadow = 0
 mesh = ExtResource( 10 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
+
+[node name="railshot_model" parent="Camera/weapon_holder" instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.102661, 0.119312, -0.0142242 )
+cast_shadow = 0
+material/0 = SubResource( 13 )
 
 [node name="GeneralArea" type="Area" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0 )
@@ -288,6 +334,10 @@ size_flags_vertical = 0
 text = "MB1 Rocket | MB2 Click to grapple, MB2 again to cancel | WASD Aircontrol | Shift WallSlide & GroundSlide | Space Jump during wallslide | E Rail | Q Missiles
 P Pause Menu | Click in window then pause and unpause to Re-Capture Mouse | Pause and unpause to hide help"
 align = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/idle = SubResource( 11 )
+anims/shoot_rocket = SubResource( 12 )
 
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]

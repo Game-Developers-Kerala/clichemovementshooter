@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/shared/projectile_straight.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/shared/single_direct_hit.tscn" type="PackedScene" id=2]
@@ -15,6 +15,16 @@ rings = 1
 
 [sub_resource type="SpatialMaterial" id=2]
 albedo_color = Color( 0.988235, 0.552941, 0.129412, 1 )
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends MeshInstance
+
+func _ready():
+	hide()
+	yield(get_tree().create_timer(0.03),\"timeout\")
+	show()
+	pass
+"
 
 [sub_resource type="SphereMesh" id=3]
 radius = 0.05
@@ -36,8 +46,10 @@ trail = NodePath("vfx_projectile_trail")
 
 [node name="Body" type="MeshInstance" parent="." index="2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.137273 )
+visible = false
 mesh = SubResource( 1 )
 material/0 = SubResource( 2 )
+script = SubResource( 5 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Body" index="0"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0.0939822 )

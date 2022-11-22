@@ -28,7 +28,7 @@ const PICKUP_MODELS = {
 				"health_medium":"",
 				"health_large":"",
 				"health_super":"",
-				"weapon_rail":"res://test/dummyrailpickup.tscn",
+				"weapon_rail":"res://assets/models/model_pickup_railshot.tscn",
 				"weapon_missilepack":"res://assets/models/model_pickup_missile_pack.tscn",
 				"powerup_spikecage":"",
 				}

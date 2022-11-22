@@ -245,6 +245,9 @@ func shoot():
 	if !$RocketCooldown.is_stopped():
 		return
 	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
+	$AnimationPlayer.stop()
+	$AnimationPlayer.play("shoot_rocket",0.0)
+	$AnimationPlayer.queue("idle")
 	var rkt = ROCKET.instance()
 	get_tree().current_scene.add_child(rkt)
 	var campos = $Camera.global_translation
@@ -256,6 +259,9 @@ func shoot_rail():
 		return
 	print(OS.get_ticks_msec()," shot rail")
 	stats.weapon_rail.shoot()
+	$AnimationPlayer.stop()
+	$AnimationPlayer.play("shoot_rocket",0.0)
+	$AnimationPlayer.queue("idle")
 	$HUD/Mrgn/Powerups/Rail/Label.hide()
 
 func shoot_missile_pack():
