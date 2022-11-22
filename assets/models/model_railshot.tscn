@@ -42,17 +42,23 @@ func set_emit_anim(in_anim:int):
 			set_process(true)
 
 func _process(delta):
-	if emit_anim == emit_anims.idle:
-		emission = 0.9+sin(game.time*4)*0.2
-		mat.set_shader_param(\"emission\",emission)
-		return
-	emission = max(emission-delta*2,0)
-	mat.set_shader_param(\"emission\",emission)
-	if !emission:
-		set_emit_anim(emit_anims.none)
+	match emit_anim:
+		emit_anims.none:
+			set_process(false)
+			return
+		emit_anims.idle:
+			emission = 0.9+sin(game.time*4)*0.2
+			mat.set_shader_param(\"emission\",emission)
+			return
+		emit_anims.shoot:
+			emission = max(emission-delta*2,0)
+			mat.set_shader_param(\"emission\",emission)
+			if !emission:
+				set_emit_anim(emit_anims.none)
 "
 
 [node name="railshot_model" type="MeshInstance"]
+cast_shadow = 0
 mesh = ExtResource( 2 )
 material/0 = SubResource( 1 )
 script = SubResource( 2 )

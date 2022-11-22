@@ -23,6 +23,7 @@ trail = NodePath("vfx_projectile_trail")
 
 [node name="Explosion" parent="." index="4" instance=ExtResource( 2 )]
 caused_by_player = true
+push_player = false
 max_damage = 50.0
 min_damage = 30.0
 

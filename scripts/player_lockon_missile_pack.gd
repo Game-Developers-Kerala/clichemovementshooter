@@ -54,7 +54,7 @@ func _process(delta):
 			var indic = LOCK_INDICATOR.instance()
 			popped.add_child(indic)
 			indic.translation = Vector3.UP
-			locked_enemies.push_back([popped,0,indic])
+			locked_enemies.push_back([popped,0]) # 0 means the enemy was shot at 0 times as of now
 #			print("locked enemy:",popped.name)
 
 func _on_player_lockon_missile_pack_body_entered(body):
@@ -95,9 +95,6 @@ func _on_Timer_timeout():
 	if missiles_fired == MISSILE_COUNT:
 		print("all missiles fired")
 		pack_position_lerp_targ = 0.2
-		for enemy in locked_enemies:
-			if is_instance_valid(enemy[0]):
-				enemy[2].queue_free()
 		$Timer.stop()
 		yield(get_tree().create_timer(0.2),"timeout")
 		queue_free()

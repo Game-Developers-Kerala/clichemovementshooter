@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
@@ -51,7 +51,7 @@ shader_param/albedo_tex = ExtResource( 12 )
 shader_param/emission_tex = ExtResource( 13 )
 
 [sub_resource type="SphereShape" id=6]
-radius = 0.5
+radius = 0.569312
 
 [sub_resource type="SphereShape" id=7]
 radius = 0.2
@@ -73,6 +73,21 @@ flags_transparent = true
 params_cull_mode = 1
 albedo_color = Color( 1, 1, 1, 0.356863 )
 
+[sub_resource type="Animation" id=17]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Camera/weapon_holder/railshot_model:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+
 [sub_resource type="Animation" id=11]
 resource_name = "idle"
 tracks/0/type = "transform"
@@ -82,6 +97,108 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = PoolRealArray( 0, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1 )
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:gun_ready")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/2/type = "transform"
+tracks/2/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = PoolRealArray( 0, 1, 0.102661, 0.119312, -0.0142242, 0, 0, 0, 1, 1, 1, 1 )
+
+[sub_resource type="Animation" id=14]
+resource_name = "rail_attach"
+tracks/0/type = "transform"
+tracks/0/path = NodePath("Camera/weapon_holder")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1, 0.1, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1, 0.2, 1, -0.0191929, -0.242598, -0.260612, 0, 0.0543925, 0, 0.99852, 1, 1, 1, 0.3, 1, 0, -0.242598, -0.261273, 0, -0.0237779, 0, 0.999717, 1, 1, 1, 0.5, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1 )
+tracks/1/type = "transform"
+tracks/1/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = PoolRealArray( 0, 1, 0.277488, 0.119312, 0.183054, 0, -0.506583, 0, 0.862191, 1, 1, 1, 0.1, 1, 0.102661, 0.119312, -0.0142242, 0, 0, 0, 1, 1, 1, 1 )
+tracks/2/type = "value"
+tracks/2/path = NodePath("Camera/weapon_holder/railshot_model:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=15]
+resource_name = "rail_detach"
+length = 0.5
+tracks/0/type = "transform"
+tracks/0/path = NodePath("Camera/weapon_holder")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1, 0.1, 1, 0.0149067, -0.242598, -0.259547, 0, -0.0575989, 0, 0.99834, 1, 1, 1, 0.3, 1, -0.00191797, -0.242598, -0.261212, 0, 0.0160214, 0, 0.999872, 1, 1, 1, 0.5, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1 )
+tracks/1/type = "transform"
+tracks/1/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = PoolRealArray( 0, 1, 0.102661, 0.119312, -0.0142242, 0, 0, 0, 1, 1, 1, 1, 0.1, 1, 0.172592, 0.119312, 0.0646871, 0, -0.210891, 0, 0.977509, 1, 1, 1, 0.3, 1, 0.277488, 0.119312, 0.183054, 0, -0.506583, 0, 0.862191, 1, 1, 1 )
+tracks/2/type = "value"
+tracks/2/path = NodePath("Camera/weapon_holder/railshot_model:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:gun_ready")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=16]
+resource_name = "shoot_rail"
+length = 0.5
+step = 0.05
+tracks/0/type = "transform"
+tracks/0/path = NodePath("Camera/weapon_holder")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, -0.242598, -0.22378, 0, 0, 0, 1, 1, 1, 1, 0.2, 1, 0, -0.242598, -0.212476, 0, 0, 0, 1, 1, 1, 1, 0.5, 1, 0, -0.242667, -0.263939, -0.0128714, 0, 0, 0.999917, 1, 1, 1 )
 
 [sub_resource type="Animation" id=12]
 resource_name = "shoot_rocket"
@@ -93,6 +210,9 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = PoolRealArray( 0, 1, 0, -0.244977, -0.238044, 0.0510026, 0, 0, 0.998699, 1, 1, 1, 0.3, 1, 0, -0.242598, -0.261273, -0.0317073, 0, 0, 0.999497, 1, 1, 1, 0.7, 1, 0, -0.242598, -0.261273, 0.00846038, 0, 0, 0.999964, 1, 1, 1, 1, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1 )
+
+[sub_resource type="SphereShape" id=18]
+radius = 0.18
 
 [node name="Player" type="KinematicBody" groups=["player"]]
 collision_mask = 258
@@ -118,10 +238,10 @@ mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
 [node name="weapon_holder" type="Spatial" parent="Camera"]
-transform = Transform( 1, 0, 0, 0, 0.999984, -0.00564469, 0, 0.00564469, 0.999984, 0, -0.242598, -0.261273 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.242598, -0.261273 )
 
 [node name="rocketlauncher" type="MeshInstance" parent="Camera/weapon_holder"]
-transform = Transform( 0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.0356899, -0.109638 )
+transform = Transform( 0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.73052, 0, 0.0356899, -0.109638 )
 cast_shadow = 0
 mesh = ExtResource( 10 )
 skeleton = NodePath("../..")
@@ -129,7 +249,7 @@ material/0 = SubResource( 10 )
 
 [node name="railshot_model" parent="Camera/weapon_holder" instance=ExtResource( 11 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.102661, 0.119312, -0.0142242 )
-cast_shadow = 0
+visible = false
 material/0 = SubResource( 13 )
 
 [node name="GeneralArea" type="Area" parent="."]
@@ -336,8 +456,16 @@ P Pause Menu | Click in window then pause and unpause to Re-Capture Mouse | Paus
 align = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 17 )
 anims/idle = SubResource( 11 )
+anims/rail_attach = SubResource( 14 )
+anims/rail_detach = SubResource( 15 )
+anims/shoot_rail = SubResource( 16 )
 anims/shoot_rocket = SubResource( 12 )
+
+[node name="CollisionShape2" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.41908, -0.388203 )
+shape = SubResource( 18 )
 
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]

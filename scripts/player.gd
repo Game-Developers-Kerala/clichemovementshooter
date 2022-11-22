@@ -53,10 +53,12 @@ const STAT_RANGES = {
 		"health":{"min":0,"max":100}
 		}
 
+export(bool) var gun_ready = true
 const ROCKET_COOLDOWN_DUR = 0.7
 const ROCKET = preload("res://scenes/player_rocket.tscn")
 const RAILSHOT = preload("res://scenes/player_railshot.tscn")
 const MISSILE_PACK = preload("res://scenes/player_lockon_missile_pack.tscn")
+
 
 var predict_past_pos :PoolVector3Array = []
 var predict_past_vel :PoolVector3Array = []
@@ -242,10 +244,10 @@ func change_movestate(to_state,args:={}):
 	movestate = to_state
 
 func shoot():
-	if !$RocketCooldown.is_stopped():
+	if !gun_ready:
 		return
-	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
-	$AnimationPlayer.stop()
+	gun_ready = false
+	stop_animation()
 	$AnimationPlayer.play("shoot_rocket",0.0)
 	$AnimationPlayer.queue("idle")
 	var rkt = ROCKET.instance()
@@ -257,10 +259,14 @@ func shoot():
 func shoot_rail():
 	if !is_instance_valid(stats.weapon_rail):
 		return
+	if !gun_ready:
+		return
+	gun_ready = false
 	print(OS.get_ticks_msec()," shot rail")
 	stats.weapon_rail.shoot()
-	$AnimationPlayer.stop()
-	$AnimationPlayer.play("shoot_rocket",0.0)
+	stop_animation()
+	$AnimationPlayer.play("shoot_rail",0.0)
+	$AnimationPlayer.queue("rail_detach")
 	$AnimationPlayer.queue("idle")
 	$HUD/Mrgn/Powerups/Rail/Label.hide()
 
@@ -287,6 +293,8 @@ func pick_up(item:pickup):
 			"weapon_rail":
 				if is_instance_valid(stats[key]):
 					return
+				$AnimationPlayer.play("rail_attach")
+				$AnimationPlayer.queue("idle")
 				stats[key] = RAILSHOT.instance()
 				$Camera.add_child(stats[key])
 				$HUD/Mrgn/Powerups/Rail/Label.show()
@@ -448,3 +456,8 @@ func _on_PredictionBlink_timeout():
 				temp_vel -= Vector3.UP*GRAVITY*0.25
 				predict_future_pos[i] = curPos + temp_vel*(i+1)*interval
 #				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+
+func stop_animation():
+	if $AnimationPlayer.current_animation == "rail_detach":
+		$Camera/weapon_holder/railshot_model.hide()
+	$AnimationPlayer.stop()

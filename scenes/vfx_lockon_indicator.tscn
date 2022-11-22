@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Sprite3D
+
+func _ready():
+	yield(get_tree().create_timer(1.2),\"timeout\")
+	queue_free()
+"
 
 [node name="indic" type="Sprite3D"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0947, 0 )
@@ -10,3 +18,4 @@ no_depth_test = true
 fixed_size = true
 alpha_cut = 1
 texture = ExtResource( 1 )
+script = SubResource( 1 )

@@ -22,30 +22,11 @@ const PICKUP_INFO = {
 				"powerup_spikecage":{"powerup_spikecage":true},
 				}
 
-const PICKUP_MODELS = {
-				"none":"",
-				"health_small":"",
-				"health_medium":"",
-				"health_large":"",
-				"health_super":"",
-				"weapon_rail":"res://assets/models/model_pickup_railshot.tscn",
-				"weapon_missilepack":"res://assets/models/model_pickup_missile_pack.tscn",
-				"powerup_spikecage":"",
-				}
-
-export(types) var type = types.none setget set_type
+export(types) var type = types.none
+export var model_node :NodePath
 var pickup_model :Node = null
 var pickup_ready :bool = true
 
-func set_type(new_type:int):
-	type = new_type
-	if is_instance_valid(pickup_model):
-		pickup_model.queue_free()
-	var modelfilepath = get_model_filepath()
-	if modelfilepath:
-		pickup_model = load(modelfilepath).instance()
-		add_child(pickup_model)
-#		pickup_model.global_translation = global_translation
 
 export(bool) var respawning = false
 export(float) var respawn_interval = 20
@@ -61,6 +42,8 @@ export(NodePath) var glow
 
 
 func _ready():
+	if model_node:
+		pickup_model = get_node(model_node)
 	origin = global_translation
 	set_process(false)
 	if anim_bob or anim_rotate:
@@ -69,9 +52,6 @@ func _ready():
 func get_pickup_info()->Dictionary:
 	return PICKUP_INFO[types.keys()[type]]
 
-func get_model_filepath():
-	return PICKUP_MODELS[types.keys()[type]]
-	
 func on_pickup():
 	if respawning:
 		respawner_pickedup()
@@ -110,8 +90,25 @@ func _on_Timer_timeout():
 func _process(delta):
 	if Engine.editor_hint:
 		return
+	if !anim_rotate and !anim_bob:
+		set_process(false)
+		return
 	if anim_rotate:
 		rotate_y(PI*delta*rotation_speed)
 	if anim_bob:
 		global_translation.y = origin.y + sin(game.time*bob_speed)*bob_amplitude
-	
+
+
+func _on_VisibilityNotifier_camera_entered(camera):
+	set_process(true)
+	if is_instance_valid(pickup_model):
+		pickup_model.set_process(true)
+	show()
+#	print("showing pickup")
+
+func _on_VisibilityNotifier_camera_exited(camera):
+	set_process(false)
+	if is_instance_valid(pickup_model):
+		pickup_model.set_process(false)
+	hide()
+#	print("hiding pickup")
