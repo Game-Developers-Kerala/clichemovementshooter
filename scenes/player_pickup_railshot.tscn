@@ -10,6 +10,7 @@
 [ext_resource path="res://assets/models/texture_weapon_railshot_emission.png" type="Texture" id=8]
 
 [sub_resource type="SphereShape" id=1]
+radius = 1.616
 
 [sub_resource type="ShaderMaterial" id=2]
 resource_local_to_scene = true
@@ -35,6 +36,7 @@ shader_param/anim_speed = 3.0
 shader_param/gradient = ExtResource( 4 )
 
 [node name="rail_pickup" type="Area"]
+visible = false
 collision_layer = 4
 collision_mask = 0
 monitoring = false

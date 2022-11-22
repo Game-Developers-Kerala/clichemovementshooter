@@ -1,7 +1,7 @@
 extends RayCast
 
 const RAIL_VFX = preload("res://scenes/vfx_railshot.tscn")
-
+const ORGN = Vector3(0.104,-0.121,-0.4)
 func _ready():
 	$Area.translate(Vector3.ZERO)
 
@@ -25,6 +25,7 @@ func shoot():
 					print(area.hit_receiver.name," hit at:",bodydist)
 	var vfx = RAIL_VFX.instance()
 	get_tree().current_scene.add_child(vfx)
-	var vfx_offset = global_transform.basis.x - global_transform.basis.y
-	vfx.init(from+vfx_offset*0.25,to)
+	var gtb = global_transform.basis
+	var vfx_offset = gtb.x*ORGN.x+gtb.y*ORGN.y+gtb.z*ORGN.z
+	vfx.init(from+vfx_offset,to)
 	queue_free()

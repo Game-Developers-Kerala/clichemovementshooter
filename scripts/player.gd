@@ -54,6 +54,7 @@ const STAT_RANGES = {
 		}
 
 export(bool) var gun_ready = true
+export(bool) var rocket_ready = true
 const ROCKET_COOLDOWN_DUR = 0.7
 const ROCKET = preload("res://scenes/player_rocket.tscn")
 const RAILSHOT = preload("res://scenes/player_railshot.tscn")
@@ -245,6 +246,8 @@ func change_movestate(to_state,args:={}):
 
 func shoot():
 	if !gun_ready:
+		return
+	if !rocket_ready:
 		return
 	gun_ready = false
 	stop_animation()
