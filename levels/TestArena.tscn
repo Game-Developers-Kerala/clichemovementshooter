@@ -1,11 +1,8 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scenes/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://levels/ceiling_tile.png" type="Texture" id=2]
-[ext_resource path="res://scenes/enemy/ground_pounder/ground_pounder.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/player_pickup.tscn" type="PackedScene" id=4]
-[ext_resource path="res://scenes/enemy/arc_shooter/arc_shooter.tscn" type="PackedScene" id=5]
-[ext_resource path="res://scenes/enemy/wizard/wizard.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/enemy/EnemyManager.tscn" type="PackedScene" id=7]
 
 [sub_resource type="NavigationMesh" id=2]
@@ -124,21 +121,23 @@ respawning = true
 respawn_interval = 10.0
 
 [node name="EnemyManager" parent="." instance=ExtResource( 7 )]
-path_to_player = NodePath("../Player")
-arc_enemy_spawner_path = NodePath("Position3D")
-ground_pounder_spawner_path = NodePath("Position3D2")
-wizard_spawner_path = NodePath("Position3D3")
-arc_enemy = ExtResource( 5 )
-ground_pounder = ExtResource( 3 )
-wizard = ExtResource( 6 )
+arc_enemy_spawner_path = NodePath("ArcGirlSpawner")
+ground_pounder_spawner_path = NodePath("GroundPounderSpawner")
 
-[node name="Position3D" type="Position3D" parent="EnemyManager"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.545914, 0.760506, -0.150414 )
+[node name="ArcGirlSpawner" type="Node" parent="EnemyManager"]
 
-[node name="Position3D2" type="Position3D" parent="EnemyManager"]
-visible = false
+[node name="Position3D" type="Position3D" parent="EnemyManager/ArcGirlSpawner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 21.0485, 0.554031, 5.37662 )
 
-[node name="Position3D3" type="Position3D" parent="EnemyManager"]
-visible = false
+[node name="Position3D2" type="Position3D" parent="EnemyManager/ArcGirlSpawner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -18.2122, 0, -12.9948 )
 
-[connection signal="spawn" from="EnemyManager" to="EnemyManager" method="_on_EnemyManager_spawn"]
+[node name="GroundPounderSpawner" type="Node" parent="EnemyManager"]
+
+[node name="Position3D" type="Position3D" parent="EnemyManager/GroundPounderSpawner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.8255, 0, -10.4372 )
+
+[node name="Position3D2" type="Position3D" parent="EnemyManager/GroundPounderSpawner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.10223, 0, 0 )
+
+[node name="WizardSpawner" type="Node" parent="EnemyManager"]

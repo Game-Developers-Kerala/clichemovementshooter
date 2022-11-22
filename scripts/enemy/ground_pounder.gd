@@ -7,7 +7,6 @@ enum states{
 	DEATH
 }
 
-var player
 var meele_speed = 200
 var shockwave = preload("res://scenes/enemy/ground_pounder/circular_wave.tscn")
 #var straight_wave = preload("res://scenes/enemy/ground_pounder/straight_wave.tscn")
@@ -17,6 +16,7 @@ onready var attack_area : Area = $AttackArea
 
 
 func _ready() -> void:
+	player = get_tree().current_scene.get_node('Player')
 	set_state(states.CHASE)
 	
 func _process(delta: float) -> void:
@@ -62,7 +62,8 @@ func _physics_process(delta: float) -> void:
 			
 			if weapon.get_collider() == player:
 				if player.in_slide :
-					pass
+					var inst = shockwave.instance()
+					get_tree().current_scene.add_child(inst)
 			
 		states.DEATH:
 			pass

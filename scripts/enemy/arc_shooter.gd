@@ -10,11 +10,11 @@ enum states{
 
 }
 
-var player
 onready var label = $BodyRotationHelper/Label3D as Label3D
 onready var ARC = preload("res://scenes/enemy/arc_shooter/arc.tscn")
 
 func _ready() -> void:
+	player = get_tree().current_scene.get_node('Player')
 	set_state(states.CHASE)
 
 
@@ -68,6 +68,7 @@ func _physics_process(delta: float) -> void:
 				else:
 					print("shoot grapple")
 					
+					
 		states.DEATH:
 			pass
 
@@ -98,3 +99,10 @@ func _shoot():
 		var inst = ARC.instance()
 		get_tree().current_scene.add_child(inst)
 		inst.look_at_from_position(global_translation,player.global_translation,Vector3.UP)
+
+
+func _shoot_grapple():
+	
+	$ShootTimer.start()
+	var inst = ARC.instance()
+	get_tree().current_scene.add_child(inst)

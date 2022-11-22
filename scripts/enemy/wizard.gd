@@ -10,11 +10,12 @@ enum states{
 
 }
 
-var player
 onready var label = $BodyRotationHelper/Label3D as Label3D
 
 
 func _ready() -> void:
+	
+	player = get_tree().current_scene.get_node('Player')
 	set_state(states.CHASE)
 
 

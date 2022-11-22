@@ -8,7 +8,6 @@ func _ready() -> void:
 	monitoring = true
 
 
-
 func _physics_process(delta: float) -> void:
 	
 	if scale < Vector3(14,0,14):
@@ -17,10 +16,8 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 		
 		
-		
 func _on_CircularWave_body_entered(body: Node) -> void:
 	
 	if body.is_in_group("player"):
-		
-		#set("monitoring",false)
 		print("player entered")
+		$CollisionShape.set_disabled(false)

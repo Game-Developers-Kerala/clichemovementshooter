@@ -15,8 +15,7 @@ export var attack_speed : float = 75
 var health : float = 100
 var velocity : Vector3 = Vector3.ZERO 
 var current_state setget set_state, get_state
-
-
+var player : KinematicBody
 
 #onready var player = get_parent().get_node("Player")
 

@@ -48,6 +48,10 @@ config/name="Clichemovementshooter"
 run/main_scene="res://levels/testarena.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+game="*res://scripts/globals/game.gd"
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
