@@ -61,9 +61,11 @@ func _physics_process(delta: float) -> void:
 			body.rotation.x = 0
 			
 			if weapon.get_collider() == player:
-				if player.in_slide :
+				if player.in_slide and $circlewaveCooldown.is_stopped():
+					$circlewaveCooldown.start()
 					var inst = shockwave.instance()
 					get_tree().current_scene.add_child(inst)
+					inst.global_translation = global_translation
 			
 		states.DEATH:
 			pass

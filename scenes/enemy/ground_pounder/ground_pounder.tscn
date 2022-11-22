@@ -69,11 +69,16 @@ neighbor_dist = 2000.0
 max_neighbors = 1
 
 [node name="AttackArea" type="Area" parent="."]
+collision_layer = 0
 monitorable = false
 
 [node name="CollisionShape" type="CollisionShape" parent="AttackArea"]
 transform = Transform( 12, 0, 0, 0, 1, 0, 0, 0, 12, 0, 0.953815, 0 )
 shape = SubResource( 4 )
+
+[node name="circlewaveCooldown" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
 
 [connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]
 [connection signal="body_exited" from="AttackArea" to="." method="_on_AttackArea_body_exited"]

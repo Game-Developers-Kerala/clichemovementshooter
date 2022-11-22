@@ -1,11 +1,11 @@
 extends Area
 
-var unit : Vector3 = Vector3(4,0,4)
+var unit : Vector3 = Vector3(8,0,8)
 
 
 func _ready() -> void:
-	
-	monitoring = true
+	translate(Vector3.ONE)
+	force_update_transform()
 
 
 func _physics_process(delta: float) -> void:
@@ -15,9 +15,8 @@ func _physics_process(delta: float) -> void:
 	else :
 		queue_free()
 		
-		
 func _on_CircularWave_body_entered(body: Node) -> void:
-	
+	disconnect("body_entered",self,"_on_CircularWave_body_entered")
 	if body.is_in_group("player"):
-		print("player entered")
-		$CollisionShape.set_disabled(false)
+		print(self.name,"player caught in WAVE!!!")
+		$single_direct_hit.hit(body)

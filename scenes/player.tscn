@@ -130,26 +130,26 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="Help" type="Label" parent="HUD/Mrgn"]
-margin_left = 9.0
-margin_right = 1014.0
+margin_left = 137.0
+margin_right = 1142.0
 margin_bottom = 14.0
 size_flags_horizontal = 4
 size_flags_vertical = 0
 text = "MB1 Rocket | MB2 Click to grapple, MB2 again to cancel | WASD Aircontrol | Shift WallSlide & GroundSlide | Space Jump during wallslide | E Rail | Q Missiles"
 
 [node name="Health" type="Label" parent="HUD/Mrgn"]
-margin_top = 586.0
+margin_top = 706.0
 margin_right = 78.0
-margin_bottom = 600.0
+margin_bottom = 720.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
 text = "HEALTH 100"
 
 [node name="Powerups" type="HBoxContainer" parent="HUD/Mrgn"]
-margin_left = 892.0
-margin_top = 568.0
-margin_right = 1024.0
-margin_bottom = 600.0
+margin_left = 1148.0
+margin_top = 688.0
+margin_right = 1280.0
+margin_bottom = 720.0
 size_flags_horizontal = 8
 size_flags_vertical = 8
 
@@ -188,72 +188,84 @@ autostart = true
 [node name="PredictionDebugIcons" type="Node" parent="."]
 
 [node name="Sprite3D" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D2" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D3" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D4" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D5" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D6" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D7" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D8" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D9" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D10" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D11" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
 texture = ExtResource( 2 )
 
 [node name="Sprite3D12" type="Sprite3D" parent="PredictionDebugIcons"]
+visible = false
 pixel_size = 0.008
 billboard = 1
 no_depth_test = true
