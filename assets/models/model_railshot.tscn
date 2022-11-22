@@ -37,9 +37,11 @@ func set_emit_anim(in_anim:int):
 		emit_anims.idle:
 			set_process(true)
 		emit_anims.shoot:
-			emission = 2.0
+			emission = 3.0
+			print(\"emission:\",emission)
 			mat.set_shader_param(\"emission\",emission)
 			set_process(true)
+	emit_anim = in_anim
 
 func _process(delta):
 	match emit_anim:
@@ -51,7 +53,7 @@ func _process(delta):
 			mat.set_shader_param(\"emission\",emission)
 			return
 		emit_anims.shoot:
-			emission = max(emission-delta*2,0)
+			emission = max(emission-delta*10,0)
 			mat.set_shader_param(\"emission\",emission)
 			if !emission:
 				set_emit_anim(emit_anims.none)

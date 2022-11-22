@@ -111,6 +111,20 @@ tracks/2/keys = {
 "update": 0,
 "values": [ true ]
 }
+tracks/3/type = "method"
+tracks/3/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "set_emit_anim"
+} ]
+}
 
 [sub_resource type="Animation" id=11]
 resource_name = "idle"
@@ -181,6 +195,20 @@ tracks/2/keys = {
 "update": 1,
 "values": [ true ]
 }
+tracks/3/type = "method"
+tracks/3/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 1 ],
+"method": "set_emit_anim"
+} ]
+}
 
 [sub_resource type="Animation" id=15]
 resource_name = "rail_detach"
@@ -223,6 +251,20 @@ tracks/3/keys = {
 "update": 1,
 "values": [ true ]
 }
+tracks/4/type = "method"
+tracks/4/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "set_emit_anim"
+} ]
+}
 
 [sub_resource type="Animation" id=16]
 resource_name = "shoot_rail"
@@ -246,6 +288,20 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ false ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 2 ],
+"method": "set_emit_anim"
+} ]
 }
 
 [sub_resource type="Animation" id=12]
