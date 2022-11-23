@@ -150,7 +150,7 @@ text = "animation"
 
 [node name="missiles" parent="." instance=ExtResource( 6 )]
 transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 13.9615, -0.66663 )
+visible = false
 
 [node name="railshot" parent="." instance=ExtResource( 4 )]
 transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -0.0601443, 29.0644, -0.00526476 )
-visible = true

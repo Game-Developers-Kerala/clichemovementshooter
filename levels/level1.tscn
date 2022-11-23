@@ -1,0 +1,386 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://scenes/player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://test/dummyenemy.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/models/model_enemy_golem.tscn" type="PackedScene" id=3]
+[ext_resource path="res://levels/ceiling_tile.png" type="Texture" id=4]
+[ext_resource path="res://scenes/player_pickup_railshot.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/player_pickup_missile_pack.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/models/model_enemy_flying_hat.tscn" type="PackedScene" id=7]
+
+[sub_resource type="SpatialMaterial" id=1]
+flags_world_triplanar = true
+albedo_texture = ExtResource( 4 )
+
+[node name="level1" type="Spatial"]
+
+[node name="LevelGeometry" type="CSGCombiner" parent="."]
+material_override = SubResource( 1 )
+use_collision = true
+collision_layer = 256
+collision_mask = 0
+
+[node name="NorthernChamber" type="CSGCombiner" parent="LevelGeometry"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.5, -115.5 )
+
+[node name="OuterWall" type="CSGCylinder" parent="LevelGeometry/NorthernChamber"]
+transform = Transform( 0.980785, 0, 0.19509, 0, 1, 0, -0.19509, 0, 0.980785, 0, 0, 0 )
+radius = 25.0
+height = 15.0
+sides = 16
+
+[node name="InnerWall_Sub" type="CSGCombiner" parent="LevelGeometry/NorthernChamber"]
+operation = 2
+
+[node name="CSGCylinder7" type="CSGCylinder" parent="LevelGeometry/NorthernChamber/InnerWall_Sub"]
+radius = 23.0
+height = 7.0
+sides = 16
+
+[node name="CSGBox" type="CSGBox" parent="LevelGeometry/NorthernChamber/InnerWall_Sub"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 23.5 )
+width = 8.0
+height = 7.0
+depth = 3.0
+
+[node name="CSGCylinder6" type="CSGCylinder" parent="LevelGeometry/NorthernChamber/InnerWall_Sub"]
+operation = 2
+radius = 10.0
+height = 13.0
+sides = 16
+
+[node name="SeeThrough_Sub" type="CSGCombiner" parent="LevelGeometry/NorthernChamber/InnerWall_Sub"]
+transform = Transform( 0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 0, 0, 0 )
+operation = 2
+
+[node name="CSGBox2" type="CSGBox" parent="LevelGeometry/NorthernChamber/InnerWall_Sub/SeeThrough_Sub"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0999603, 0, 17.35 )
+width = 1.0
+height = 7.0
+depth = 1.0
+
+[node name="CSGBox3" type="CSGBox" parent="LevelGeometry/NorthernChamber/InnerWall_Sub/SeeThrough_Sub"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0999756, 0, 19.35 )
+width = 1.0
+height = 7.0
+depth = 1.0
+
+[node name="CSGBox4" type="CSGBox" parent="LevelGeometry/NorthernChamber/InnerWall_Sub/SeeThrough_Sub"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0999756, 0, 15.35 )
+width = 1.0
+height = 7.0
+depth = 1.0
+
+[node name="CSGBox5" type="CSGBox" parent="LevelGeometry/NorthernChamber/InnerWall_Sub/SeeThrough_Sub"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0999756, 0, 13.35 )
+width = 1.0
+height = 7.0
+depth = 1.0
+
+[node name="CSGBox6" type="CSGBox" parent="LevelGeometry/NorthernChamber/InnerWall_Sub/SeeThrough_Sub"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0999908, 0, 11.35 )
+width = 1.0
+height = 7.0
+depth = 1.0
+
+[node name="CSGBox7" type="CSGBox" parent="LevelGeometry/NorthernChamber/InnerWall_Sub/SeeThrough_Sub"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099968, 0, 21.35 )
+width = 1.0
+height = 7.0
+depth = 1.0
+
+[node name="pickup_missile" parent="LevelGeometry/NorthernChamber" instance=ExtResource( 6 )]
+transform = Transform( 1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -7.5, 0, 15 )
+visible = true
+respawn_interval = 25.0
+
+[node name="SoutherPlatform" type="CSGCombiner" parent="LevelGeometry"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -19, 111.5 )
+
+[node name="CSGBox" type="CSGBox" parent="LevelGeometry/SoutherPlatform"]
+transform = Transform( 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 8, -12.5 )
+width = 4.0
+height = 4.0
+
+[node name="RampToNorthChamber" type="CSGCombiner" parent="LevelGeometry"]
+transform = Transform( 1, 0, 0, 0, 0.989237, -0.146325, 0, 0.146325, 0.989237, 0, 7, -91 )
+
+[node name="CSGBox2" type="CSGBox" parent="LevelGeometry/RampToNorthChamber"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 24 )
+width = 8.0
+depth = 48.0
+
+[node name="CSGBox3" type="CSGBox" parent="LevelGeometry/RampToNorthChamber"]
+transform = Transform( 1, 0, 0, 0, 0.989237, 0.146325, 0, -0.146325, 0.989237, 0, -0.890305, 48.654 )
+width = 8.0
+depth = 7.0
+
+[node name="Center" type="CSGCombiner" parent="LevelGeometry"]
+
+[node name="CentralGround" type="CSGCylinder" parent="LevelGeometry/Center"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, 0 )
+radius = 40.0
+height = 10.0
+sides = 32
+
+[node name="CentralWalls" type="CSGCombiner" parent="LevelGeometry/Center"]
+
+[node name="CSGCylinder3" type="CSGCylinder" parent="LevelGeometry/Center/CentralWalls"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0 )
+radius = 25.0
+height = 12.0
+sides = 32
+
+[node name="Mid_Sub" type="CSGCylinder" parent="LevelGeometry/Center/CentralWalls"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+operation = 2
+radius = 22.0
+height = 15.0
+sides = 32
+
+[node name="CSGBox" type="CSGBox" parent="LevelGeometry/Center/CentralWalls"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0 )
+operation = 2
+width = 50.0
+height = 16.0
+depth = 18.0
+
+[node name="CSGBox2" type="CSGBox" parent="LevelGeometry/Center/CentralWalls"]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 4.5, 0 )
+operation = 2
+width = 50.0
+height = 9.0
+depth = 12.0
+
+[node name="CSGBox" type="CSGBox" parent="LevelGeometry/Center"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 52 )
+width = 8.0
+depth = 25.0
+
+[node name="Zigzap_Jump" type="CSGCombiner" parent="LevelGeometry"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 68.5, 0 )
+
+[node name="CSGBox7" type="CSGBox" parent="LevelGeometry/Zigzap_Jump"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -5.5 )
+width = 20.0
+height = 8.0
+
+[node name="CSGBox8" type="CSGBox" parent="LevelGeometry/Zigzap_Jump"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 5.5 )
+width = 20.0
+height = 8.0
+
+[node name="CSGBox11" type="CSGBox" parent="LevelGeometry/Zigzap_Jump"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -5.5 )
+width = 20.0
+height = 8.0
+
+[node name="CSGBox12" type="CSGBox" parent="LevelGeometry/Zigzap_Jump"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 5.5 )
+width = 20.0
+height = 8.0
+
+[node name="CSGBox9" type="CSGBox" parent="LevelGeometry/Zigzap_Jump"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, -5.5 )
+width = 20.0
+height = 8.0
+
+[node name="CSGBox10" type="CSGBox" parent="LevelGeometry/Zigzap_Jump"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, 5.5 )
+width = 20.0
+height = 8.0
+
+[node name="CSGCombiner" type="CSGCombiner" parent="LevelGeometry/Zigzap_Jump"]
+
+[node name="CSGBox" type="CSGBox" parent="LevelGeometry/Zigzap_Jump/CSGCombiner"]
+width = 72.0
+height = 23.0
+depth = 27.0
+
+[node name="CSGBox2" type="CSGBox" parent="LevelGeometry/Zigzap_Jump/CSGCombiner"]
+operation = 2
+width = 72.0
+height = 15.0
+depth = 20.0
+
+[node name="CSGBox3" type="CSGBox" parent="LevelGeometry/Zigzap_Jump/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9, -8, 0 )
+height = 4.0
+depth = 21.0
+
+[node name="CSGBox4" type="CSGBox" parent="LevelGeometry/Zigzap_Jump/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7, -8, 0 )
+height = 4.0
+depth = 21.0
+
+[node name="CSGBox5" type="CSGBox" parent="LevelGeometry/Zigzap_Jump/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23, -8, 0 )
+height = 4.0
+depth = 21.0
+
+[node name="CSGBox6" type="CSGBox" parent="LevelGeometry/Zigzap_Jump/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25, -8, 0 )
+height = 4.0
+depth = 21.0
+
+[node name="CSGBox7" type="CSGBox" parent="LevelGeometry/Zigzap_Jump/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.5, 4.5 )
+height = 12.0
+depth = 10.0
+
+[node name="CSGBox8" type="CSGBox" parent="LevelGeometry/Zigzap_Jump/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.5, -5.5 )
+height = 12.0
+depth = 10.0
+
+[node name="CSGBox9" type="CSGBox" parent="LevelGeometry/Zigzap_Jump/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 0.5, 4.5 )
+height = 12.0
+depth = 10.0
+
+[node name="CSGBox10" type="CSGBox" parent="LevelGeometry/Zigzap_Jump/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 0.5, -5.5 )
+height = 12.0
+depth = 10.0
+
+[node name="pickup_missile" parent="LevelGeometry/Zigzap_Jump" instance=ExtResource( 6 )]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+
+[node name="EastWestPlatforms" type="CSGCombiner" parent="LevelGeometry"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 31, 0 )
+
+[node name="EastPlatform" type="CSGCylinder" parent="LevelGeometry/EastWestPlatforms"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 0, 0 )
+radius = 25.0
+height = 5.0
+sides = 16
+
+[node name="Bridge" type="CSGBox" parent="LevelGeometry/EastWestPlatforms"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0 )
+width = 125.0
+depth = 16.0
+
+[node name="WestPlatform" type="CSGCylinder" parent="LevelGeometry/EastWestPlatforms"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -85, 0, 0 )
+radius = 25.0
+height = 5.0
+sides = 16
+
+[node name="RampToEastWestPlatforms" type="CSGCombiner" parent="LevelGeometry"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -9, 0 )
+
+[node name="WestRamp" type="CSGCombiner" parent="LevelGeometry/RampToEastWestPlatforms"]
+transform = Transform( 0.906308, 0, -0.422618, 0, 1, 0, 0.422618, 0, 0.906308, -85, 42.5, 0 )
+
+[node name="CSGCombiner" type="CSGCombiner" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp"]
+transform = Transform( -2.98023e-08, -1.49012e-08, 1, -0.422618, 0.906308, 9.10035e-10, -0.906307, -0.422618, -2.98023e-08, 0, 0, -27 )
+
+[node name="CSGBox3" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, -0.999996, 0 )
+width = 37.0
+depth = 8.0
+
+[node name="CSGBox" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, -25.5 )
+width = 8.0
+depth = 3.0
+
+[node name="CSGCombiner2" type="CSGCombiner" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp"]
+transform = Transform( 0.906308, 0.422618, 0, -0.422618, 0.906308, -1.99638e-09, 0, 0, 1, 4.02146, -15.5, -63.4987 )
+
+[node name="CSGBox3" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp/CSGCombiner2"]
+transform = Transform( 1, -1.3411e-07, 0, 0, 1, 0, 5.96046e-08, 2.98023e-08, 1, 21.5, -0.999993, 1.14441e-05 )
+width = 43.0
+depth = 8.0
+
+[node name="CSGBox4" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp/CSGCombiner2"]
+transform = Transform( 0.906308, -0.422618, 5.96046e-08, 0.422618, 0.906308, -7.45058e-08, 8.9407e-08, 2.73012e-09, 1, 47.9941, 1.41585, -0.000196457 )
+width = 12.0
+depth = 8.0
+
+[node name="CSGBox2" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp"]
+transform = Transform( -8.9407e-08, 0, -1, 0, 1, 0, 1, 0, -8.9407e-08, 0.0214767, -16.5, -63.4987 )
+width = 8.0
+depth = 8.0
+
+[node name="CSGBox4" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp"]
+transform = Transform( -0.25882, 0, -0.965926, 0, 1, 0, 0.965926, 0, -0.25882, 7.42428, -16.5, -94.1818 )
+width = 58.0
+depth = 8.0
+
+[node name="EastRamp" type="CSGCombiner" parent="LevelGeometry/RampToEastWestPlatforms"]
+transform = Transform( 0.906308, 0, 0.422618, 0, 1, 0, -0.422618, 0, 0.906308, 85, 42.5, 0 )
+
+[node name="CSGCombiner" type="CSGCombiner" parent="LevelGeometry/RampToEastWestPlatforms/EastRamp"]
+transform = Transform( -2.98023e-08, -1.49012e-08, 1, -0.422618, 0.906308, 9.10035e-10, -0.906307, -0.422618, -2.98023e-08, 0, 0, -27 )
+
+[node name="CSGBox3" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/EastRamp/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, -0.999996, 0 )
+width = 37.0
+depth = 8.0
+
+[node name="CSGBox" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/EastRamp"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, -25.5 )
+width = 8.0
+depth = 3.0
+
+[node name="CSGCombiner2" type="CSGCombiner" parent="LevelGeometry/RampToEastWestPlatforms/EastRamp"]
+transform = Transform( -0.906308, -0.422619, -1.78814e-07, -0.422618, 0.906308, -1.99638e-09, 1.78814e-07, 7.45058e-08, -1, -4, -15.5, -63.5 )
+
+[node name="CSGBox3" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/EastRamp/CSGCombiner2"]
+transform = Transform( 1, -1.3411e-07, 0, 0, 1, 0, 5.96046e-08, 2.98023e-08, 1, 21.5, -0.999993, 1.14441e-05 )
+width = 43.0
+depth = 8.0
+
+[node name="CSGBox4" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/EastRamp/CSGCombiner2"]
+transform = Transform( 0.906308, -0.422618, 5.96046e-08, 0.422618, 0.906308, -7.45058e-08, 8.9407e-08, 2.73012e-09, 1, 47.9941, 1.41585, -0.000196457 )
+width = 12.0
+depth = 8.0
+
+[node name="CSGBox2" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/EastRamp"]
+transform = Transform( -8.9407e-08, 0, -1, 0, 1, 0, 1, 0, -8.9407e-08, 0.0214767, -16.5, -63.4987 )
+width = 8.0
+depth = 8.0
+
+[node name="CSGBox4" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/EastRamp"]
+transform = Transform( 0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, 0.258819, -7.22545, -16.5, -94.5446 )
+width = 58.0
+depth = 8.0
+
+[node name="dummies" type="Spatial" parent="."]
+
+[node name="DummyEnemy" parent="dummies" instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 29.5 )
+
+[node name="DummyEnemy5" parent="dummies" instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0, -32.5 )
+
+[node name="model_enemy_golem" parent="dummies" instance=ExtResource( 3 )]
+transform = Transform( 0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, 3.5, 0, 0 )
+
+[node name="model_enemy_golem6" parent="dummies" instance=ExtResource( 3 )]
+transform = Transform( 0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, 0, 0, 22.5 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 2.5, 0, 36 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.435844, 0.900022, 0, -0.900022, 0.435844, 0, 28.0865, 0 )
+light_energy = 0.5
+shadow_enabled = true
+
+[node name="Pickups" type="Node" parent="."]
+
+[node name="pickup_rail" parent="Pickups" instance=ExtResource( 5 )]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 8, 90 )
+visible = true
+respawn_interval = 20.0
+anim_bob = false
+
+[node name="pickup_rail2" parent="Pickups" instance=ExtResource( 5 )]
+transform = Transform( 1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 0, 1.5, 0 )
+visible = true
+respawn_interval = 20.0
+
+[node name="model_enemy_flying_hat" parent="." instance=ExtResource( 7 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -9, 67, -2.5 )

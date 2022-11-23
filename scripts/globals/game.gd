@@ -3,10 +3,12 @@ extends Node
 
 signal wave_start
 signal announcement
+signal enemy_count_changed
 
 var time:=0.0
 var frame := 0
 var curr_wave := 0
+#var wave_active :bool = false
 
 const WAVE_NEXT_WAIT_TIME = 7
 const ANNOUCE_WAIT_TIME = 2
@@ -51,10 +53,12 @@ func next_wave():
 		yield(get_tree().create_timer(1.0),"timeout") #countdown wait
 	
 #	emit_signal("announcement","")
-	emit_signal("wave_start")
+	emit_signal("wave_start",curr_wave)
 
-func _on_wave_end():
-	pass
+func _on_enemy_count_changed(in_count:int):
+	emit_signal("enemy_count_changed",in_count)
+	if !in_count:
+		next_wave()
 
 func _on_player_death():
 	emit_signal("announcement","You died")

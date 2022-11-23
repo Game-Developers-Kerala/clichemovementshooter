@@ -40,8 +40,11 @@ var on_wall = false
 var wallsidecheck = false
 onready var in_slide = auto_slide
 var in_jump = false
+var ground_only_slide_velocity = Vector3.ZERO
 var last_velocity = Vector3.ZERO
 var air_auto_dir = false
+
+onready var starting_xform := global_transform
 
 var stats = {
 	"health":100,
@@ -50,7 +53,7 @@ var stats = {
 	"powerup_spikecage":false,
 	}
 const STAT_RANGES = {
-		"health":{"min":0,"max":100}
+		"health":{"min":0,"max":100,"overload":200}
 		}
 
 export(bool) var gun_ready = true
@@ -151,13 +154,17 @@ func _physics_process(delta):
 			velocity.z = lerp(velocity.z,dir.z*AIRCONTROL,AIRACCEL*delta)
 			velocity.y -= GRAVITY*delta
 			snap = Vector3.ZERO
+			if global_translation.y < -240:
+				fall_recover()
 		movestates.wall:
 			dir = last_velocity.normalized()
 			velocity.y = 0.0
 			velocity.x = lerp(velocity.x,dir.x*SLIDESPEED,GROUNDACCEL*delta)
 			velocity.z = lerp(velocity.z,dir.z*SLIDESPEED,GROUNDACCEL*delta)
 		movestates.ground:
-			dir = last_velocity.normalized()
+			dir = ground_only_slide_velocity.normalized()
+			if on_wall:
+				dir = last_velocity.normalized()
 			velocity.x = lerp(velocity.x,dir.x*SLIDESPEED,GROUNDACCEL*delta)
 			velocity.z = lerp(velocity.z,dir.z*SLIDESPEED,GROUNDACCEL*delta)
 			velocity.y = 0.0
@@ -170,6 +177,7 @@ func _physics_process(delta):
 		walljump()
 	
 	velocity = move_and_slide_with_snap(velocity,snap,Vector3.UP,true)
+#	velocity = move_and_slide(velocity,Vector3.UP)
 	var lookdir = (velocity.rotated(Vector3.UP,PI*0.5)*Vector3(1,0,1)).normalized()
 	if lookdir:
 		$wallsidecheckarea.look_at($wallsidecheckarea.global_translation+lookdir,Vector3.UP)
@@ -190,7 +198,7 @@ func _physics_process(delta):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		pass
 	$Label.text = movestates.keys()[movestate]
-	$Label.text = "\nWallray colliding:"+str(wallsidecheck)
+#	$Label.text = "\nWallray colliding:"+str(wallsidecheck)
 	$HUD/Mrgn/FPSCounter.text = "FPS\n" + str(Engine.get_frames_per_second())
 
 func set_move_state():
@@ -231,6 +239,8 @@ func change_movestate(to_state,args:={}):
 	if movestate == to_state:
 		return
 	match to_state:
+		movestates.ground:
+			ground_only_slide_velocity = velocity
 		movestates.air:
 			if $PredictionSuspend.is_stopped():
 				$PredictionSuspend.start(prediction_suspend_time)
@@ -290,9 +300,12 @@ func pick_up(item:pickup):
 	for key in dict.keys():
 		match key:
 			"health":
-				if stats.health >= STAT_RANGES.health.max:
+				var healthmax = STAT_RANGES.health.max
+				if dict.has("health_overload"):
+					healthmax = STAT_RANGES.health.overload
+				if stats.health >= healthmax:
 					return
-				adjust_health(dict[key])
+				adjust_health(dict[key],healthmax)
 			"weapon_rail":
 				if is_instance_valid(stats[key]):
 					return
@@ -327,9 +340,9 @@ func get_hit(args:={}):
 	if args.has("origin"):
 		$HUD/Mrgn/attack_indicators.new_attack(global_transform,$Camera.global_transform,args.origin)
 
-func adjust_health(in_val):
+func adjust_health(in_val,max_limit:=STAT_RANGES.health.max):
 	stats.health = ceil(stats.health+in_val)
-	stats.health = clamp(stats.health,STAT_RANGES.health.min,STAT_RANGES.health.max)
+	stats.health = clamp(stats.health,0,max_limit)
 	$HUD/Mrgn/Health.text = "Health " + str(int(stats.health)) 
 	if !stats.health:
 		set_process(false)
@@ -389,15 +402,18 @@ func grapple_stop():
 
 
 func _on_GeneralArea_body_entered(body):
+#	print("gen area,",body.name)
 	on_wall = true
 
 
 func _on_GeneralArea_body_exited(body):
 	if !$GeneralArea.get_overlapping_bodies():
 		on_wall = false
+		ground_only_slide_velocity = velocity
 
 
 func _on_wallsidecheckarea_body_entered(body):
+#	print("sidecheck,",body.name)
 	wallsidecheck = true
 
 
@@ -459,6 +475,12 @@ func _on_PredictionBlink_timeout():
 				temp_vel -= Vector3.UP*GRAVITY*0.25
 				predict_future_pos[i] = curPos + temp_vel*(i+1)*interval
 #				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+
+func fall_recover():
+	velocity = Vector3.ZERO
+	global_transform = starting_xform
+	change_movestate(movestates.none)
+
 
 func stop_animation():
 	if $AnimationPlayer.current_animation == "rail_detach":

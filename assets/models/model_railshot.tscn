@@ -57,6 +57,10 @@ func _process(delta):
 			mat.set_shader_param(\"emission\",emission)
 			if !emission:
 				set_emit_anim(emit_anims.none)
+
+
+func _on_railshot_model_visibility_changed():
+	set_process(is_visible_in_tree())
 "
 
 [node name="railshot_model" type="MeshInstance"]
@@ -64,3 +68,5 @@ cast_shadow = 0
 mesh = ExtResource( 2 )
 material/0 = SubResource( 1 )
 script = SubResource( 2 )
+
+[connection signal="visibility_changed" from="." to="." method="_on_railshot_model_visibility_changed"]

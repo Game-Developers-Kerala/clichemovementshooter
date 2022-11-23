@@ -19,7 +19,8 @@ shader_param/anim_size = 0.1
 shader_param/anim_speed = 3.0
 shader_param/gradient = ExtResource( 4 )
 
-[node name="player_pickup" type="Area"]
+[node name="pickup_missile" type="Area"]
+visible = false
 collision_layer = 4
 collision_mask = 0
 monitoring = false

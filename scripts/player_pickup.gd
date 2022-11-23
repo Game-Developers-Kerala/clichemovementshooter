@@ -13,10 +13,10 @@ enum types {none,health_small,health_medium,health_large,health_super
 
 const PICKUP_INFO = {
 				"none":{},
-				"health_small":{"health":3},
+				"health_small":{"health":3,"health_overload":true},
 				"health_medium":{"health":20},
 				"health_large":{"health":50},
-				"health_super":{"health":100},
+				"health_super":{"health":200,"health_overload":true},
 				"weapon_rail":{"weapon_rail":true},
 				"weapon_missilepack":{"weapon_missilepack":true},
 				"powerup_spikecage":{"powerup_spikecage":true},
@@ -101,14 +101,8 @@ func _process(delta):
 
 func _on_VisibilityNotifier_camera_entered(camera):
 	set_process(true)
-	if is_instance_valid(pickup_model):
-		pickup_model.set_process(true)
 	show()
-#	print("showing pickup")
 
 func _on_VisibilityNotifier_camera_exited(camera):
 	set_process(false)
-	if is_instance_valid(pickup_model):
-		pickup_model.set_process(false)
 	hide()
-#	print("hiding pickup")

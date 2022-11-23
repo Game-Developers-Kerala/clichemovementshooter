@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
@@ -15,14 +15,16 @@
 [ext_resource path="res://assets/models/texture_weapon_railshot_emission.png" type="Texture" id=13]
 
 [sub_resource type="CapsuleShape" id=1]
-radius = 0.4
+radius = 0.56
+height = 0.68
 
 [sub_resource type="QuadMesh" id=3]
 size = Vector2( 0.002, 0.002 )
 
-[sub_resource type="SpatialMaterial" id=4]
-flags_unshaded = true
-flags_no_depth_test = true
+[sub_resource type="Shader" id=18]
+
+[sub_resource type="ShaderMaterial" id=19]
+shader = SubResource( 18 )
 
 [sub_resource type="ShaderMaterial" id=10]
 resource_local_to_scene = true
@@ -50,8 +52,8 @@ shader_param/occlusion = 0.0
 shader_param/albedo_tex = ExtResource( 12 )
 shader_param/emission_tex = ExtResource( 13 )
 
-[sub_resource type="SphereShape" id=6]
-radius = 0.569312
+[sub_resource type="SphereShape" id=21]
+radius = 0.57
 
 [sub_resource type="SphereShape" id=7]
 radius = 0.2
@@ -72,6 +74,28 @@ size = Vector3( 0.05, 0.05, 1 )
 flags_transparent = true
 params_cull_mode = 1
 albedo_color = Color( 1, 1, 1, 0.356863 )
+
+[sub_resource type="GDScript" id=20]
+script/source = "extends Label
+
+var curr_wave := 0
+var enemy_count := 0
+
+func _ready():
+	game.connect(\"enemy_count_changed\",self,\"_on_enemy_count_changed\")
+	game.connect(\"enemy_count_changed\",self,\"_on_wave_start\")
+
+func _on_enemy_count_changed(in_count:int):
+	enemy_count = in_count
+	update_label()
+	
+func _on_wave_start(in_wave:int):
+	curr_wave = in_wave
+	update_label()
+
+func update_label():
+	text = \"Wave:\"+str(curr_wave)+\"\\nEnemies:\"+str(enemy_count)
+"
 
 [sub_resource type="Animation" id=17]
 length = 0.001
@@ -339,9 +363,6 @@ tracks/2/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="SphereShape" id=18]
-radius = 0.18
-
 [node name="Player" type="KinematicBody" groups=["player"]]
 collision_mask = 258
 script = ExtResource( 1 )
@@ -363,7 +384,7 @@ collide_with_areas = true
 [node name="MeshInstance" type="MeshInstance" parent="Camera/AimRay"]
 transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, -0.103075 )
 mesh = SubResource( 3 )
-material/0 = SubResource( 4 )
+material/0 = SubResource( 19 )
 
 [node name="weapon_holder" type="Spatial" parent="Camera"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.242598, -0.261273 )
@@ -391,7 +412,7 @@ monitorable = false
 
 [node name="CollisionShape" type="CollisionShape" parent="GeneralArea"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
-shape = SubResource( 6 )
+shape = SubResource( 21 )
 
 [node name="wallsidecheckarea" type="Area" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.19503, 0 )
@@ -438,11 +459,6 @@ one_shot = true
 [node name="RocketCooldown" type="Timer" parent="."]
 one_shot = true
 
-[node name="Label" type="Label" parent="."]
-visible = false
-margin_right = 40.0
-margin_bottom = 14.0
-
 [node name="JumpCoolDown" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
@@ -457,6 +473,15 @@ margin_top = 8.0
 margin_right = -8.0
 margin_bottom = -8.0
 theme = ExtResource( 6 )
+
+[node name="GameStuff" type="Label" parent="HUD/Mrgn"]
+margin_right = 1264.0
+margin_bottom = 53.0
+size_flags_vertical = 0
+theme_type_variation = "SubTitleLabel"
+text = "Wave:0
+Enemies:0"
+script = SubResource( 20 )
 
 [node name="Health" type="Label" parent="HUD/Mrgn"]
 margin_top = 664.0
@@ -586,6 +611,10 @@ text = "MB1 Rocket | MB2 Click to grapple, MB2 again to cancel | WASD Aircontrol
 P Pause Menu | Click in window then pause and unpause to Re-Capture Mouse | Pause and unpause to hide help"
 align = 1
 
+[node name="Label" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 17 )
 anims/idle = SubResource( 11 )
@@ -593,10 +622,6 @@ anims/rail_attach = SubResource( 14 )
 anims/rail_detach = SubResource( 15 )
 anims/shoot_rail = SubResource( 16 )
 anims/shoot_rocket = SubResource( 12 )
-
-[node name="CollisionShape2" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.41908, -0.388203 )
-shape = SubResource( 18 )
 
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]

@@ -19,6 +19,13 @@ tracks/0/keys = {
 "update": 0,
 "values": [ true ]
 }
+tracks/1/type = "transform"
+tracks/1/path = NodePath("MeshHolder")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 )
 
 [sub_resource type="Animation" id=2]
 resource_name = "death"
@@ -138,7 +145,7 @@ anims/idle = SubResource( 5 )
 anims/idle_still = SubResource( 6 )
 
 [node name="MeshHolder" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.658953, -0.752184, 0, 0.752184, 0.658953, 0, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 __meta__ = {
 "_edit_group_": true
 }
