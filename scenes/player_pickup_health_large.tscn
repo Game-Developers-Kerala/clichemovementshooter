@@ -1,0 +1,35 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://shaders/glow.shader" type="Shader" id=1]
+[ext_resource path="res://scenes/player_pickup.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/vfx_glow_base.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/models/mesh_soda_bottle.obj" type="ArrayMesh" id=4]
+[ext_resource path="res://shaders/texture_gradient_beam_rgb_32.png" type="Texture" id=5]
+[ext_resource path="res://shaders/pickups_health.material" type="Material" id=6]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/opacity = 1.0
+shader_param/color1 = Color( 0, 1, 0, 0.427451 )
+shader_param/color2 = Color( 0, 0.486275, 1, 0.647059 )
+shader_param/color3 = Color( 1, 1, 1, 0.721569 )
+shader_param/anim_size = 0.1
+shader_param/anim_speed = 3.0
+shader_param/gradient = ExtResource( 5 )
+
+[node name="large_health" instance=ExtResource( 2 )]
+type = 3
+model_node = NodePath("MeshInstance")
+respawning = true
+respawn_interval = 90.0
+anim_rotate = true
+glow = NodePath("vfx_glow")
+
+[node name="MeshInstance" type="MeshInstance" parent="." index="3"]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+mesh = ExtResource( 4 )
+material/0 = ExtResource( 6 )
+
+[node name="vfx_glow" parent="." index="4" instance=ExtResource( 3 )]
+transform = Transform( 1.04675, 0, 0, 0, 1.04675, 0, 0, 0, 1.04675, 0, 0, 0 )
+material/0 = SubResource( 1 )

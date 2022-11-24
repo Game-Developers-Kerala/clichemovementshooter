@@ -194,6 +194,7 @@ func _physics_process(delta):
 	jumping = false
 	
 	check_if_can_grapple()
+	
 	if Input.is_action_pressed("shoot"):
 		shoot()
 	if Input.is_action_pressed("grapple"):
@@ -291,7 +292,7 @@ func shoot_rail():
 	$AnimationPlayer.play("shoot_rail",0.0)
 	$AnimationPlayer.queue("rail_detach")
 	$AnimationPlayer.queue("idle")
-	$HUD/Mrgn/Powerups/Rail/Label.hide()
+	$HUD/Mrgn/Powerups/Railshot/enabled.hide()
 
 func shoot_missile_pack():
 	if !stats.weapon_missilepack:
@@ -303,7 +304,7 @@ func shoot_missile_pack():
 	$Camera.add_child(mispak)
 	mispak.global_transform = $Camera.global_transform
 	stats.weapon_missilepack = false
-	$HUD/Mrgn/Powerups/Missile/Label.hide()
+	$HUD/Mrgn/Powerups/Missile/enabled.hide()
 
 func pick_up(item:pickup):
 	var dict :Dictionary= item.get_pickup_info()
@@ -323,16 +324,16 @@ func pick_up(item:pickup):
 				$AnimationPlayer.queue("idle")
 				stats[key] = RAILSHOT.instance()
 				$Camera.add_child(stats[key])
-				$HUD/Mrgn/Powerups/Rail/Label.show()
+				$HUD/Mrgn/Powerups/Railshot/enabled.show()
 			"weapon_missilepack":
 				if stats[key]:
 					return
 				stats[key] = dict[key]
-				$HUD/Mrgn/Powerups/Missile/Label.show()
+				$HUD/Mrgn/Powerups/Missile/enabled.show()
 			"powerup_spikecage":
 				$SpikeCountdown.start()
 				spike_time_left = SPIKE_TIME
-				$HUD/Mrgn/Spike.text = str(spike_time_left)
+				$HUD/Mrgn/Spike/timelabel.text = str(spike_time_left)
 				$HUD/Mrgn/Spike.show()
 				pass
 	item.on_pickup()
@@ -390,8 +391,10 @@ func walljump():
 
 func check_if_can_grapple():
 	can_grapple = false
+	$HUD/Mrgn/crosshair/grapple.hide()
 	if $Camera/AimRay.is_colliding():
 		if !$Camera/AimRay.get_collider().get_collision_layer_bit(cmn.colliders.level_no_grapple):
+			$HUD/Mrgn/crosshair/grapple.show()
 			can_grapple = true
 
 func grapple():
@@ -537,7 +540,7 @@ func stop_animation():
 
 func _on_SpikeCountdown_timeout():
 	spike_time_left -= 1
-	$HUD/Mrgn/Spike.text = str(spike_time_left)
+	$HUD/Mrgn/Spike/timelabel.text = str(spike_time_left)
 	if !spike_time_left:
 		$SpikeCountdown.stop()
 		$HUD/Mrgn/Spike.hide()

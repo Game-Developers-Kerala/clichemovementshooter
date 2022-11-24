@@ -12,6 +12,7 @@ func _ready():
 
 
 func new_attack(playerglobalxform:Transform,camglobalXform:Transform,atkOrigin:Vector3):
+#	print("new attack at ind")
 	var ppos = playerglobalxform.origin
 	var pbas = playerglobalxform.basis.orthonormalized()
 	var campos = camglobalXform.origin
@@ -26,7 +27,8 @@ func new_attack(playerglobalxform:Transform,camglobalXform:Transform,atkOrigin:V
 	var perp_to_plane = dir_to_attack.cross(-cambas.z).normalized()
 	var perp_to_perp = -perp_to_plane.cross(-cambas.z).normalized()
 	var angle = acos(perp_to_perp.dot(cambas.x))
-	get_child(0).rotation = angle*(1-2*int(-perp_to_perp.dot(cambas.y)<0))
+	get_child(0).rotation = (angle*(1-2*int(-perp_to_perp.dot(cambas.y)<0)))-PI*0.5
+#	print("atk indic rotated:", get_child(0).rotation)
 	get_child(0).show()
 	set_process(true)
 

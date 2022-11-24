@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://assets/vfx_atlas.png" type="Texture" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Sprite3D
@@ -12,10 +12,13 @@ func _ready():
 
 [node name="indic" type="Sprite3D"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0947, 0 )
-pixel_size = 0.001
+modulate = Color( 0, 0.784314, 0.0862745, 1 )
+pixel_size = 0.007
 billboard = 1
 no_depth_test = true
 fixed_size = true
 alpha_cut = 1
 texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 16, 16, 16 )
 script = SubResource( 1 )
