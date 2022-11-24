@@ -60,6 +60,8 @@ func on_pickup():
 
 func respawner_pickedup():
 	pickup_ready = false
+	set_process(false)
+	hide()
 	if glow:
 		get_node(glow).hide()
 	$CollisionShape.disabled = true
@@ -71,6 +73,8 @@ func respawn():
 	pickup_ready = true
 	if glow:
 		get_node(glow).show()
+	set_process(true)
+	show()
 	$CollisionShape.disabled = false
 	yield(get_tree(),"idle_frame")
 	translate(Vector3.ZERO)
@@ -90,7 +94,7 @@ func _on_Timer_timeout():
 func _process(delta):
 	if Engine.editor_hint:
 		return
-	if !anim_rotate and !anim_bob:
+	if (!anim_rotate and !anim_bob) or !pickup_ready:
 		set_process(false)
 		return
 	if anim_rotate:

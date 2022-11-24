@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
@@ -83,7 +83,7 @@ var enemy_count := 0
 
 func _ready():
 	game.connect(\"enemy_count_changed\",self,\"_on_enemy_count_changed\")
-	game.connect(\"enemy_count_changed\",self,\"_on_wave_start\")
+	game.connect(\"wave_start\",self,\"_on_wave_start\")
 
 func _on_enemy_count_changed(in_count:int):
 	enemy_count = in_count
@@ -95,6 +95,7 @@ func _on_wave_start(in_wave:int):
 
 func update_label():
 	text = \"Wave:\"+str(curr_wave)+\"\\nEnemies:\"+str(enemy_count)
+	print(text)
 "
 
 [sub_resource type="Animation" id=17]
@@ -363,6 +364,9 @@ tracks/2/keys = {
 "values": [ false ]
 }
 
+[sub_resource type="SphereShape" id=22]
+radius = 0.8
+
 [node name="Player" type="KinematicBody" groups=["player"]]
 collision_mask = 258
 script = ExtResource( 1 )
@@ -548,6 +552,16 @@ margin_right = 1264.0
 margin_bottom = 359.0
 text = "FPS"
 
+[node name="Spike" type="Label" parent="HUD/Mrgn"]
+visible = false
+margin_left = 1188.0
+margin_top = 332.0
+margin_right = 1264.0
+margin_bottom = 372.0
+size_flags_horizontal = 8
+theme_type_variation = "TitleLabel"
+text = "24"
+
 [node name="Announcements" type="Control" parent="HUD"]
 anchor_top = 0.15
 anchor_right = 1.0
@@ -612,6 +626,7 @@ P Pause Menu | Click in window then pause and unpause to Re-Capture Mouse | Paus
 align = 1
 
 [node name="Label" type="Label" parent="."]
+visible = false
 margin_right = 40.0
 margin_bottom = 14.0
 
@@ -623,6 +638,23 @@ anims/rail_detach = SubResource( 15 )
 anims/shoot_rail = SubResource( 16 )
 anims/shoot_rocket = SubResource( 12 )
 
+[node name="SpikeCountdown" type="Timer" parent="."]
+
+[node name="SpikeExtend" type="Timer" parent="."]
+wait_time = 0.15
+one_shot = true
+
+[node name="SpikeArea" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42, 0 )
+collision_layer = 0
+collision_mask = 2
+input_ray_pickable = false
+monitorable = false
+
+[node name="CollisionShape" type="CollisionShape" parent="SpikeArea"]
+shape = SubResource( 22 )
+disabled = true
+
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]
 [connection signal="body_exited" from="GeneralArea" to="." method="_on_GeneralArea_body_exited"]
@@ -630,3 +662,6 @@ anims/shoot_rocket = SubResource( 12 )
 [connection signal="body_exited" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_exited"]
 [connection signal="timeout" from="HUD/Announcements/CenterContainer/Label/Timer" to="HUD/Announcements/CenterContainer/Label" method="_on_Timer_timeout"]
 [connection signal="timeout" from="PredictionBlink" to="." method="_on_PredictionBlink_timeout"]
+[connection signal="timeout" from="SpikeCountdown" to="." method="_on_SpikeCountdown_timeout"]
+[connection signal="timeout" from="SpikeExtend" to="." method="_on_SpikeExtend_timeout"]
+[connection signal="body_entered" from="SpikeArea" to="." method="_on_SpikeArea_body_entered"]

@@ -161,6 +161,7 @@ enter={
 3d_physics/layer_9="level"
 3d_physics/layer_10="level_porous"
 3d_physics/layer_11="level_seethrough"
+3d_physics/layer_12="level_no_grapple"
 
 [physics]
 

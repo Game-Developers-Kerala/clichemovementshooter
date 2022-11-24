@@ -7,7 +7,7 @@
 [ext_resource path="res://assets/models/model_pickup_missile_pack.tscn" type="PackedScene" id=5]
 
 [sub_resource type="SphereShape" id=1]
-radius = 1.61563
+radius = 2.0
 
 [sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 3 )
@@ -20,7 +20,6 @@ shader_param/anim_speed = 3.0
 shader_param/gradient = ExtResource( 4 )
 
 [node name="pickup_missile" type="Area"]
-visible = false
 collision_layer = 4
 collision_mask = 0
 monitoring = false

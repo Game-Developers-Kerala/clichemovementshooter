@@ -36,7 +36,6 @@ shader_param/anim_speed = 3.0
 shader_param/gradient = ExtResource( 4 )
 
 [node name="pickup_rail" type="Area"]
-visible = false
 collision_layer = 4
 collision_mask = 0
 monitoring = false

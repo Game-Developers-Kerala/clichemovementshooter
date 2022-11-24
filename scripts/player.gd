@@ -26,6 +26,11 @@ var grapplevec = Vector3.ZERO
 var grapplelength = 0.0
 var grappled_enemy :Node = null
 var grappling_enemy :bool = false
+var spike_active :bool = false
+const SPIKE_TIME = 50
+var spike_time_left:int= 0
+const SPIKE_ATK_DICT = {"caused_by_player":true, "dmg":200.0,"force":10.0,
+						"push_dir":Vector3.ZERO,"dir_replace":true,"origin":Vector3.ZERO}
 onready var grapple_targ = $floaters/GrappleTargArea
 
 
@@ -33,6 +38,7 @@ onready var cam = $Camera
 
 var auto_slide = false
 
+var can_grapple = false
 var grappling = false
 var braking = false
 var jumping = false
@@ -45,6 +51,8 @@ var last_velocity = Vector3.ZERO
 var air_auto_dir = false
 
 onready var starting_xform := global_transform
+var randgen = RandomNumberGenerator.new()
+
 
 var stats = {
 	"health":100,
@@ -71,6 +79,7 @@ onready var predict_blink_timer = $PredictionBlink
 var prediction_suspend_time := 0.5
 
 func _ready():
+	randgen.randomize()
 	predict_past_pos.resize(4)
 	predict_past_pos.fill(global_translation+CENTER_OF_MASS)
 	predict_past_vel.resize(4)
@@ -183,7 +192,8 @@ func _physics_process(delta):
 		$wallsidecheckarea.look_at($wallsidecheckarea.global_translation+lookdir,Vector3.UP)
 	last_velocity = velocity
 	jumping = false
-
+	
+	check_if_can_grapple()
 	if Input.is_action_pressed("shoot"):
 		shoot()
 	if Input.is_action_pressed("grapple"):
@@ -320,6 +330,10 @@ func pick_up(item:pickup):
 				stats[key] = dict[key]
 				$HUD/Mrgn/Powerups/Missile/Label.show()
 			"powerup_spikecage":
+				$SpikeCountdown.start()
+				spike_time_left = SPIKE_TIME
+				$HUD/Mrgn/Spike.text = str(spike_time_left)
+				$HUD/Mrgn/Spike.show()
 				pass
 	item.on_pickup()
 
@@ -374,6 +388,12 @@ func walljump():
 #		velocity += Vector3.UP*6+perp_vec*2
 	change_movestate(movestates.air,{auto_dir=true})
 
+func check_if_can_grapple():
+	can_grapple = false
+	if $Camera/AimRay.is_colliding():
+		if !$Camera/AimRay.get_collider().get_collision_layer_bit(cmn.colliders.level_no_grapple):
+			can_grapple = true
+
 func grapple():
 	if grappling:
 		if $GrappleCancel.is_stopped():
@@ -381,17 +401,21 @@ func grapple():
 		return
 	if !$GrappleCancel.is_stopped():
 		return
-	if $Camera/AimRay.is_colliding():
-		var collider = $Camera/AimRay.get_collider()
-		if collider.get_collision_layer_bit(cmn.colliders.enemy_hurtbox):
-			grappling_enemy = true
-			grappled_enemy = collider.hit_receiver
-			grapple_targ.global_translation = grappled_enemy.global_translation +grappled_enemy.CENTER_OF_MASS
-		else:
-			grapple_targ.global_translation = $Camera/AimRay.get_collision_point()
-		grappling = true
-		$floaters/GrappleRay/GrappleMesh.show()
-		$GrappleCancel.start()
+	if !can_grapple:
+		return
+	var collider = $Camera/AimRay.get_collider()
+	if !$SpikeCountdown.is_stopped():
+		spike_active = true
+		$SpikeArea/CollisionShape.disabled = false
+	if collider.get_collision_layer_bit(cmn.colliders.enemy_hurtbox):
+		grappling_enemy = true
+		grappled_enemy = collider.hit_receiver
+		grapple_targ.global_translation = grappled_enemy.global_translation +grappled_enemy.CENTER_OF_MASS
+	else:
+		grapple_targ.global_translation = $Camera/AimRay.get_collision_point()
+	grappling = true
+	$floaters/GrappleRay/GrappleMesh.show()
+	$GrappleCancel.start()
 
 func grapple_stop():
 	grappling_enemy = false
@@ -399,12 +423,26 @@ func grapple_stop():
 	grappling = false
 	$floaters/GrappleRay/GrappleMesh.hide()
 	$GrappleCancel.start()
+	if spike_active:
+		$SpikeExtend.start()
+
+func _on_SpikeArea_body_entered(body):
+	if !spike_active:
+		return
+	$SpikeArea/CollisionShape.disabled = true
+	spike_active = false
+	print("enemy body entered")
+	var atk_dict = SPIKE_ATK_DICT.duplicate()
+	atk_dict.origin = global_translation+CENTER_OF_MASS
+	atk_dict.push_dir = -global_transform.basis.z
+	print("spike hit:",atk_dict)
+	body.get_hit(atk_dict)
+	grapple_stop()
 
 
 func _on_GeneralArea_body_entered(body):
-#	print("gen area,",body.name)
-	on_wall = true
-
+	if body.get_collision_layer_bit(cmn.colliders.level):
+		on_wall = true
 
 func _on_GeneralArea_body_exited(body):
 	if !$GeneralArea.get_overlapping_bodies():
@@ -480,9 +518,32 @@ func fall_recover():
 	velocity = Vector3.ZERO
 	global_transform = starting_xform
 	change_movestate(movestates.none)
+	var spawn_points = get_tree().get_nodes_in_group("player_respawn_points")
+	var valid:=[]
+	if spawn_points:
+		for point in spawn_points:
+			if point.valid:
+				valid.push_front(point)
+	if valid:
+		var idx = randgen.randi()%valid.size()
+		global_transform = valid[idx].global_transform
 
 
 func stop_animation():
 	if $AnimationPlayer.current_animation == "rail_detach":
 		$Camera/weapon_holder/railshot_model.hide()
 	$AnimationPlayer.stop()
+
+
+func _on_SpikeCountdown_timeout():
+	spike_time_left -= 1
+	$HUD/Mrgn/Spike.text = str(spike_time_left)
+	if !spike_time_left:
+		$SpikeCountdown.stop()
+		$HUD/Mrgn/Spike.hide()
+
+
+func _on_SpikeExtend_timeout():
+	spike_active = false
+	$SpikeArea/CollisionShape.disabled = true
+
