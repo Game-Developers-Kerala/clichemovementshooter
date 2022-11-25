@@ -129,21 +129,27 @@ respawn_interval = 40.0
 
 [node name="small_health" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 3.5 )
+visible = true
 
 [node name="small_health2" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -3.5 )
+visible = true
 
 [node name="small_health3" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 3.5 )
+visible = true
 
 [node name="small_health4" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -3.5 )
+visible = true
 
 [node name="small_health5" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, 3.5 )
+visible = true
 
 [node name="small_health6" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, -3.5 )
+visible = true
 
 [node name="LevelGeometry" type="CSGCombiner" parent="."]
 material_override = SubResource( 1 )
@@ -237,12 +243,12 @@ transform = Transform( 1, 0, 0, 0, 0.989237, -0.146325, 0, 0.146325, 0.989237, 0
 
 [node name="CSGBox2" type="CSGBox" parent="LevelGeometry/RampToNorthChamber"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 24 )
-width = 8.0
+width = 24.0
 depth = 48.0
 
 [node name="CSGBox3" type="CSGBox" parent="LevelGeometry/RampToNorthChamber"]
-transform = Transform( 1, 0, 0, 0, 0.989237, 0.146325, 0, -0.146325, 0.989237, 0, -0.890305, 48.654 )
-width = 8.0
+transform = Transform( 1, 0, 0, 0, 0.989237, 0.146325, 0, -0.146325, 0.989237, 0, -0.670819, 50.1379 )
+width = 24.0
 depth = 7.0
 
 [node name="Center" type="CSGCombiner" parent="LevelGeometry"]
@@ -348,9 +354,9 @@ width = 37.0
 depth = 8.0
 
 [node name="CSGBox" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, -25.5 )
+transform = Transform( 1, 0, 2.98023e-08, 0, 1, 0, -2.98023e-08, 0, 1, -7.62939e-06, -1, -25 )
 width = 8.0
-depth = 3.0
+depth = 4.0
 
 [node name="CSGCombiner2" type="CSGCombiner" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp"]
 transform = Transform( 0.906308, 0.422618, 0, -0.422618, 0.906308, -1.99638e-09, 0, 0, 1, 4.02146, -15.5, -63.4987 )
@@ -376,7 +382,7 @@ width = 58.0
 depth = 8.0
 
 [node name="guardrail4" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/WestRamp"]
-transform = Transform( -2.08616e-07, 0, 0.999998, 0, 1, 0, -0.999998, 0, -2.08616e-07, -4.40418, -0.5, -28.4622 )
+transform = Transform( -1.78814e-07, 0, 0.999998, 0, 1, 0, -0.999998, 0, -1.78814e-07, -4.50418, -0.5, -28.4622 )
 width = 9.0
 height = 5.0
 depth = 1.0
@@ -439,13 +445,13 @@ width = 58.0
 depth = 8.0
 
 [node name="guardrail4" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/EastRamp"]
-transform = Transform( -1.49012e-07, 0, 0.999998, 0, 1, 0, -0.999998, 0, -1.49012e-07, 4.59582, -0.5, -28.4622 )
+transform = Transform( -1.49012e-07, 0, 0.999998, 0, 1, 0, -0.999998, 0, -1.49012e-07, 4.49583, -0.5, -28.4622 )
 width = 9.0
 height = 5.0
 depth = 1.0
 
 [node name="guardrail5" type="CSGBox" parent="LevelGeometry/RampToEastWestPlatforms/EastRamp"]
-transform = Transform( -0.258818, 0, 0.965922, 0, 1, 0, -0.965922, 0, -0.258818, 3.49604, -15.5, -71.8624 )
+transform = Transform( -0.258818, 0, 0.965922, 0, 1, 0, -0.965922, 0, -0.258818, 3.51678, -15.5, -71.8679 )
 width = 9.0
 height = 3.0
 depth = 1.0
@@ -461,6 +467,68 @@ transform = Transform( -0.258818, 0, 0.965922, 0, 1, 0, -0.965922, 0, -0.258818,
 width = 9.0
 height = 3.0
 depth = 1.0
+
+[node name="ExtraRamp" type="CSGCombiner" parent="LevelGeometry"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18, -116 )
+
+[node name="CSGCombiner" type="CSGCombiner" parent="LevelGeometry/ExtraRamp"]
+transform = Transform( 1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0, 0, 28 )
+
+[node name="CSGBox3" type="CSGBox" parent="LevelGeometry/ExtraRamp/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -5, 16 )
+width = 8.0
+height = 10.0
+depth = 32.0
+
+[node name="CSGBox4" type="CSGBox" parent="LevelGeometry/ExtraRamp/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -5, 16 )
+width = 8.0
+height = 10.0
+depth = 32.0
+
+[node name="CSGBox" type="CSGBox" parent="LevelGeometry/ExtraRamp"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -2, 24.5 )
+width = 8.0
+height = 4.0
+depth = 7.0
+
+[node name="CSGBox2" type="CSGBox" parent="LevelGeometry/ExtraRamp"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -2, 24.5 )
+width = 8.0
+height = 4.0
+depth = 7.0
+
+[node name="CSGBox5" type="CSGBox" parent="LevelGeometry/ExtraRamp"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11, -9.5, 24.5 )
+height = 11.0
+depth = 6.0
+
+[node name="CSGBox6" type="CSGBox" parent="LevelGeometry/ExtraRamp"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11, -9.5, 24.5 )
+height = 11.0
+depth = 6.0
+
+[node name="CSGBox3" type="CSGBox" parent="LevelGeometry/ExtraRamp"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -11, 31 )
+width = 8.0
+height = 8.0
+depth = 7.0
+
+[node name="CSGBox4" type="CSGBox" parent="LevelGeometry/ExtraRamp"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -11, 31 )
+width = 8.0
+height = 8.0
+depth = 7.0
+
+[node name="CSGCombiner2" type="CSGCombiner" parent="LevelGeometry/ExtraRamp"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -17.5, 45 )
+operation = 2
+
+[node name="CSGBox" type="CSGBox" parent="LevelGeometry/ExtraRamp/CSGCombiner2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.2, 0 )
+width = 32.0
+height = 9.0
+depth = 22.0
 
 [node name="dummies" type="Spatial" parent="."]
 
@@ -489,6 +557,7 @@ directional_shadow_max_distance = 200.0
 
 [node name="pickup_rail" parent="Pickups" instance=ExtResource( 5 )]
 transform = Transform( -2, 0, -3.01992e-07, 0, 2, 0, 3.01992e-07, 0, -2, 0, 8, 90 )
+visible = false
 respawn_interval = 20.0
 anim_bob = false
 
@@ -504,21 +573,27 @@ lifespan = 24.0
 
 [node name="small_health2" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1, 0 )
+visible = true
 
 [node name="small_health6" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 1, 0 )
+visible = true
 
 [node name="small_health7" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1, 0 )
+visible = true
 
 [node name="small_health3" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1, 0 )
+visible = true
 
 [node name="small_health4" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 1, 0 )
+visible = true
 
 [node name="small_health5" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 1, 0 )
+visible = true
 
 [node name="medium_health" parent="Pickups" instance=ExtResource( 11 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -58.5, 19.5, -57 )

@@ -82,7 +82,7 @@ func _on_Timer_timeout():
 	randlook += Vector3.UP*randgen.randf_range(-RANDOM_LOOK*0.5,RANDOM_LOOK)
 	missile.look_dir = randlook
 	get_tree().current_scene.add_child(missile)
-	missile.global_translation = org_local +global_translation
+	missile.global_translation = org_local*0.5 +global_translation
 	if missiles_fired%2:
 #		print("left")
 #		missile.global_translation = $PackMeshes/left.global_translation
