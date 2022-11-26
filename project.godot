@@ -44,6 +44,7 @@ game="*res://scripts/globals/game.gd"
 
 window/size/width=1280
 window/size/height=720
+window/size/fullscreen=true
 
 [gui]
 
@@ -71,6 +72,10 @@ texture={
 "size_limit": 0,
 "stream": false,
 "svg/scale": 1.0
+}
+ogg_vorbis={
+"loop": false,
+"loop_offset": 0
 }
 
 [input]

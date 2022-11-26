@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://scenes/shared/projectile_straight.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/shared/single_direct_hit.tscn" type="PackedScene" id=2]
@@ -11,6 +11,8 @@
 [ext_resource path="res://assets/vfx_atlas.png" type="Texture" id=9]
 [ext_resource path="res://assets/models/mesh_rocket.obj" type="ArrayMesh" id=10]
 [ext_resource path="res://shaders/player_rocket_and_launcher.material" type="Material" id=11]
+[ext_resource path="res://sfx/rocket_buzz.ogg" type="AudioStream" id=12]
+[ext_resource path="res://sfx/explosion1.ogg" type="AudioStream" id=13]
 
 [sub_resource type="GDScript" id=5]
 script/source = "extends MeshInstance
@@ -53,6 +55,14 @@ material/0 = SubResource( 6 )
 caused_by_player = true
 max_damage = 75.0
 min_damage = 25.0
+explosion_audio_player = NodePath("AudioStreamPlayer3D2")
+
+[node name="AudioStreamPlayer3D2" type="AudioStreamPlayer3D" parent="Explosion" index="2"]
+stream = ExtResource( 13 )
+unit_db = 6.0
+unit_size = 2.0
+max_db = -6.0
+bus = "non_music"
 
 [node name="Vfx_Explosion" parent="." index="4" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.15 )
@@ -68,3 +78,12 @@ modulate = Color( 0.462745, 0.462745, 0.462745, 1 )
 puff_count = 16
 interval = 0.025
 size_factor = 2.0
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." index="7"]
+stream = ExtResource( 12 )
+unit_db = -6.0
+unit_size = 2.0
+max_db = -3.0
+autoplay = true
+max_distance = 20.0
+bus = "non_music"

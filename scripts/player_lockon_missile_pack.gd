@@ -51,6 +51,7 @@ func _process(delta):
 		if $RayCast.get_collider() == popped:
 #			print("ray colliding:",popped.name)
 			# adding the enemy to locked enemies and the number of times fired at as an array
+			$fx.play()
 			var indic = LOCK_INDICATOR.instance()
 			popped.add_child(indic)
 			indic.translation = Vector3.UP
@@ -87,10 +88,12 @@ func _on_Timer_timeout():
 #		print("left")
 #		missile.global_translation = $PackMeshes/left.global_translation
 		$PackMeshes/left.translation.z = 0.04
+		$left.play()
 	else:
 #		print("right")
 #		missile.global_translation = $PackMeshes/right.global_translation
 		$PackMeshes/right.translation.z =0.04
+		$right.play()
 	missiles_fired += 1
 	if missiles_fired == MISSILE_COUNT:
 		print("all missiles fired")

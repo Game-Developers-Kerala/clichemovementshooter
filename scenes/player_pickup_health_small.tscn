@@ -18,7 +18,6 @@ shader_param/anim_speed = 3.0
 shader_param/gradient = ExtResource( 5 )
 
 [node name="small_health" instance=ExtResource( 2 )]
-visible = false
 type = 1
 model_node = NodePath("MeshInstance")
 respawning = true
@@ -26,7 +25,8 @@ respawn_interval = 40.0
 glow = NodePath("vfx_glow")
 
 [node name="MeshInstance" type="MeshInstance" parent="." index="3"]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+transform = Transform( 3.42964, -0.547428, -0.905139, 0, 1.3352, -2.74572, 1.35581, 1.38476, 2.28962, 0, 0, 0 )
+cast_shadow = 0
 mesh = ExtResource( 4 )
 material/0 = ExtResource( 6 )
 

@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scripts/player_lockon_missile_pack.gd" type="Script" id=1]
 [ext_resource path="res://assets/models/mesh_missile_pack.obj" type="ArrayMesh" id=2]
 [ext_resource path="res://shaders/player_missile_and_pack.material" type="Material" id=3]
+[ext_resource path="res://sfx/rocket_shoot.ogg" type="AudioStream" id=4]
+[ext_resource path="res://sfx/lockon_indicator.ogg" type="AudioStream" id=5]
 [ext_resource path="res://assets/vfx_atlas.png" type="Texture" id=6]
 
 [sub_resource type="ConvexPolygonShape" id=1]
@@ -49,6 +51,27 @@ scale = Vector2( 11, 11 )
 texture = ExtResource( 6 )
 region_enabled = true
 region_rect = Rect2( 32, 0, 32, 32 )
+
+[node name="left" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.330937, 0, -0.140734 )
+stream = ExtResource( 4 )
+attenuation_model = 3
+unit_db = -6.0
+max_db = -3.0
+bus = "non_music"
+
+[node name="right" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.331, 0, -0.141 )
+stream = ExtResource( 4 )
+attenuation_model = 3
+unit_db = -6.0
+max_db = -3.0
+bus = "non_music"
+
+[node name="fx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+volume_db = -9.0
+bus = "non_music"
 
 [connection signal="body_entered" from="." to="." method="_on_player_lockon_missile_pack_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

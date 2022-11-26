@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://shaders/player_rocket_and_launcher.material" type="Material" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://scripts/hud_announcement_label.gd" type="Script" id=5]
 [ext_resource path="res://gui/main.theme" type="Theme" id=6]
 [ext_resource path="res://shaders/generic_object.shader" type="Shader" id=7]
+[ext_resource path="res://sfx/rocket_shoot.ogg" type="AudioStream" id=8]
 [ext_resource path="res://assets/models/mesh_rocket_launcher.obj" type="ArrayMesh" id=10]
 [ext_resource path="res://assets/models/model_railshot.tscn" type="PackedScene" id=11]
 [ext_resource path="res://assets/models/texture_weapon_railshot_color.png" type="Texture" id=12]
@@ -212,6 +213,20 @@ tracks/3/keys = {
 "method": "set_emit_anim"
 } ]
 }
+tracks/4/type = "method"
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "railattach" ],
+"method": "play_audio"
+} ]
+}
 
 [sub_resource type="Animation" id=15]
 resource_name = "rail_detach"
@@ -268,6 +283,20 @@ tracks/4/keys = {
 "method": "set_emit_anim"
 } ]
 }
+tracks/5/type = "method"
+tracks/5/path = NodePath(".")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "raildetach" ],
+"method": "play_audio"
+} ]
+}
 
 [sub_resource type="Animation" id=16]
 resource_name = "shoot_rail"
@@ -306,6 +335,20 @@ tracks/2/keys = {
 "method": "set_emit_anim"
 } ]
 }
+tracks/3/type = "method"
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "railshoot" ],
+"method": "play_audio"
+} ]
+}
 
 [sub_resource type="Animation" id=12]
 resource_name = "shoot_rocket"
@@ -341,6 +384,20 @@ tracks/2/keys = {
 "update": 1,
 "values": [ false ]
 }
+tracks/3/type = "method"
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "rocketshoot" ],
+"method": "play_audio"
+} ]
+}
 
 [sub_resource type="SphereShape" id=22]
 radius = 0.8
@@ -374,7 +431,7 @@ skeleton = NodePath("../..")
 material/0 = ExtResource( 2 )
 
 [node name="railshot_model" parent="Camera/weapon_holder" instance=ExtResource( 11 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.102661, 0.119312, -0.0142242 )
+transform = Transform( 0.486747, 0, -0.873543, 0, 1, 0, 0.873543, 0, 0.486747, 0.277488, 0.119312, 0.183054 )
 visible = false
 material/0 = SubResource( 13 )
 
@@ -679,6 +736,25 @@ monitorable = false
 [node name="CollisionShape" type="CollisionShape" parent="SpikeArea"]
 shape = SubResource( 22 )
 disabled = true
+
+[node name="audioplayers" type="Node" parent="."]
+
+[node name="gun" type="AudioStreamPlayer" parent="audioplayers"]
+stream = ExtResource( 8 )
+volume_db = -3.0
+bus = "player"
+
+[node name="mouth" type="AudioStreamPlayer" parent="audioplayers"]
+volume_db = -3.0
+bus = "player"
+
+[node name="feet" type="AudioStreamPlayer" parent="audioplayers"]
+volume_db = -3.0
+bus = "player"
+
+[node name="fx" type="AudioStreamPlayer" parent="audioplayers"]
+volume_db = -3.0
+bus = "player"
 
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]

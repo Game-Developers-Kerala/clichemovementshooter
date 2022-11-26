@@ -14,6 +14,7 @@ export(float) var push_force = 30.0
 export(float) var blast_duration = 0.2
 export(bool) var explode_on_ready = false # if on, will go off immediately on spawn.
 export(NodePath) var explosion_vfx
+export(NodePath) var explosion_audio_player
 
 var receivers := []
 
@@ -36,6 +37,12 @@ func explode():
 		get_tree().current_scene.add_child(xpl_vfx)
 		xpl_vfx.global_translation = global_translation
 		xpl_vfx.explode()
+	if explosion_audio_player:
+		var xpl_aud = get_node(explosion_audio_player)
+		remove_child(xpl_aud)
+		get_tree().current_scene.add_child(xpl_aud)
+		xpl_aud.global_translation = global_translation
+		xpl_aud.play()
 
 func _on_Timer_timeout():
 	queue_free()

@@ -78,6 +78,21 @@ var predict_future_pos :PoolVector3Array = []
 onready var predict_blink_timer = $PredictionBlink
 var prediction_suspend_time := 0.5
 
+const AUD = {
+	"railshoot":{"stream":preload("res://sfx/rail_shoot.ogg"),"source":"gun"},
+	"rocketshoot":{"stream":preload("res://sfx/rocket_shoot.ogg"),"source":"gun","vol":0.0},
+	"railattach":{"stream":preload("res://sfx/reload_p2.ogg"),"vol":-12},
+	"raildetach":{"stream":preload("res://sfx/reload_p1.ogg"),"vol":-12},
+	"spikepickup":{"stream":preload("res://sfx/pickup_spike.ogg"),"vol":-6},
+	"spikecountdown":{"stream":preload("res://sfx/spike_count_ping.ogg"),"vol":-6},
+	"spiketimedout":{"stream":preload("res://sfx/spike_timedout.ogg"),"vol":-12},
+	"missilepickup":{"stream":preload("res://sfx/pickup_missilepack.ogg"),"vol":-12},
+	"missileactivate":{"stream":preload("res://sfx/missile_activate.ogg"),"vol":-9},
+	"healthpickupsmall":{"stream":preload("res://sfx/healthpickup_small.ogg"),"vol":-9},
+	"healthpickupmedium":{"stream":preload("res://sfx/healthpickup_medium.ogg"),"vol":-9},
+	"healthpickuplarge":{"stream":preload("res://sfx/healthpickup_large.ogg"),"vol":-9},
+	}
+
 func _ready():
 	randgen.randomize()
 	predict_past_pos.resize(4)
@@ -204,9 +219,10 @@ func _physics_process(delta):
 	if Input.is_action_pressed("homingmissile"):
 		shoot_missile_pack()
 	if Input.is_action_just_pressed("ui_page_down"):
+		adjust_health(-20)
 		pass
 	if Input.is_action_just_pressed("ui_page_up"):
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+#		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		pass
 	$Label.text = movestates.keys()[movestate]
 #	$Label.text = "\nWallray colliding:"+str(wallsidecheck)
@@ -305,6 +321,7 @@ func shoot_missile_pack():
 	mispak.global_transform = $Camera.global_transform
 	stats.weapon_missilepack = false
 	$HUD/Mrgn/Powerups/Missile/enabled.hide()
+	play_audio("missileactivate")
 
 func pick_up(item:pickup):
 	var dict :Dictionary= item.get_pickup_info()
@@ -317,6 +334,13 @@ func pick_up(item:pickup):
 				if stats.health >= healthmax:
 					return
 				adjust_health(dict[key],healthmax)
+				match dict["id"]:
+					"small":
+						play_audio("healthpickupsmall")
+					"medium":
+						play_audio("healthpickupmedium")
+					"large":
+						play_audio("healthpickuplarge")
 			"weapon_rail":
 				if is_instance_valid(stats[key]):
 					return
@@ -330,11 +354,13 @@ func pick_up(item:pickup):
 					return
 				stats[key] = dict[key]
 				$HUD/Mrgn/Powerups/Missile/enabled.show()
+				play_audio("missilepickup")
 			"powerup_spikecage":
 				$SpikeCountdown.start()
 				spike_time_left = SPIKE_TIME
 				$HUD/Mrgn/Spike/timelabel.text = str(spike_time_left)
 				$HUD/Mrgn/Spike.show()
+				play_audio("spikepickup")
 				pass
 	item.on_pickup()
 
@@ -358,7 +384,7 @@ func get_hit(args:={}):
 func adjust_health(in_val,max_limit:=STAT_RANGES.health.max):
 	stats.health = ceil(stats.health+in_val)
 	stats.health = clamp(stats.health,0,max_limit)
-	$HUD/Mrgn/Health.text = "Health " + str(int(stats.health)) 
+	$HUD/Mrgn/Health.text = str(int(stats.health)) 
 	if !stats.health:
 		set_process(false)
 		set_physics_process(false)
@@ -544,9 +570,30 @@ func _on_SpikeCountdown_timeout():
 	if !spike_time_left:
 		$SpikeCountdown.stop()
 		$HUD/Mrgn/Spike.hide()
+		play_audio("spiketimedout")
+		return
+	if spike_time_left < 6:
+		play_audio("spikecountdown")
 
 
 func _on_SpikeExtend_timeout():
 	spike_active = false
 	$SpikeArea/CollisionShape.disabled = true
 
+func play_audio(in_aud:String):
+	if !AUD.has(in_aud):
+		return
+	var aud_player:AudioStreamPlayer = $audioplayers/fx
+	if AUD[in_aud].has("source"):
+		match AUD[in_aud]["source"]:
+			"gun":
+				aud_player = $audioplayers/gun
+			"mouth":
+				aud_player = $audioplayers/mouth
+			"feet":
+				aud_player = $audioplayers/feet
+	aud_player.volume_db = -3
+	if AUD[in_aud].has("vol"):
+		aud_player.volume_db = AUD[in_aud]["vol"]
+	aud_player.stream = AUD[in_aud]["stream"]
+	aud_player.play()

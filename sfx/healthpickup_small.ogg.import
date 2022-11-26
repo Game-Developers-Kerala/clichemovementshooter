@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/healthpickup_small.ogg-e8654f38370c4b5fbd7b81d917ac5af8.oggstr"
+
+[deps]
+
+source_file="res://sfx/healthpickup_small.ogg"
+dest_files=[ "res://.import/healthpickup_small.ogg-e8654f38370c4b5fbd7b81d917ac5af8.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0
