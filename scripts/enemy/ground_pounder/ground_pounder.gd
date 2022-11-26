@@ -24,12 +24,28 @@ func _process(delta: float) -> void:
 	match get_state():
 		
 		states.CHASE:
+			
 			label.text = "Chase"
+			_aim_at_player()
+			#here enemy will navigate to the player
+			nav_agent.set_target_location(player.global_transform.origin)
+			
 		states.ATTACK:
+			
+			_aim_at_player()
+			#here enemy will navigate to the player
+			nav_agent.set_target_location(player.global_transform.origin)
 			label.text = "Attack"
+			
 		states.MEELE:
+			
+			_aim_at_player()
+			#here enemy will navigate to the player
+			nav_agent.set_target_location(player.global_transform.origin)
 			label.text = "Meele"
+			
 		states.DEATH:
+			
 			label.text = "Death"
 	
 	
@@ -41,36 +57,18 @@ func _physics_process(delta: float) -> void:
 		
 		states.CHASE:
 			
-			#to make enemy look at player
-			body.look_at(player.global_transform.origin, Vector3.UP)
-			weapon.look_at(player.global_transform.origin, Vector3.UP)
-			body.rotation.x = 0
-			
-			#here enemy will navigate to the player
-			nav_agent.set_target_location(player.global_transform.origin)
-			var target_pos = nav_agent.get_next_location()
-			var dir : Vector3 = (target_pos - global_transform.origin).normalized()
-			velocity = dir * chase_speed * delta
+			velocity = _calc_velocity(chase_speed) * delta
 			move_and_slide(velocity,Vector3.UP)
 		
+
 		states.ATTACK:
-			
-			#to make enemy look at player
-			body.look_at(player.global_transform.origin, Vector3.UP)
-			weapon.look_at(player.global_transform.origin, Vector3.UP)
-			body.rotation.x = 0
-			
-			if weapon.get_collider() == player:
-				if player.in_slide and $circlewaveCooldown.is_stopped():
-					$circlewaveCooldown.start()
-					var inst = shockwave.instance()
-					get_tree().current_scene.add_child(inst)
-					inst.global_translation = global_translation
-			
+			pass
 		states.DEATH:
 			pass
 
 
+
+	
 #SIGNALS
 func _on_AttackArea_body_entered(body: Node) -> void:
 	

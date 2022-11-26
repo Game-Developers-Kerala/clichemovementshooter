@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripts/enemy/wizard/homing_missle_target.gd" type="Script" id=1]
+
+[sub_resource type="CylinderShape" id=1]
+
+[node name="HomingMissleTarget" type="Area"]
+transform = Transform( 4, 0, 0, 0, 0.5, 0, 0, 0, 4, 0, 0.544357, 0 )
+collision_layer = 0
+monitorable = false
+script = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="CSGCylinder" type="CSGCylinder" parent="."]
+
+[node name="Die" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[connection signal="timeout" from="Die" to="." method="_on_Die_timeout"]

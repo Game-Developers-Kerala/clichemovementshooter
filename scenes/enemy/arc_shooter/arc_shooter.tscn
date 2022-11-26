@@ -1,8 +1,8 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scripts/enemy/enemy_hurtbox.gd" type="Script" id=1]
 [ext_resource path="res://Assets/shared/up-arrow-svgrepo-com.svg" type="Texture" id=2]
-[ext_resource path="res://scripts/enemy/arc_shooter.gd" type="Script" id=3]
+[ext_resource path="res://scripts/enemy/arc_shooter/arc_shooter.gd" type="Script" id=3]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.4
@@ -14,8 +14,6 @@ rings = 2
 
 [sub_resource type="SpatialMaterial" id=3]
 albedo_color = Color( 0.768627, 0.172549, 0.690196, 1 )
-
-[sub_resource type="SphereShape" id=4]
 
 [node name="ArcShooter" type="KinematicBody"]
 collision_layer = 2
@@ -50,6 +48,7 @@ texture = ExtResource( 2 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.33705, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -200 )
+collision_mask = 257
 
 [node name="Hurtbox" type="Area" parent="."]
 collision_layer = 32
@@ -68,17 +67,12 @@ path_max_distance = 7.0
 neighbor_dist = 2000.0
 max_neighbors = 2
 
-[node name="ShootRange" type="Area" parent="." groups=["enemy"]]
-transform = Transform( 8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 2.95322, 0 )
-collision_layer = 0
-monitorable = false
-
-[node name="CollisionShape" type="CollisionShape" parent="ShootRange"]
-shape = SubResource( 4 )
-
 [node name="ShootTimer" type="Timer" parent="."]
-wait_time = 2.0
 one_shot = true
 
-[connection signal="body_entered" from="ShootRange" to="." method="_on_ShootRange_body_entered"]
-[connection signal="body_exited" from="ShootRange" to="." method="_on_ShootRange_body_exited"]
+[node name="AttackCooldown" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[connection signal="timeout" from="ShootTimer" to="." method="_on_ShootTimer_timeout"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_AttackCooldown_timeout"]

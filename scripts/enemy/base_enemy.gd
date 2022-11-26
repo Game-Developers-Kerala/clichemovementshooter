@@ -18,7 +18,6 @@ var current_state setget set_state, get_state
 var player : KinematicBody
 
 #onready var player = get_parent().get_node("Player")
-
 onready var weapon = get_node(path_to_weapon) as RayCast
 onready var nav_agent = get_node(path_to_nav_agent) as NavigationAgent
 onready var body = get_node(path_to_BodyRotationHelper) as Spatial
@@ -51,3 +50,20 @@ func get_hit(args={}):
 		return
 
 
+func _calc_velocity(speed):
+	
+	var target_pos = nav_agent.get_next_location()
+	var dir : Vector3 = (target_pos - global_transform.origin).normalized()
+	return dir * speed
+
+
+func _aim_at_player():
+	
+	#to make enemy look at player
+	body.look_at(player.global_transform.origin, Vector3.UP)
+	weapon.look_at(player.global_transform.origin, Vector3.UP)
+	body.rotation.x = 0
+
+
+func _calc_vantage_point(target : Vector3):
+	pass
