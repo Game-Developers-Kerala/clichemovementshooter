@@ -37,6 +37,19 @@ mesh = SubResource( 2 )
 skeleton = NodePath("../..")
 material/0 = SubResource( 3 )
 
-[node name="attackcooldown" type="Timer" parent="."]
-wait_time = 3.0
+[node name="GunCoolTimer" type="Timer" parent="."]
+wait_time = 5.0
 one_shot = true
+
+[node name="GunBarrageTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="GunshotIntervalTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="muzzle_left" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1 )
+
+[node name="muzzle_right" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1 )

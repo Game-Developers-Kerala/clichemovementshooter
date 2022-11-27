@@ -8,15 +8,16 @@ enum states{
 	DEATH
 	
 }
+const PROJECTILE = preload("res://scenes/enemy/heavy_gunner/heavy_gunner_projectile.tscn")
 
-const MISSILE = preload("res://test/test_enemy_homing_projectile.tscn")
-
-func fire_missile():
-	var missile = MISSILE.instance()
-	get_tree().current_scene.add_child(missile)
-	missile.target = player
-	missile.look_dir = -global_transform.basis.z
-	missile.global_translation = global_translation-global_transform.basis.z
+func _fire_shot(left:bool=true):
+	var origin = $muzzle_left
+	if !left:
+		origin = $muzzle_right
+	var projectile = PROJECTILE.instance()
+	get_tree().current_scene.add_child(projectile)
+	var to = player.global_translation + player.CENTER_OF_MASS # change this to predicted location
+	projectile.look_at_from_position(origin.global_translation,to,Vector3.UP)
 
 func _ready() -> void:
 	player = get_tree().current_scene.get_node('Player')
@@ -32,16 +33,26 @@ func _process(delta: float) -> void:
 			
 			nav_agent.set_target_location(player.global_transform.origin)
 			_aim_at_player()
-			if $attackcooldown.is_stopped():
-				$attackcooldown.start()
-				fire_missile()
+			#=== testing projectile in chase state itself==
+#			if $GunCoolTimer.is_stopped():
+#				_start_barrage()
+#			elif !$GunBarrageTimer.is_stopped(): # barrage is ongoing
+#				if $GunshotIntervalTimer.is_stopped(): #time to shoot
+#					$GunshotIntervalTimer.start()
+#					_fire_shot(true) #left
+#					_fire_shot(false) #right
 			
 		states.ATTACK:
 			
 			nav_agent.set_target_location(player.global_transform.origin)
 			_aim_at_player()
-			
-			
+			if $GunCoolTimer.is_stopped():
+				_start_barrage()
+			elif !$GunBarrageTimer.is_stopped(): # barrage is ongoing
+				if $GunshotIntervalTimer.is_stopped(): #time to shoot
+					$GunshotIntervalTimer.start()
+					_fire_shot(true) #left
+					_fire_shot(false) #right
 			
 		states.DEATH:
 			pass
@@ -64,3 +75,10 @@ func _physics_process(delta: float) -> void:
 			
 		states.DEATH:
 			pass
+
+
+func _start_barrage() -> void:
+	$GunCoolTimer.start()
+	$GunBarrageTimer.start()
+	$GunshotIntervalTimer.start()
+	pass

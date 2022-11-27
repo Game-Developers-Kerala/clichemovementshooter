@@ -13,6 +13,8 @@ enum states{
 onready var label = $BodyRotationHelper/Label3D as Label3D
 onready var missle_target = preload("res://scenes/enemy/wizard/homing_missle_target.tscn")
 
+const MISSILE = preload("res://scenes/enemy/wizard/wizard_homing_projectile.tscn")
+
 func _ready() -> void:
 	
 	player = get_tree().current_scene.get_node('Player')
@@ -57,9 +59,8 @@ func _physics_process(delta: float) -> void:
 		states.ATTACK:
 			
 				if weapon.get_collider() == player:
-				
 					if $HomingMissleTimer.is_stopped():
-						_homing_missle()
+						_fire_missile()
 				else:
 				
 					_calc_velocity(attack_speed)
@@ -67,10 +68,10 @@ func _physics_process(delta: float) -> void:
 		states.DEATH:
 			pass
 
-	
-func _homing_missle() -> void:
-	
+func _fire_missile():
 	$HomingMissleTimer.start()
-	var inst = missle_target.instance()
-	inst.global_transform.origin = player.global_translation
-	get_tree().current_scene.add_child(inst)
+	var missile = MISSILE.instance()
+	get_tree().current_scene.add_child(missile)
+	missile.target = player
+	missile.look_dir = -global_transform.basis.z
+	missile.global_translation = global_translation-global_transform.basis.z+CENTER_OF_MASS

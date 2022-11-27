@@ -68,4 +68,5 @@ neighbor_dist = 2000.0
 max_neighbors = 2
 
 [node name="HomingMissleTimer" type="Timer" parent="."]
+wait_time = 3.0
 one_shot = true

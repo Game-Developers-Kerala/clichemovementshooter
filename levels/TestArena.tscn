@@ -138,6 +138,7 @@ respawn_interval = 10.0
 [node name="EnemyManager" parent="." instance=ExtResource( 7 )]
 arc_enemy_spawner_path = NodePath("ArcGirlSpawner")
 ground_pounder_spawner_path = NodePath("GroundPounderSpawner")
+wizard_spawner_path = NodePath("WizardSpawner")
 
 [node name="ArcGirlSpawner" type="Node" parent="EnemyManager"]
 
@@ -156,3 +157,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.8255, 0, -10.4372 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.10223, 0, 0 )
 
 [node name="WizardSpawner" type="Node" parent="EnemyManager"]
+
+[node name="Position3D3" type="Position3D" parent="EnemyManager/WizardSpawner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.98837, 0.0282098, 16.0894 )

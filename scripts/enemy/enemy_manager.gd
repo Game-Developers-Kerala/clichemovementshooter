@@ -14,6 +14,7 @@ onready var wizard_spawner = get_node(wizard_spawner_path)
 
 onready var arc_enemy = preload("res://scenes/enemy/arc_shooter/arc_shooter.tscn")
 onready var ground_pounder = preload("res://scenes/enemy/ground_pounder/ground_pounder.tscn")
+onready var wizard = preload("res://scenes/enemy/wizard/wizard.tscn")
 onready var timer = Timer.new()
 
 #stores enemy spawn points
@@ -37,6 +38,7 @@ func ontimeout_start_spawn():
 	
 	_start_spawn(arc_enemy,arc_enemy_spawn_point)
 	_start_spawn(ground_pounder,ground_pounder_spawn_point)
+	_start_spawn(wizard,wizard_spawn_point)
 	
 	#comment out the stop function to spawn unlimited
 	timer.stop()
