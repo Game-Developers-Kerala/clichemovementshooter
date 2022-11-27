@@ -36,3 +36,7 @@ transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0
 mesh = SubResource( 2 )
 skeleton = NodePath("../..")
 material/0 = SubResource( 3 )
+
+[node name="attackcooldown" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true

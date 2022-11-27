@@ -58,9 +58,9 @@ height = 2.30785
 depth = 17.3706
 
 [node name="NavigationMeshInstance2" type="NavigationMeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.806004, 0 )
+transform = Transform( 0.970232, 0, 0.242176, 0, 1, 0, -0.242176, 0, 0.970232, -9.26881, -0.806004, 20.5856 )
 navmesh = ExtResource( 4 )
 navigation_layers = 2
 
 [node name="BaseEnemy" parent="." instance=ExtResource( 5 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 91.9562, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 63.0782, 52.8146 )
