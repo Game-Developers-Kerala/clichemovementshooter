@@ -11,37 +11,30 @@
 [sub_resource type="GDScript" id=17]
 script/source = "extends Spatial
 
-var player :Spatial
+const CONTINUE_AIMING_ANIMS = [\"shoot1_draw\",\"shoot1_release\",\"shoot2_draw\",\"shoot2_release\"]
 
-const AIMING_ANIMS = [\"idle\",\"shoot1_draw\",\"shoot1_release\",\"shoot2_draw\",\"shoot2_release\"]
+var target:Vector3
 
 func _ready():
 	set_process(false)
-	var arr = get_tree().get_nodes_in_group(\"player\")
-	if arr:
-		player = arr[0]
-	
-func _process(delta): #aims the upper body at player
-	if !player:
-		set_process(false)
-		return
-	var player_center = player.global_translation+Vector3(0,2,0)
-	var own_eyelevel = global_translation + Vector3(0,2,0)
-	var player_vertical_dir = 1
-	if player_center.y < own_eyelevel.y:
-		player_vertical_dir = -1
-	var player_dir = own_eyelevel.direction_to(player_center)
-	var cos_angle = player_dir.dot(-global_transform.basis.z.normalized())
-	var angle = acos(clamp(cos_angle,0,1))
-	$body.rotation.x = clamp(angle*player_vertical_dir,deg2rad(-35),deg2rad(80))
 
-func start_aiming():
+
+func _process(delta): #aims the upper body at player
+	var own_eyelevel = global_translation + Vector3(0,2,0)
+	var vertical_dir = 1
+	if target.y < own_eyelevel.y:
+		vertical_dir = -1
+	var target_dir = own_eyelevel.direction_to(target)
+	var cos_angle = target_dir.dot(-global_transform.basis.z.normalized())
+	var angle = acos(clamp(cos_angle,0,1))
+	$body.rotation.x = clamp(angle*vertical_dir,deg2rad(-35),deg2rad(80))
+
+func vertical_look_at(in_target:Vector3):
+	target = in_target
 	set_process(true)
 
 func _on_AnimationPlayer_animation_started(anim_name):
-	if !player:
-		return
-	if AIMING_ANIMS.has(anim_name):
+	if CONTINUE_AIMING_ANIMS.has(anim_name):
 		set_process(true)
 		return
 	$body.rotation.x = 0
@@ -2219,7 +2212,7 @@ skin = SubResource( 2 )
 material/0 = SubResource( 15 )
 
 [node name="HipBone" type="BoneAttachment" parent="Legs/Skeleton"]
-transform = Transform( -0.20112, -6.28486e-08, -0.979566, -5.31867e-08, -1, 7.50796e-08, -0.979567, 6.71999e-08, 0.20112, 0.00542599, 0.924792, 0.0919018 )
+transform = Transform( -0.218282, -4.77453e-08, -0.975886, -4.77454e-08, -1, 5.96046e-08, -0.975886, 5.96046e-08, 0.218282, 0, 1.13409, 0 )
 bone_name = "hip"
 
 [node name="RemoteTransform" type="RemoteTransform" parent="Legs/Skeleton/HipBone"]
@@ -2227,7 +2220,7 @@ remote_path = NodePath("../../../../body")
 update_rotation = false
 
 [node name="body" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00542599, 0.924792, 0.0919018 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13409, 0 )
 
 [node name="Skeleton2" type="Skeleton" parent="body"]
 bones/0/name = "torso"
