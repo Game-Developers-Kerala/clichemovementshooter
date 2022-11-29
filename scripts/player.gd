@@ -88,9 +88,13 @@ const AUD = {
 	"spiketimedout":{"stream":preload("res://sfx/spike_timedout.ogg"),"vol":-12},
 	"missilepickup":{"stream":preload("res://sfx/pickup_missilepack.ogg"),"vol":-12},
 	"missileactivate":{"stream":preload("res://sfx/missile_activate.ogg"),"vol":-9},
-	"healthpickupsmall":{"stream":preload("res://sfx/healthpickup_small.ogg"),"vol":-9},
-	"healthpickupmedium":{"stream":preload("res://sfx/healthpickup_medium.ogg"),"vol":-9},
-	"healthpickuplarge":{"stream":preload("res://sfx/healthpickup_large.ogg"),"vol":-9},
+	"healthpickupsmall":{"stream":preload("res://sfx/healthpickup_small.ogg"),"vol":-9,"source":"mouth"},
+	"healthpickupmedium":{"stream":preload("res://sfx/healthpickup_medium.ogg"),"vol":-9,"source":"mouth"},
+	"healthpickuplarge":{"stream":preload("res://sfx/healthpickup_large.ogg"),"vol":-9,"source":"mouth"},
+	"hurt1":{"stream":preload("res://sfx/player_hurt1.ogg"),"source":"mouth"},
+	"hurt2":{"stream":preload("res://sfx/player_hurt2.ogg"),"source":"mouth"},
+	"hurt3":{"stream":preload("res://sfx/player_hurt3.ogg"),"source":"mouth"},
+	"die":{"stream":preload("res://sfx/player_death.ogg"),"source":"mouth"},
 	}
 
 func _ready():
