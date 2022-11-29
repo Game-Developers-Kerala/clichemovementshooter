@@ -5,6 +5,8 @@ const MISSILE_COUNT = 12
 var missiles_fired = 0
 const RANDOM_LOOK = 0.2
 
+var pack_position_lerp_targ := 0.0
+
 var detect_queue = []
 var locked_enemies = []
 
@@ -18,6 +20,10 @@ const MISSILE = preload("res://scenes/player_homing_missile.tscn")
 var randgen  = RandomNumberGenerator.new()
 
 func _ready():
+	$PackMeshes/left.translation.z = 0.2
+	$PackMeshes/right.translation.z = 0.2
+	translation.y = -0.25
+	rotation.x = deg2rad(10)
 	randgen.randomize()
 	print("missile pack activated =========")
 	translate(Vector3.ZERO)
@@ -27,6 +33,7 @@ func _ready():
 
 
 func _process(delta):
+	animate(delta)
 	if !detect_queue:
 		return
 	var popped = detect_queue.pop_front()
@@ -44,10 +51,11 @@ func _process(delta):
 		if $RayCast.get_collider() == popped:
 #			print("ray colliding:",popped.name)
 			# adding the enemy to locked enemies and the number of times fired at as an array
+			$fx.play()
 			var indic = LOCK_INDICATOR.instance()
 			popped.add_child(indic)
 			indic.translation = Vector3.UP
-			locked_enemies.push_back([popped,0,indic])
+			locked_enemies.push_back([popped,0]) # 0 means the enemy was shot at 0 times as of now
 #			print("locked enemy:",popped.name)
 
 func _on_player_lockon_missile_pack_body_entered(body):
@@ -75,11 +83,26 @@ func _on_Timer_timeout():
 	randlook += Vector3.UP*randgen.randf_range(-RANDOM_LOOK*0.5,RANDOM_LOOK)
 	missile.look_dir = randlook
 	get_tree().current_scene.add_child(missile)
-	missile.global_translation = org_local +global_translation
+	missile.global_translation = org_local*0.5 +global_translation
+	if missiles_fired%2:
+#		print("left")
+#		missile.global_translation = $PackMeshes/left.global_translation
+		$PackMeshes/left.translation.z = 0.04
+		$left.play()
+	else:
+#		print("right")
+#		missile.global_translation = $PackMeshes/right.global_translation
+		$PackMeshes/right.translation.z =0.04
+		$right.play()
 	missiles_fired += 1
 	if missiles_fired == MISSILE_COUNT:
-#		print("all missiles fired")
-		for enemy in locked_enemies:
-			if is_instance_valid(enemy[0]):
-				enemy[2].queue_free()
+		print("all missiles fired")
+		pack_position_lerp_targ = 0.2
+		$Timer.stop()
+		yield(get_tree().create_timer(0.2),"timeout")
 		queue_free()
+
+
+func animate(delta):
+	$PackMeshes/left.translation.z = lerp($PackMeshes/left.translation.z,pack_position_lerp_targ,delta*10)
+	$PackMeshes/right.translation.z = lerp($PackMeshes/right.translation.z,pack_position_lerp_targ,delta*10)

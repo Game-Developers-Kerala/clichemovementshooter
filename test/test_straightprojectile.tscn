@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://scripts/shared/projectile_straight.gd" type="Script" id=1]
+[ext_resource path="res://scenes/shared/projectile.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/shared/single_direct_hit.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/shared/vfx_projectile_trail.tscn" type="PackedScene" id=4]
+[ext_resource path="res://test/smoke_puff.png" type="Texture" id=5]
+
+[sub_resource type="SphereMesh" id=1]
+radius = 0.1
+height = 0.4
+
+[node name="projectile_straight_test" instance=ExtResource( 2 )]
+script = ExtResource( 1 )
+speed = 10.0
+detect_npc = false
+detect_wall = false
+detect_player = true
+direct_hit = NodePath("single_direct_hit")
+trail = NodePath("vfx_projectile_trail")
+
+[node name="RayCast" type="RayCast" parent="." index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.33 )
+enabled = true
+cast_to = Vector3( 0, 0, -1 )
+collision_mask = 0
+collide_with_areas = true
+
+[node name="MeshInstance" type="MeshInstance" parent="." index="2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
+mesh = SubResource( 1 )
+
+[node name="single_direct_hit" parent="." index="3" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.01228 )
+damage = 35.0
+force = 2.0
+
+[node name="vfx_projectile_trail" parent="." index="4" instance=ExtResource( 4 )]
+texture = ExtResource( 5 )
+modulate = Color( 0.694118, 0.694118, 0.694118, 1 )
+puff_count = 16
+interval = 0.1
+size_factor = 3.0

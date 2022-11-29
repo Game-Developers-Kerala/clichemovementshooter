@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/rocket_buzz.ogg-40b8925bb005317bcae6f2ee63e7a3c5.oggstr"
+
+[deps]
+
+source_file="res://sfx/rocket_buzz.ogg"
+dest_files=[ "res://.import/rocket_buzz.ogg-40b8925bb005317bcae6f2ee63e7a3c5.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

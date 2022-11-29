@@ -1,20 +1,38 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://shaders/player_rocket_and_launcher.material" type="Material" id=2]
+[ext_resource path="res://scripts/hud_attack_indicators.gd" type="Script" id=3]
+[ext_resource path="res://test/test_Pause.gd" type="Script" id=4]
+[ext_resource path="res://scripts/hud_announcement_label.gd" type="Script" id=5]
+[ext_resource path="res://gui/main.theme" type="Theme" id=6]
+[ext_resource path="res://shaders/generic_object.shader" type="Shader" id=7]
+[ext_resource path="res://sfx/rocket_shoot.ogg" type="AudioStream" id=8]
+[ext_resource path="res://assets/models/mesh_rocket_launcher.obj" type="ArrayMesh" id=10]
+[ext_resource path="res://assets/models/model_railshot.tscn" type="PackedScene" id=11]
+[ext_resource path="res://assets/models/texture_weapon_railshot_color.png" type="Texture" id=12]
+[ext_resource path="res://assets/models/texture_weapon_railshot_emission.png" type="Texture" id=13]
+[ext_resource path="res://assets/vfx_atlas.png" type="Texture" id=14]
 
 [sub_resource type="CapsuleShape" id=1]
-radius = 0.4
+radius = 0.56
+height = 0.68
 
-[sub_resource type="QuadMesh" id=3]
-size = Vector2( 0.002, 0.002 )
+[sub_resource type="ShaderMaterial" id=13]
+resource_local_to_scene = true
+shader = ExtResource( 7 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/emission_color = Color( 1, 1, 1, 1 )
+shader_param/emission = 1.0
+shader_param/roughness = 0.8
+shader_param/specular = 0.5
+shader_param/metallic = 0.0
+shader_param/occlusion = 0.0
+shader_param/albedo_tex = ExtResource( 12 )
+shader_param/emission_tex = ExtResource( 13 )
 
-[sub_resource type="SpatialMaterial" id=4]
-flags_unshaded = true
-flags_no_depth_test = true
-
-[sub_resource type="SphereShape" id=6]
-radius = 0.5
+[sub_resource type="SphereShape" id=21]
+radius = 0.57
 
 [sub_resource type="SphereShape" id=7]
 radius = 0.2
@@ -36,6 +54,354 @@ flags_transparent = true
 params_cull_mode = 1
 albedo_color = Color( 1, 1, 1, 0.356863 )
 
+[sub_resource type="GDScript" id=20]
+script/source = "extends Label
+
+var curr_wave := 0
+var enemy_count := 0
+
+func _ready():
+	game.connect(\"enemy_count_changed\",self,\"_on_enemy_count_changed\")
+	game.connect(\"wave_start\",self,\"_on_wave_start\")
+
+func _on_enemy_count_changed(in_count:int):
+	enemy_count = in_count
+	update_label()
+	
+func _on_wave_start(in_wave:int):
+	curr_wave = in_wave
+	update_label()
+
+func update_label():
+	text = \"Wave:\"+str(curr_wave)+\"\\nEnemies:\"+str(enemy_count)
+	print(text)
+"
+
+[sub_resource type="Animation" id=17]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Camera/weapon_holder/railshot_model:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:gun_ready")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:rocket_ready")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+tracks/3/type = "method"
+tracks/3/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "set_emit_anim"
+} ]
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "idle"
+tracks/0/type = "transform"
+tracks/0/path = NodePath("Camera/weapon_holder")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1 )
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:gun_ready")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/2/type = "transform"
+tracks/2/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = PoolRealArray( 0, 1, 0.102661, 0.119312, -0.0142242, 0, 0, 0, 1, 1, 1, 1 )
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:rocket_ready")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=14]
+resource_name = "rail_attach"
+tracks/0/type = "transform"
+tracks/0/path = NodePath("Camera/weapon_holder")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1, 0.1, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1, 0.2, 1, -0.0191929, -0.242598, -0.260612, 0, 0.0543925, 0, 0.99852, 1, 1, 1, 0.3, 1, 0, -0.242598, -0.261273, 0, -0.0237779, 0, 0.999717, 1, 1, 1, 0.5, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1 )
+tracks/1/type = "transform"
+tracks/1/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = PoolRealArray( 0, 1, 0.277488, 0.119312, 0.183054, 0, -0.506583, 0, 0.862191, 1, 1, 1, 0.1, 1, 0.102661, 0.119312, -0.0142242, 0, 0, 0, 1, 1, 1, 1 )
+tracks/2/type = "value"
+tracks/2/path = NodePath("Camera/weapon_holder/railshot_model:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/3/type = "method"
+tracks/3/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 1 ],
+"method": "set_emit_anim"
+} ]
+}
+tracks/4/type = "method"
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "railattach" ],
+"method": "play_audio"
+} ]
+}
+
+[sub_resource type="Animation" id=15]
+resource_name = "rail_detach"
+length = 0.5
+tracks/0/type = "transform"
+tracks/0/path = NodePath("Camera/weapon_holder")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1, 0.1, 1, 0.0149067, -0.242598, -0.259547, 0, -0.0575989, 0, 0.99834, 1, 1, 1, 0.3, 1, -0.00191797, -0.242598, -0.261212, 0, 0.0160214, 0, 0.999872, 1, 1, 1, 0.5, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1 )
+tracks/1/type = "transform"
+tracks/1/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = PoolRealArray( 0, 1, 0.102661, 0.119312, -0.0142242, 0, 0, 0, 1, 1, 1, 1, 0.1, 1, 0.172592, 0.119312, 0.0646871, 0, -0.210891, 0, 0.977509, 1, 1, 1, 0.3, 1, 0.277488, 0.119312, 0.183054, 0, -0.506583, 0, 0.862191, 1, 1, 1 )
+tracks/2/type = "value"
+tracks/2/path = NodePath("Camera/weapon_holder/railshot_model:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:gun_ready")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/4/type = "method"
+tracks/4/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "set_emit_anim"
+} ]
+}
+tracks/5/type = "method"
+tracks/5/path = NodePath(".")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "raildetach" ],
+"method": "play_audio"
+} ]
+}
+
+[sub_resource type="Animation" id=16]
+resource_name = "shoot_rail"
+length = 0.5
+step = 0.05
+tracks/0/type = "transform"
+tracks/0/path = NodePath("Camera/weapon_holder")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, -0.242598, -0.22378, 0, 0, 0, 1, 1, 1, 1, 0.2, 1, 0, -0.242598, -0.212476, 0, 0, 0, 1, 1, 1, 1, 0.5, 1, 0, -0.242667, -0.263939, -0.0128714, 0, 0, 0.999917, 1, 1, 1 )
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:gun_ready")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("Camera/weapon_holder/railshot_model")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 2 ],
+"method": "set_emit_anim"
+} ]
+}
+tracks/3/type = "method"
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "railshoot" ],
+"method": "play_audio"
+} ]
+}
+
+[sub_resource type="Animation" id=12]
+resource_name = "shoot_rocket"
+step = 0.05
+tracks/0/type = "transform"
+tracks/0/path = NodePath("Camera/weapon_holder")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, -0.244977, -0.238044, 0.0510026, 0, 0, 0.998699, 1, 1, 1, 0.3, 1, 0, -0.242598, -0.261273, -0.0317073, 0, 0, 0.999497, 1, 1, 1, 0.7, 1, 0, -0.242598, -0.261273, 0.00846038, 0, 0, 0.999964, 1, 1, 1, 1, 1, 0, -0.242598, -0.261273, 0, 0, 0, 1, 1, 1, 1 )
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:gun_ready")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:rocket_ready")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/3/type = "method"
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "rocketshoot" ],
+"method": "play_audio"
+} ]
+}
+
+[sub_resource type="SphereShape" id=22]
+radius = 0.8
+
 [node name="Player" type="KinematicBody" groups=["player"]]
 collision_mask = 258
 script = ExtResource( 1 )
@@ -54,10 +420,23 @@ cast_to = Vector3( 0, 0, -400 )
 collision_mask = 288
 collide_with_areas = true
 
-[node name="MeshInstance" type="MeshInstance" parent="Camera/AimRay"]
-transform = Transform( 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, -0.103075 )
-mesh = SubResource( 3 )
-material/0 = SubResource( 4 )
+[node name="weapon_holder" type="Spatial" parent="Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.242598, -0.261273 )
+
+[node name="rocketlauncher" type="MeshInstance" parent="Camera/weapon_holder"]
+transform = Transform( 0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.73052, 0, 0.0356899, -0.109638 )
+cast_shadow = 0
+mesh = ExtResource( 10 )
+skeleton = NodePath("../..")
+material/0 = ExtResource( 2 )
+
+[node name="railshot_model" parent="Camera/weapon_holder" instance=ExtResource( 11 )]
+transform = Transform( 0.486747, 0, -0.873543, 0, 1, 0, 0.873543, 0, 0.486747, 0.277488, 0.119312, 0.183054 )
+visible = false
+material/0 = SubResource( 13 )
+
+[node name="Position3D" type="Position3D" parent="Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.102785, -0.12, -0.4 )
 
 [node name="GeneralArea" type="Area" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0 )
@@ -67,7 +446,7 @@ monitorable = false
 
 [node name="CollisionShape" type="CollisionShape" parent="GeneralArea"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
-shape = SubResource( 6 )
+shape = SubResource( 21 )
 
 [node name="wallsidecheckarea" type="Area" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.19503, 0 )
@@ -114,11 +493,6 @@ one_shot = true
 [node name="RocketCooldown" type="Timer" parent="."]
 one_shot = true
 
-[node name="Label" type="Label" parent="."]
-visible = false
-margin_right = 40.0
-margin_bottom = 14.0
-
 [node name="JumpCoolDown" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
@@ -128,155 +502,267 @@ one_shot = true
 [node name="Mrgn" type="MarginContainer" parent="HUD"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -8.0
+theme = ExtResource( 6 )
 
-[node name="Help" type="Label" parent="HUD/Mrgn"]
-margin_left = 137.0
-margin_right = 1142.0
-margin_bottom = 14.0
-size_flags_horizontal = 4
+[node name="GameStuff" type="Label" parent="HUD/Mrgn"]
+margin_right = 1264.0
+margin_bottom = 53.0
 size_flags_vertical = 0
-text = "MB1 Rocket | MB2 Click to grapple, MB2 again to cancel | WASD Aircontrol | Shift WallSlide & GroundSlide | Space Jump during wallslide | E Rail | Q Missiles"
+theme_type_variation = "SubTitleLabel"
+text = "Wave:0
+Enemies:0"
+script = SubResource( 20 )
 
 [node name="Health" type="Label" parent="HUD/Mrgn"]
-margin_top = 706.0
-margin_right = 78.0
-margin_bottom = 720.0
+margin_top = 664.0
+margin_right = 97.0
+margin_bottom = 704.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
-text = "HEALTH 100"
+theme_type_variation = "TitleLabel"
+text = "100"
 
 [node name="Powerups" type="HBoxContainer" parent="HUD/Mrgn"]
-margin_left = 1148.0
-margin_top = 688.0
-margin_right = 1280.0
-margin_bottom = 720.0
+margin_left = 1132.0
+margin_top = 640.0
+margin_right = 1264.0
+margin_bottom = 704.0
 size_flags_horizontal = 8
 size_flags_vertical = 8
 
-[node name="Rail" type="Control" parent="HUD/Mrgn/Powerups"]
-margin_right = 64.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 64, 32 )
-
-[node name="Label" type="Label" parent="HUD/Mrgn/Powerups/Rail"]
-visible = false
-margin_right = 64.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 64, 32 )
-text = "/  RAIL  \\
-\\ SHOT /"
-align = 1
-
 [node name="Missile" type="Control" parent="HUD/Mrgn/Powerups"]
+margin_right = 64.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+
+[node name="disabled" type="Sprite" parent="HUD/Mrgn/Powerups/Missile"]
+texture = ExtResource( 14 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 0, 64, 64, 64 )
+
+[node name="enabled" type="Sprite" parent="HUD/Mrgn/Powerups/Missile"]
+visible = false
+texture = ExtResource( 14 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 64, 0, 64, 64 )
+
+[node name="Railshot" type="Control" parent="HUD/Mrgn/Powerups"]
 margin_left = 68.0
 margin_right = 132.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 64, 32 )
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
 
-[node name="Label" type="Label" parent="HUD/Mrgn/Powerups/Missile"]
+[node name="disabled" type="Sprite" parent="HUD/Mrgn/Powerups/Railshot"]
+texture = ExtResource( 14 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 64, 64, 64, 64 )
+
+[node name="enabled" type="Sprite" parent="HUD/Mrgn/Powerups/Railshot"]
 visible = false
-margin_right = 60.0
-margin_bottom = 31.0
-text = "/MISSILE\\
-\\  PACK  /"
+texture = ExtResource( 14 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 128, 0, 64, 64 )
+
+[node name="attack_indicators" type="Control" parent="HUD/Mrgn"]
+margin_left = 632.0
+margin_top = 352.0
+margin_right = 632.0
+margin_bottom = 352.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource( 3 )
+
+[node name="attack" type="Sprite" parent="HUD/Mrgn/attack_indicators"]
+texture = ExtResource( 14 )
+offset = Vector2( 0, 200 )
+region_enabled = true
+region_rect = Rect2( 0, 128, 192, 32 )
+
+[node name="FPSCounter" type="Label" parent="HUD/Mrgn"]
+margin_top = 345.0
+margin_right = 1264.0
+margin_bottom = 359.0
+text = "FPS"
+
+[node name="Spike" type="VBoxContainer" parent="HUD/Mrgn"]
+visible = false
+margin_left = 1188.0
+margin_top = 305.0
+margin_right = 1264.0
+margin_bottom = 398.0
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_constants/separation = -11
+
+[node name="Control" type="Control" parent="HUD/Mrgn/Spike"]
+margin_left = 6.0
+margin_right = 70.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+size_flags_horizontal = 4
+
+[node name="Sprite3" type="Sprite" parent="HUD/Mrgn/Spike/Control"]
+texture = ExtResource( 14 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 128, 64, 64, 64 )
+
+[node name="timelabel" type="Label" parent="HUD/Mrgn/Spike"]
+margin_top = 53.0
+margin_right = 76.0
+margin_bottom = 93.0
+size_flags_horizontal = 8
+theme_type_variation = "TitleLabel"
+text = "24"
+
+[node name="crosshair" type="Control" parent="HUD/Mrgn"]
+margin_left = 632.0
+margin_top = 352.0
+margin_right = 632.0
+margin_bottom = 352.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="main" type="Sprite" parent="HUD/Mrgn/crosshair"]
+rotation = 0.785398
+texture = ExtResource( 14 )
+region_enabled = true
+region_rect = Rect2( 16, 0, 16, 16 )
+
+[node name="grapple" type="Sprite" parent="HUD/Mrgn/crosshair"]
+rotation = -0.785398
+texture = ExtResource( 14 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 16, 16 )
+
+[node name="Announcements" type="Control" parent="HUD"]
+anchor_top = 0.15
+anchor_right = 1.0
+anchor_bottom = 0.15
+theme = ExtResource( 6 )
+
+[node name="CenterContainer" type="CenterContainer" parent="HUD/Announcements"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="HUD/Announcements/CenterContainer"]
+margin_left = 397.0
+margin_right = 882.0
+margin_bottom = 40.0
+size_flags_horizontal = 4
+theme_type_variation = "TitleLabel"
+text = "ANNOUNCEMENT"
 align = 1
+valign = 1
+script = ExtResource( 5 )
+
+[node name="Timer" type="Timer" parent="HUD/Announcements/CenterContainer/Label"]
+one_shot = true
 
 [node name="PredictionBlink" type="Timer" parent="."]
 wait_time = 0.25
 autostart = true
 
-[node name="PredictionDebugIcons" type="Node" parent="."]
-
-[node name="Sprite3D" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D2" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D3" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D4" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D5" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D6" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D7" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D8" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D9" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D10" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D11" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
-[node name="Sprite3D12" type="Sprite3D" parent="PredictionDebugIcons"]
-visible = false
-pixel_size = 0.008
-billboard = 1
-no_depth_test = true
-texture = ExtResource( 2 )
-
 [node name="PredictionSuspend" type="Timer" parent="."]
 one_shot = true
+
+[node name="Pause" type="CanvasLayer" parent="."]
+pause_mode = 2
+visible = false
+script = ExtResource( 4 )
+
+[node name="Mrgn" type="MarginContainer" parent="Pause"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 6 )
+
+[node name="Paused" type="Label" parent="Pause/Mrgn"]
+margin_left = 521.0
+margin_top = 340.0
+margin_right = 759.0
+margin_bottom = 380.0
+size_flags_horizontal = 4
+theme_type_variation = "TitleLabel"
+text = "PAUSED"
+align = 1
+valign = 1
+
+[node name="Help" type="Label" parent="Pause/Mrgn"]
+margin_left = 137.0
+margin_right = 1142.0
+margin_bottom = 31.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "MB1 Rocket | MB2 Click to grapple, MB2 again to cancel | WASD Aircontrol | Shift WallSlide & GroundSlide | Space Jump during wallslide | E Rail | Q Missiles
+P Pause Menu | Click in window then pause and unpause to Re-Capture Mouse | Pause and unpause to hide help"
+align = 1
+
+[node name="Label" type="Label" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 14.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 17 )
+anims/idle = SubResource( 11 )
+anims/rail_attach = SubResource( 14 )
+anims/rail_detach = SubResource( 15 )
+anims/shoot_rail = SubResource( 16 )
+anims/shoot_rocket = SubResource( 12 )
+
+[node name="SpikeCountdown" type="Timer" parent="."]
+
+[node name="SpikeExtend" type="Timer" parent="."]
+wait_time = 0.15
+one_shot = true
+
+[node name="SpikeArea" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42, 0 )
+collision_layer = 0
+collision_mask = 2
+input_ray_pickable = false
+monitorable = false
+
+[node name="CollisionShape" type="CollisionShape" parent="SpikeArea"]
+shape = SubResource( 22 )
+disabled = true
+
+[node name="audioplayers" type="Node" parent="."]
+
+[node name="gun" type="AudioStreamPlayer" parent="audioplayers"]
+stream = ExtResource( 8 )
+volume_db = -3.0
+bus = "player"
+
+[node name="mouth" type="AudioStreamPlayer" parent="audioplayers"]
+volume_db = -3.0
+bus = "player"
+
+[node name="feet" type="AudioStreamPlayer" parent="audioplayers"]
+volume_db = -3.0
+bus = "player"
+
+[node name="fx" type="AudioStreamPlayer" parent="audioplayers"]
+volume_db = -3.0
+bus = "player"
 
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_GeneralArea_area_entered"]
 [connection signal="body_entered" from="GeneralArea" to="." method="_on_GeneralArea_body_entered"]
 [connection signal="body_exited" from="GeneralArea" to="." method="_on_GeneralArea_body_exited"]
 [connection signal="body_entered" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_entered"]
 [connection signal="body_exited" from="wallsidecheckarea" to="." method="_on_wallsidecheckarea_body_exited"]
+[connection signal="timeout" from="HUD/Announcements/CenterContainer/Label/Timer" to="HUD/Announcements/CenterContainer/Label" method="_on_Timer_timeout"]
 [connection signal="timeout" from="PredictionBlink" to="." method="_on_PredictionBlink_timeout"]
+[connection signal="timeout" from="SpikeCountdown" to="." method="_on_SpikeCountdown_timeout"]
+[connection signal="timeout" from="SpikeExtend" to="." method="_on_SpikeExtend_timeout"]
+[connection signal="body_entered" from="SpikeArea" to="." method="_on_SpikeArea_body_entered"]

@@ -15,6 +15,8 @@ export(NodePath) var trail
 
 func _ready():
 	$Timer.start(lifespan)
+	if trail:
+		get_node(trail).start()
 	ready_extend()
 
 func ready_extend():
@@ -54,4 +56,6 @@ func stop_trail():
 	trail_node.stop()
 
 func _on_Timer_timeout():
+	if trail:
+		stop_trail()
 	queue_free()

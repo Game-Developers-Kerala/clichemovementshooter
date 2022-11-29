@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Spatial
+
+export(NodePath) var fx_inst 
+export(String) var file_path
+
+func _input(event):
+	if event.is_action_pressed(\"ui_page_down\"):
+		if fx_inst:
+			get_node(fx_inst).show_fx()
+	if event.is_action_pressed(\"ui_page_up\"):
+		if file_path:
+			var inst = load(file_path).instance()
+			add_child(inst)
+			inst.transform = $Position3D.transform
+"
+
+[node name="Spatial" type="Spatial"]
+script = SubResource( 1 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.5 )
+
+[node name="Position3D" type="Position3D" parent="."]
+transform = Transform( 0.707107, 0.707107, 0, -0.353553, 0.353553, -0.866025, -0.612372, 0.612372, 0.5, 0, 0, 0 )

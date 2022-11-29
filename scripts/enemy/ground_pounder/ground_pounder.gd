@@ -7,6 +7,7 @@ enum states{
 	DEATH
 }
 
+onready var model = $BodyRotationHelper/model_enemy_golem
 var meele_speed = 200
 var shockwave = preload("res://scenes/enemy/ground_pounder/circular_wave.tscn")
 #var straight_wave = preload("res://scenes/enemy/ground_pounder/straight_wave.tscn")

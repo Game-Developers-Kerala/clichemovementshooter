@@ -26,6 +26,11 @@ var grapplevec = Vector3.ZERO
 var grapplelength = 0.0
 var grappled_enemy :Node = null
 var grappling_enemy :bool = false
+var spike_active :bool = false
+const SPIKE_TIME = 50
+var spike_time_left:int= 0
+const SPIKE_ATK_DICT = {"caused_by_player":true, "dmg":200.0,"force":10.0,
+						"push_dir":Vector3.ZERO,"dir_replace":true,"origin":Vector3.ZERO}
 onready var grapple_targ = $floaters/GrappleTargArea
 
 
@@ -33,6 +38,7 @@ onready var cam = $Camera
 
 var auto_slide = false
 
+var can_grapple = false
 var grappling = false
 var braking = false
 var jumping = false
@@ -40,10 +46,13 @@ var on_wall = false
 var wallsidecheck = false
 onready var in_slide = auto_slide
 var in_jump = false
+var ground_only_slide_velocity = Vector3.ZERO
 var last_velocity = Vector3.ZERO
 var air_auto_dir = false
 
-var health := 100
+onready var starting_xform := global_transform
+var randgen = RandomNumberGenerator.new()
+
 
 var stats = {
 	"health":100,
@@ -52,13 +61,16 @@ var stats = {
 	"powerup_spikecage":false,
 	}
 const STAT_RANGES = {
-		"health":{"min":0,"max":100}
+		"health":{"min":0,"max":100,"overload":200}
 		}
 
+export(bool) var gun_ready = true
+export(bool) var rocket_ready = true
 const ROCKET_COOLDOWN_DUR = 0.7
 const ROCKET = preload("res://scenes/player_rocket.tscn")
 const RAILSHOT = preload("res://scenes/player_railshot.tscn")
 const MISSILE_PACK = preload("res://scenes/player_lockon_missile_pack.tscn")
+
 
 var predict_past_pos :PoolVector3Array = []
 var predict_past_vel :PoolVector3Array = []
@@ -66,7 +78,23 @@ var predict_future_pos :PoolVector3Array = []
 onready var predict_blink_timer = $PredictionBlink
 var prediction_suspend_time := 0.5
 
+const AUD = {
+	"railshoot":{"stream":preload("res://sfx/rail_shoot.ogg"),"source":"gun"},
+	"rocketshoot":{"stream":preload("res://sfx/rocket_shoot.ogg"),"source":"gun","vol":0.0},
+	"railattach":{"stream":preload("res://sfx/reload_p2.ogg"),"vol":-12},
+	"raildetach":{"stream":preload("res://sfx/reload_p1.ogg"),"vol":-12},
+	"spikepickup":{"stream":preload("res://sfx/pickup_spike.ogg"),"vol":-6},
+	"spikecountdown":{"stream":preload("res://sfx/spike_count_ping.ogg"),"vol":-6},
+	"spiketimedout":{"stream":preload("res://sfx/spike_timedout.ogg"),"vol":-12},
+	"missilepickup":{"stream":preload("res://sfx/pickup_missilepack.ogg"),"vol":-12},
+	"missileactivate":{"stream":preload("res://sfx/missile_activate.ogg"),"vol":-9},
+	"healthpickupsmall":{"stream":preload("res://sfx/healthpickup_small.ogg"),"vol":-9},
+	"healthpickupmedium":{"stream":preload("res://sfx/healthpickup_medium.ogg"),"vol":-9},
+	"healthpickuplarge":{"stream":preload("res://sfx/healthpickup_large.ogg"),"vol":-9},
+	}
+
 func _ready():
+	randgen.randomize()
 	predict_past_pos.resize(4)
 	predict_past_pos.fill(global_translation+CENTER_OF_MASS)
 	predict_past_vel.resize(4)
@@ -150,13 +178,17 @@ func _physics_process(delta):
 			velocity.z = lerp(velocity.z,dir.z*AIRCONTROL,AIRACCEL*delta)
 			velocity.y -= GRAVITY*delta
 			snap = Vector3.ZERO
+			if global_translation.y < -240:
+				fall_recover()
 		movestates.wall:
 			dir = last_velocity.normalized()
 			velocity.y = 0.0
 			velocity.x = lerp(velocity.x,dir.x*SLIDESPEED,GROUNDACCEL*delta)
 			velocity.z = lerp(velocity.z,dir.z*SLIDESPEED,GROUNDACCEL*delta)
 		movestates.ground:
-			dir = last_velocity.normalized()
+			dir = ground_only_slide_velocity.normalized()
+			if on_wall:
+				dir = last_velocity.normalized()
 			velocity.x = lerp(velocity.x,dir.x*SLIDESPEED,GROUNDACCEL*delta)
 			velocity.z = lerp(velocity.z,dir.z*SLIDESPEED,GROUNDACCEL*delta)
 			velocity.y = 0.0
@@ -169,12 +201,15 @@ func _physics_process(delta):
 		walljump()
 	
 	velocity = move_and_slide_with_snap(velocity,snap,Vector3.UP,true)
+#	velocity = move_and_slide(velocity,Vector3.UP)
 	var lookdir = (velocity.rotated(Vector3.UP,PI*0.5)*Vector3(1,0,1)).normalized()
 	if lookdir:
 		$wallsidecheckarea.look_at($wallsidecheckarea.global_translation+lookdir,Vector3.UP)
 	last_velocity = velocity
 	jumping = false
-
+	
+	check_if_can_grapple()
+	
 	if Input.is_action_pressed("shoot"):
 		shoot()
 	if Input.is_action_pressed("grapple"):
@@ -184,9 +219,14 @@ func _physics_process(delta):
 	if Input.is_action_pressed("homingmissile"):
 		shoot_missile_pack()
 	if Input.is_action_just_pressed("ui_page_down"):
+		adjust_health(-20)
+		pass
+	if Input.is_action_just_pressed("ui_page_up"):
+#		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		pass
 	$Label.text = movestates.keys()[movestate]
-	$Label.text = "\nWallray colliding:"+str(wallsidecheck)
+#	$Label.text = "\nWallray colliding:"+str(wallsidecheck)
+	$HUD/Mrgn/FPSCounter.text = "FPS\n" + str(Engine.get_frames_per_second())
 
 func set_move_state():
 	if grappling:
@@ -226,6 +266,8 @@ func change_movestate(to_state,args:={}):
 	if movestate == to_state:
 		return
 	match to_state:
+		movestates.ground:
+			ground_only_slide_velocity = velocity
 		movestates.air:
 			if $PredictionSuspend.is_stopped():
 				$PredictionSuspend.start(prediction_suspend_time)
@@ -240,9 +282,14 @@ func change_movestate(to_state,args:={}):
 	movestate = to_state
 
 func shoot():
-	if !$RocketCooldown.is_stopped():
+	if !gun_ready:
 		return
-	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
+	if !rocket_ready:
+		return
+	gun_ready = false
+	stop_animation()
+	$AnimationPlayer.play("shoot_rocket",0.0)
+	$AnimationPlayer.queue("idle")
 	var rkt = ROCKET.instance()
 	get_tree().current_scene.add_child(rkt)
 	var campos = $Camera.global_translation
@@ -252,9 +299,16 @@ func shoot():
 func shoot_rail():
 	if !is_instance_valid(stats.weapon_rail):
 		return
+	if !gun_ready:
+		return
+	gun_ready = false
 	print(OS.get_ticks_msec()," shot rail")
 	stats.weapon_rail.shoot()
-	$HUD/Mrgn/Powerups/Rail/Label.hide()
+	stop_animation()
+	$AnimationPlayer.play("shoot_rail",0.0)
+	$AnimationPlayer.queue("rail_detach")
+	$AnimationPlayer.queue("idle")
+	$HUD/Mrgn/Powerups/Railshot/enabled.hide()
 
 func shoot_missile_pack():
 	if !stats.weapon_missilepack:
@@ -264,29 +318,49 @@ func shoot_missile_pack():
 	$RocketCooldown.start(ROCKET_COOLDOWN_DUR)
 	var mispak = MISSILE_PACK.instance()
 	$Camera.add_child(mispak)
+	mispak.global_transform = $Camera.global_transform
 	stats.weapon_missilepack = false
-	$HUD/Mrgn/Powerups/Missile/Label.hide()
+	$HUD/Mrgn/Powerups/Missile/enabled.hide()
+	play_audio("missileactivate")
 
 func pick_up(item:pickup):
 	var dict :Dictionary= item.get_pickup_info()
 	for key in dict.keys():
 		match key:
 			"health":
-				if stats.health >= STAT_RANGES.health.max:
+				var healthmax = STAT_RANGES.health.max
+				if dict.has("health_overload"):
+					healthmax = STAT_RANGES.health.overload
+				if stats.health >= healthmax:
 					return
-				adjust_health(dict[key])
+				adjust_health(dict[key],healthmax)
+				match dict["id"]:
+					"small":
+						play_audio("healthpickupsmall")
+					"medium":
+						play_audio("healthpickupmedium")
+					"large":
+						play_audio("healthpickuplarge")
 			"weapon_rail":
 				if is_instance_valid(stats[key]):
 					return
+				$AnimationPlayer.play("rail_attach")
+				$AnimationPlayer.queue("idle")
 				stats[key] = RAILSHOT.instance()
 				$Camera.add_child(stats[key])
-				$HUD/Mrgn/Powerups/Rail/Label.show()
+				$HUD/Mrgn/Powerups/Railshot/enabled.show()
 			"weapon_missilepack":
 				if stats[key]:
 					return
 				stats[key] = dict[key]
-				$HUD/Mrgn/Powerups/Missile/Label.show()
+				$HUD/Mrgn/Powerups/Missile/enabled.show()
+				play_audio("missilepickup")
 			"powerup_spikecage":
+				$SpikeCountdown.start()
+				spike_time_left = SPIKE_TIME
+				$HUD/Mrgn/Spike/timelabel.text = str(spike_time_left)
+				$HUD/Mrgn/Spike.show()
+				play_audio("spikepickup")
 				pass
 	item.on_pickup()
 
@@ -305,14 +379,17 @@ func get_hit(args:={}):
 			jumping = true
 			snap = Vector3.ZERO
 	if args.has("origin"):
-		#do something with the origin info
-		return
+		$HUD/Mrgn/attack_indicators.new_attack(global_transform,$Camera.global_transform,args.origin)
 
-func adjust_health(in_val):
+func adjust_health(in_val,max_limit:=STAT_RANGES.health.max):
 	stats.health = ceil(stats.health+in_val)
-	stats.health = clamp(stats.health,STAT_RANGES.health.min,STAT_RANGES.health.max)
-	$HUD/Mrgn/Health.text = "Health " + str(int(stats.health)) 
-	pass
+	stats.health = clamp(stats.health,0,max_limit)
+	$HUD/Mrgn/Health.text = str(int(stats.health)) 
+	if !stats.health:
+		set_process(false)
+		set_physics_process(false)
+		set_process_input(false)
+		game._on_player_death()
 
 func get_pushed(push_dict:={}):
 	print("got pushed")
@@ -338,6 +415,14 @@ func walljump():
 #		velocity += Vector3.UP*6+perp_vec*2
 	change_movestate(movestates.air,{auto_dir=true})
 
+func check_if_can_grapple():
+	can_grapple = false
+	$HUD/Mrgn/crosshair/grapple.hide()
+	if $Camera/AimRay.is_colliding():
+		if !$Camera/AimRay.get_collider().get_collision_layer_bit(cmn.colliders.level_no_grapple):
+			$HUD/Mrgn/crosshair/grapple.show()
+			can_grapple = true
+
 func grapple():
 	if grappling:
 		if $GrappleCancel.is_stopped():
@@ -345,17 +430,21 @@ func grapple():
 		return
 	if !$GrappleCancel.is_stopped():
 		return
-	if $Camera/AimRay.is_colliding():
-		var collider = $Camera/AimRay.get_collider()
-		if collider.get_collision_layer_bit(cmn.colliders.enemy_hurtbox):
-			grappling_enemy = true
-			grappled_enemy = collider.hit_receiver
-			grapple_targ.global_translation = grappled_enemy.global_translation +grappled_enemy.CENTER_OF_MASS
-		else:
-			grapple_targ.global_translation = $Camera/AimRay.get_collision_point()
-		grappling = true
-		$floaters/GrappleRay/GrappleMesh.show()
-		$GrappleCancel.start()
+	if !can_grapple:
+		return
+	var collider = $Camera/AimRay.get_collider()
+	if !$SpikeCountdown.is_stopped():
+		spike_active = true
+		$SpikeArea/CollisionShape.disabled = false
+	if collider.get_collision_layer_bit(cmn.colliders.enemy_hurtbox):
+		grappling_enemy = true
+		grappled_enemy = collider.hit_receiver
+		grapple_targ.global_translation = grappled_enemy.global_translation +grappled_enemy.CENTER_OF_MASS
+	else:
+		grapple_targ.global_translation = $Camera/AimRay.get_collision_point()
+	grappling = true
+	$floaters/GrappleRay/GrappleMesh.show()
+	$GrappleCancel.start()
 
 func grapple_stop():
 	grappling_enemy = false
@@ -363,18 +452,35 @@ func grapple_stop():
 	grappling = false
 	$floaters/GrappleRay/GrappleMesh.hide()
 	$GrappleCancel.start()
+	if spike_active:
+		$SpikeExtend.start()
+
+func _on_SpikeArea_body_entered(body):
+	if !spike_active:
+		return
+	$SpikeArea/CollisionShape.disabled = true
+	spike_active = false
+	print("enemy body entered")
+	var atk_dict = SPIKE_ATK_DICT.duplicate()
+	atk_dict.origin = global_translation+CENTER_OF_MASS
+	atk_dict.push_dir = -global_transform.basis.z
+	print("spike hit:",atk_dict)
+	body.get_hit(atk_dict)
+	grapple_stop()
 
 
 func _on_GeneralArea_body_entered(body):
-	on_wall = true
-
+	if body.get_collision_layer_bit(cmn.colliders.level):
+		on_wall = true
 
 func _on_GeneralArea_body_exited(body):
 	if !$GeneralArea.get_overlapping_bodies():
 		on_wall = false
+		ground_only_slide_velocity = velocity
 
 
 func _on_wallsidecheckarea_body_entered(body):
+#	print("sidecheck,",body.name)
 	wallsidecheck = true
 
 
@@ -389,38 +495,105 @@ func _on_GeneralArea_area_entered(area):
 
 
 func _on_PredictionBlink_timeout():
-	if $PredictionSuspend.time_left:
-		predict_future_pos.remove(0)
-		var size = predict_future_pos.size()
-		print("suspended prediction: array size", size)
-		predict_future_pos.append(predict_future_pos[size-1])
-		return
 	var curPos = global_translation+CENTER_OF_MASS
-	var predi
 	var interval = $PredictionBlink.wait_time
+	predict_past_pos.remove(0)
+	predict_past_pos.append(curPos)
+	predict_past_vel.remove(0)
+	predict_past_vel.append(velocity)
+	if $PredictionSuspend.time_left:
+#		predict_future_pos.remove(0)
+#		var size = predict_future_pos.size()
+##		print("suspended prediction: array size", size)
+#		predict_future_pos.append(predict_future_pos[size-1])
+
+		var avg_vel = Vector3.ZERO
+		for vec in predict_past_vel:
+			avg_vel += vec
+		avg_vel = avg_vel / predict_past_vel.size()
+		for i in predict_future_pos.size():
+			predict_future_pos[i] = curPos + avg_vel*(i+1)*interval
+#			$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+		return
+	
 	match movestate:
 		movestates.none:
 			for i in predict_future_pos.size():
 				predict_future_pos[i] = curPos
-				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		movestates.ground:
 			for i in predict_future_pos.size():
 				predict_future_pos[i] = curPos + velocity*(i+1)*interval
-				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		movestates.grapple:
 			predict_future_pos.fill(grapple_targ.global_translation)
 			var eta = grapplelength/float(GRAPPLESPEED)
 			for i in predict_future_pos.size():
 				if !(i+1)*interval > eta:
 					predict_future_pos[i] = curPos + velocity*(i+1)*interval
-				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		movestates.wall:
 			for i in predict_future_pos.size():
 				predict_future_pos[i] = curPos + velocity*(i+1)*interval
-				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
 		movestates.air:
 			var temp_vel = velocity
 			for i in predict_future_pos.size():
 				temp_vel -= Vector3.UP*GRAVITY*0.25
 				predict_future_pos[i] = curPos + temp_vel*(i+1)*interval
-				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+#				$PredictionDebugIcons.get_child(i).global_translation = predict_future_pos[i]
+
+func fall_recover():
+	velocity = Vector3.ZERO
+	global_transform = starting_xform
+	change_movestate(movestates.none)
+	var spawn_points = get_tree().get_nodes_in_group("player_respawn_points")
+	var valid:=[]
+	if spawn_points:
+		for point in spawn_points:
+			if point.valid:
+				valid.push_front(point)
+	if valid:
+		var idx = randgen.randi()%valid.size()
+		global_transform = valid[idx].global_transform
+
+
+func stop_animation():
+	if $AnimationPlayer.current_animation == "rail_detach":
+		$Camera/weapon_holder/railshot_model.hide()
+	$AnimationPlayer.stop()
+
+
+func _on_SpikeCountdown_timeout():
+	spike_time_left -= 1
+	$HUD/Mrgn/Spike/timelabel.text = str(spike_time_left)
+	if !spike_time_left:
+		$SpikeCountdown.stop()
+		$HUD/Mrgn/Spike.hide()
+		play_audio("spiketimedout")
+		return
+	if spike_time_left < 6:
+		play_audio("spikecountdown")
+
+
+func _on_SpikeExtend_timeout():
+	spike_active = false
+	$SpikeArea/CollisionShape.disabled = true
+
+func play_audio(in_aud:String):
+	if !AUD.has(in_aud):
+		return
+	var aud_player:AudioStreamPlayer = $audioplayers/fx
+	if AUD[in_aud].has("source"):
+		match AUD[in_aud]["source"]:
+			"gun":
+				aud_player = $audioplayers/gun
+			"mouth":
+				aud_player = $audioplayers/mouth
+			"feet":
+				aud_player = $audioplayers/feet
+	aud_player.volume_db = -3
+	if AUD[in_aud].has("vol"):
+		aud_player.volume_db = AUD[in_aud]["vol"]
+	aud_player.stream = AUD[in_aud]["stream"]
+	aud_player.play()

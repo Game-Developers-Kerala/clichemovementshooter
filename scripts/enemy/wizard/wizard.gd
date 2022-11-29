@@ -40,6 +40,9 @@ func _process(delta: float) -> void:
 			nav_agent.set_target_location(player.global_transform.origin)
 			_aim_at_player()
 			
+			if weapon.get_collider() != player:
+				set_state(states.CHASE)
+				
 			label.text = "Attack"
 		
 		states.DEATH:
@@ -63,7 +66,8 @@ func _physics_process(delta: float) -> void:
 						_fire_missile()
 				else:
 				
-					_calc_velocity(attack_speed)
+					velocity = _calc_velocity(attack_speed)
+					move_and_slide(velocity,Vector3.UP)
 
 		states.DEATH:
 			pass

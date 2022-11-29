@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/lockon_indicator.ogg-b8771b926e64e41d504bee31f684bd2b.oggstr"
+
+[deps]
+
+source_file="res://sfx/lockon_indicator.ogg"
+dest_files=[ "res://.import/lockon_indicator.ogg-b8771b926e64e41d504bee31f684bd2b.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0
