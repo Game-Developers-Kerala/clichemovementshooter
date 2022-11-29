@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scripts/enemy/sniper/Sniper.gd" type="Script" id=1]
+
+[sub_resource type="CapsuleShape" id=1]
+
+[sub_resource type="CapsuleMesh" id=2]
+
+[node name="Sniper" type="KinematicBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5443, 0 )
+collision_layer = 2
+collision_mask = 258
+script = ExtResource( 1 )
+path_to_weapon = NodePath("Body/RayCast")
+path_to_nav_agent = NodePath("NavigationAgent")
+path_to_BodyRotationHelper = NodePath("Body")
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="Body" type="Spatial" parent="."]
+
+[node name="MeshInstance" type="MeshInstance" parent="Body"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
+mesh = SubResource( 2 )
+skeleton = NodePath("../..")
+
+[node name="RayCast" type="RayCast" parent="Body"]
+enabled = true
+cast_to = Vector3( 0, 0, -200 )
+
+[node name="NavigationAgent" type="NavigationAgent" parent="."]
+path_desired_distance = 3.0
+target_desired_distance = 5.0
+path_max_distance = 7.0
+neighbor_dist = 2000.0
+max_neighbors = 2
+
+[connection signal="timeout" from="ShootTimer" to="." method="_on_ShootTimer_timeout"]

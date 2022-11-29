@@ -44,11 +44,13 @@ func ontimeout_start_spawn():
 	timer.stop()
 
 #function to spawn enemies
-func _start_spawn(spawnable,spawn_point : Array) -> void:
-
-	var inst = spawnable.instance()
-	inst.global_transform.origin = spawn_point[randi() % spawn_point.size()].global_transform.origin
-	add_child(inst)
+func _start_spawn(spawnable,spawn_point : Array,count : int = 2) -> void:
+	
+	for i in range(count - 1):
+		
+		var inst = spawnable.instance()
+		inst.global_transform.origin = spawn_point[randi() % spawn_point.size()].global_transform.origin
+		add_child(inst)
 
 
 #function to iterate over spawn points
@@ -60,3 +62,7 @@ func _get_spawn_points(spawner : Node) -> Array :
 			spawn_points.append(child)
 	
 	return spawn_points
+	
+#spawn function
+func start_wave(wave : int):
+	pass

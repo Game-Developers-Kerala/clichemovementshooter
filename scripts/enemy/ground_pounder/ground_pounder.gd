@@ -22,34 +22,24 @@ func _ready() -> void:
 	
 func _process(delta: float) -> void:
 	
+	nav_agent.set_target_location(player.global_transform.origin)
+	
 	match get_state():
 		
 		states.CHASE:
 			
-			label.text = "Chase"
-			_aim_at_player()
-			#here enemy will navigate to the player
-			nav_agent.set_target_location(player.global_transform.origin)
+			if weapon.get_collider() == player:
+				set_state(states.ATTACK)
+		
+		states.ATTACK :
 			
-		states.ATTACK:
-			
-			_aim_at_player()
-			#here enemy will navigate to the player
-			nav_agent.set_target_location(player.global_transform.origin)
-			label.text = "Attack"
-			
-		states.MEELE:
-			
-			_aim_at_player()
-			#here enemy will navigate to the player
-			nav_agent.set_target_location(player.global_transform.origin)
-			label.text = "Meele"
-			
+			if weapon.get_collider() != player :
+				set_state(states.CHASE)
+				
 		states.DEATH:
+			pass
 			
-			label.text = "Death"
-	
-	
+			
 func _physics_process(delta: float) -> void:
 	
 #STATE MANAGMENT
@@ -61,9 +51,12 @@ func _physics_process(delta: float) -> void:
 			velocity = _calc_velocity(chase_speed) * delta
 			move_and_slide(velocity,Vector3.UP)
 		
-
 		states.ATTACK:
+			
 			pass
+			#straight wave
+			
+			
 		states.DEATH:
 			pass
 

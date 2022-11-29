@@ -11,10 +11,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	
 	if get_target() != Vector3.ZERO:
-		unit = lerp(global_transform.origin,target,delta)
-		
-		scale += unit
-	
+		pass
 
 func set_target(val: Vector3) -> void:
 	target = val
