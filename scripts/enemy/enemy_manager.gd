@@ -5,16 +5,22 @@ extends Node
 export(NodePath) var arc_enemy_spawner_path
 export(NodePath) var ground_pounder_spawner_path
 export(NodePath) var wizard_spawner_path
-
+export(NodePath) var sniper_spawner_path
+export(NodePath) var ufo_spawn_path
 
 onready var arc_enemy_spawner = get_node(arc_enemy_spawner_path)
 onready var ground_pounder_spawner = get_node(ground_pounder_spawner_path)
 onready var wizard_spawner = get_node(wizard_spawner_path)
+onready var sniper_spawner = get_node(sniper_spawner_path)
+onready var ufo_spawner = get_node(ufo_spawn_path)
 
 
 onready var arc_enemy = preload("res://scenes/enemy/arc_shooter/arc_shooter.tscn")
 onready var ground_pounder = preload("res://scenes/enemy/ground_pounder/ground_pounder.tscn")
 onready var wizard = preload("res://scenes/enemy/wizard/wizard.tscn")
+onready var ufo = preload("res://scenes/enemy/heavy_gunner/heavy_gunner.tscn")
+onready var sniper = preload("res://scenes/enemy/sniper/Sniper.tscn")
+
 onready var timer = Timer.new()
 
 #stores enemy spawn points
@@ -35,7 +41,7 @@ func _ready() -> void:
 
 	
 func ontimeout_start_spawn():
-	
+
 	_start_spawn(arc_enemy,arc_enemy_spawn_point)
 	_start_spawn(ground_pounder,ground_pounder_spawn_point)
 	_start_spawn(wizard,wizard_spawn_point)
