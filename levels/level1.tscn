@@ -569,6 +569,7 @@ respawn_interval = 20.0
 
 [node name="spike" parent="Pickups" instance=ExtResource( 9 )]
 transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 19.5, -115.5 )
+visible = true
 respawn_interval = 120.0
 lifespan = 24.0
 
@@ -600,6 +601,7 @@ visible = false
 
 [node name="large_health" parent="Pickups" instance=ExtResource( 12 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -85.5, 35, 0 )
+visible = false
 
 [node name="large_health2" parent="Pickups" instance=ExtResource( 12 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 35, 0 )
