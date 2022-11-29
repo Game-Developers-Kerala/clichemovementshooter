@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://assets/models/texture_enemy_arcgirl_color.png" type="Texture" id=1]
 [ext_resource path="res://assets/models/texture_enemy_arcgirl_emission.png" type="Texture" id=2]
@@ -108,6 +108,12 @@ shader_param/occlusion = 0.0
 shader_param/albedo_tex = ExtResource( 1 )
 shader_param/emission_tex = ExtResource( 2 )
 
+[sub_resource type="SphereShape" id=18]
+radius = 0.3
+
+[sub_resource type="BoxShape" id=19]
+extents = Vector3( 0.15, 0.35, 0.15 )
+
 [sub_resource type="ArrayMesh" id=3]
 resource_name = "archgirl_Cube"
 surfaces/0 = {
@@ -165,6 +171,18 @@ bind/12/name = "hand.R"
 bind/12/bone = -1
 bind/12/pose = Transform( 0.00430676, -0.99761, 0.0689656, 0.999991, 0.00431719, -1.26893e-08, -0.000297727, 0.0689649, 0.997619, 1.19609, -0.764043, -0.216161 )
 
+[sub_resource type="SphereShape" id=20]
+radius = 0.25
+
+[sub_resource type="BoxShape" id=21]
+extents = Vector3( 0.16, 0.4, 0.16 )
+
+[sub_resource type="BoxShape" id=22]
+extents = Vector3( 0.16, 0.35, 0.16 )
+
+[sub_resource type="BoxShape" id=23]
+extents = Vector3( 1, 0.2, 0.16 )
+
 [sub_resource type="Animation" id=16]
 length = 0.001
 tracks/0/type = "value"
@@ -179,10 +197,23 @@ tracks/0/keys = {
 "update": 0,
 "values": [ 0.0 ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
 
 [sub_resource type="Animation" id=5]
 resource_name = "dead"
 length = 1.66667
+step = 0.05
 tracks/0/type = "transform"
 tracks/0/path = NodePath("Legs/Skeleton:knee_ik.L")
 tracks/0/interp = 1
@@ -383,6 +414,18 @@ tracks/26/keys = {
 "stream": ExtResource( 7 )
 } ],
 "times": PoolRealArray( 0 )
+}
+tracks/27/type = "value"
+tracks/27/path = NodePath(".:visible")
+tracks/27/interp = 1
+tracks/27/loop_wrap = true
+tracks/27/imported = false
+tracks/27/enabled = true
+tracks/27/keys = {
+"times": PoolRealArray( 0, 1, 1.05, 1.2, 1.25, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6, 1.65 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true, false, true, false, true, false, true, false, true, false ]
 }
 
 [sub_resource type="Animation" id=6]
@@ -2184,7 +2227,7 @@ bones/7/name = "shin.L"
 bones/7/parent = 6
 bones/7/rest = Transform( 0.217904, 0.118563, 0.968742, -2.98023e-08, 0.992593, -0.121482, -0.97597, 0.0264714, 0.216291, -2.51717e-09, 0.391808, 3.49246e-09 )
 bones/7/enabled = true
-bones/7/bound_children = [  ]
+bones/7/bound_children = [ NodePath("shin_l") ]
 bones/8/name = "foot.L"
 bones/8/parent = 7
 bones/8/rest = Transform( -0.99861, 0.041812, 0.0320766, -3.35276e-08, 0.608679, -0.793416, -0.0526986, -0.792314, -0.607833, 1.13559e-08, 0.395368, 2.50293e-09 )
@@ -2199,7 +2242,7 @@ bones/10/name = "shin.R"
 bones/10/parent = 9
 bones/10/rest = Transform( 0.217904, -0.118563, -0.968742, 1.11759e-08, 0.992594, -0.121482, 0.97597, 0.0264714, 0.216291, 5.09069e-10, 0.391808, 8.14907e-10 )
 bones/10/enabled = true
-bones/10/bound_children = [  ]
+bones/10/bound_children = [ NodePath("shin_r") ]
 bones/11/name = "foot.R"
 bones/11/parent = 10
 bones/11/rest = Transform( -0.99861, -0.041812, -0.0320766, -2.79397e-08, 0.608679, -0.793416, 0.0526987, -0.792314, -0.607833, 2.7841e-10, 0.395368, -3.72529e-09 )
@@ -2219,6 +2262,41 @@ bone_name = "hip"
 remote_path = NodePath("../../../../body")
 update_rotation = false
 
+[node name="hurtbox" type="Area" parent="Legs/Skeleton/HipBone"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Legs/Skeleton/HipBone/hurtbox"]
+transform = Transform( 1, 1.42109e-14, 0, -1.42109e-14, 1, 1.33227e-14, 0, -3.55271e-15, 1, -7.10543e-15, 0.2, 0 )
+shape = SubResource( 18 )
+
+[node name="shin_l" type="BoneAttachment" parent="Legs/Skeleton"]
+transform = Transform( -0.998269, 0.0582756, -0.00791144, -0.0588103, -0.989194, 0.134295, 2.23517e-07, 0.134528, 0.990911, -0.109396, 0.526024, 0.00515355 )
+bone_name = "shin.L"
+
+[node name="hurtbox" type="Area" parent="Legs/Skeleton/shin_l"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Legs/Skeleton/shin_l/hurtbox"]
+transform = Transform( 1, 1.42109e-14, 0, -1.42109e-14, 1, 1.33227e-14, 0, -3.55271e-15, 1, -7.10543e-15, 0.2, 0 )
+shape = SubResource( 19 )
+
+[node name="shin_r" type="BoneAttachment" parent="Legs/Skeleton"]
+transform = Transform( -0.998269, -0.0582758, 0.00791098, 0.0588104, -0.989195, 0.134295, 2.08616e-07, 0.134528, 0.990911, 0.109396, 0.526024, 0.00515368 )
+bone_name = "shin.R"
+
+[node name="hurtbox" type="Area" parent="Legs/Skeleton/shin_r"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Legs/Skeleton/shin_r/hurtbox"]
+transform = Transform( 1, 1.42109e-14, 0, -1.42109e-14, 1, 1.33227e-14, 0, -3.55271e-15, 1, -7.10543e-15, 0.2, 0 )
+shape = SubResource( 19 )
+
 [node name="body" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13409, 0 )
 
@@ -2227,12 +2305,12 @@ bones/0/name = "torso"
 bones/0/parent = -1
 bones/0/rest = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 bones/0/enabled = true
-bones/0/bound_children = [  ]
+bones/0/bound_children = [ NodePath("chest") ]
 bones/1/name = "head"
 bones/1/parent = 0
 bones/1/rest = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.469817, 0.0457304 )
 bones/1/enabled = true
-bones/1/bound_children = [  ]
+bones/1/bound_children = [ NodePath("head") ]
 bones/2/name = "uArm.L"
 bones/2/parent = 0
 bones/2/rest = Transform( 0.0256537, -0.999576, -0.0137336, 0.997294, 0.0246435, 0.0692663, -0.0688985, -0.0154733, 0.997504, -0.118491, 0.292983, 0.0463364 )
@@ -2242,12 +2320,12 @@ bones/3/name = "fArm.L"
 bones/3/parent = 2
 bones/3/rest = Transform( 0.999962, -0.00872181, 6.46064e-05, 0.00872181, 0.999851, -0.0149073, 6.54221e-05, 0.0149073, 0.999889, -1.18278e-07, 0.295502, 1.53668e-08 )
 bones/3/enabled = true
-bones/3/bound_children = [  ]
+bones/3/bound_children = [ NodePath("f_arm_l") ]
 bones/4/name = "hand.L"
 bones/4/parent = 3
 bones/4/rest = Transform( 0.99992, -0.0126274, -5.43352e-06, 0.0126274, 0.99992, 0.000872934, -5.58976e-06, -0.000872933, 1, 1.64844e-07, 0.339807, 7.74162e-09 )
 bones/4/enabled = true
-bones/4/bound_children = [  ]
+bones/4/bound_children = [ NodePath("hand_l") ]
 bones/5/name = "string_ik.Up"
 bones/5/parent = 4
 bones/5/rest = Transform( 0.0730974, 0.0689655, 0.994937, -0.997312, 0, 0.0732719, 0.00505334, -0.997619, 0.0687802, 1.13901, -0.409156, 0.0578199 )
@@ -2282,7 +2360,7 @@ bones/11/name = "lArm.R"
 bones/11/parent = 10
 bones/11/rest = Transform( 0.999962, 0.00872181, -6.46064e-05, -0.00872181, 0.999851, -0.0149073, -6.54221e-05, 0.0149073, 0.999889, -6.33299e-08, 0.295502, 0 )
 bones/11/enabled = true
-bones/11/bound_children = [  ]
+bones/11/bound_children = [ NodePath("f_arm_r") ]
 bones/12/name = "hand.R"
 bones/12/parent = 11
 bones/12/rest = Transform( 0.99992, 0.0126274, 5.55273e-06, -0.0126274, 0.99992, 0.000872933, 5.47055e-06, -0.000872933, 1, -9.12696e-08, 0.339807, 6.57747e-09 )
@@ -2293,6 +2371,70 @@ bones/12/bound_children = [  ]
 mesh = SubResource( 3 )
 skin = SubResource( 4 )
 material/0 = SubResource( 15 )
+
+[node name="head" type="BoneAttachment" parent="body/Skeleton2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.469817, 0.0457304 )
+bone_name = "head"
+
+[node name="hurtbox" type="Area" parent="body/Skeleton2/head"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="body/Skeleton2/head/hurtbox"]
+transform = Transform( 1, 1.42109e-14, 0, -1.42109e-14, 1, 1.33227e-14, 0, -3.55271e-15, 1, -7.10543e-15, 0.2, 0 )
+shape = SubResource( 20 )
+
+[node name="chest" type="BoneAttachment" parent="body/Skeleton2"]
+bone_name = "torso"
+
+[node name="hurtbox" type="Area" parent="body/Skeleton2/chest"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="body/Skeleton2/chest/hurtbox"]
+transform = Transform( 1, 1.42109e-14, 0, -1.42109e-14, 1, 1.33227e-14, 0, -3.55271e-15, 1, -7.10543e-15, 0.2, 0 )
+shape = SubResource( 20 )
+
+[node name="f_arm_l" type="BoneAttachment" parent="body/Skeleton2"]
+transform = Transform( 0.0169337, -0.999856, 0.00117056, 0.997476, 0.0169742, 0.0689557, -0.0689656, 1.67638e-08, 0.99762, -0.413868, 0.300265, 0.041764 )
+bone_name = "fArm.L"
+
+[node name="hurtbox" type="Area" parent="body/Skeleton2/f_arm_l"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="body/Skeleton2/f_arm_l/hurtbox"]
+transform = Transform( 1, 7.4887e-10, 0, 6.67983e-09, 1, 4.98943e-11, 7.45058e-09, -7.68951e-10, 1, -2.38419e-07, 0.25, -1.49012e-08 )
+shape = SubResource( 21 )
+
+[node name="f_arm_r" type="BoneAttachment" parent="body/Skeleton2"]
+transform = Transform( 0.0169337, 0.999856, -0.00117056, -0.997476, 0.0169742, 0.0689557, 0.0689656, 1.67638e-08, 0.99762, 0.413868, 0.300265, 0.041764 )
+bone_name = "lArm.R"
+
+[node name="hurtbox" type="Area" parent="body/Skeleton2/f_arm_r"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="body/Skeleton2/f_arm_r/hurtbox"]
+transform = Transform( 1, -7.6998e-10, 0, 4.49604e-09, 1, 4.98943e-11, 0, -1.07431e-09, 1, 0, 0.15, -1.49012e-08 )
+shape = SubResource( 22 )
+
+[node name="hand_l" type="BoneAttachment" parent="body/Skeleton2"]
+transform = Transform( 0.00430678, -0.99999, 0.000297661, 0.99761, 0.00431712, 0.0689651, -0.0689656, 1.76369e-08, 0.99762, -0.753626, 0.306033, 0.041764 )
+bone_name = "hand.L"
+
+[node name="hurtbox" type="Area" parent="body/Skeleton2/hand_l"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="body/Skeleton2/hand_l/hurtbox"]
+transform = Transform( 1, 7.21159e-10, 0, 2.81405e-09, 1, 4.50342e-11, 0, -1.06663e-09, 1, -2.38419e-07, -0.05, -1.49012e-08 )
+shape = SubResource( 23 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "idle"
@@ -2310,8 +2452,9 @@ anims/shoot2_release = SubResource( 14 )
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
-stream = ExtResource( 4 )
+stream = ExtResource( 7 )
 unit_size = 2.0
 max_db = -3.0
+bus = "enemies"
 
 [connection signal="animation_started" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_started"]

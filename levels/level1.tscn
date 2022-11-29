@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://scenes/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://test/dummyenemy.tscn" type="PackedScene" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://scenes/player_pickup_health_medium.tscn" type="PackedScene" id=11]
 [ext_resource path="res://scenes/player_pickup_health_large.tscn" type="PackedScene" id=12]
 [ext_resource path="res://assets/models/model_enemy_arcgirl.tscn" type="PackedScene" id=13]
+[ext_resource path="res://assets/models/model_enemy_sniper.tscn" type="PackedScene" id=14]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_world_triplanar = true
@@ -230,7 +231,6 @@ depth = 1.0
 
 [node name="pickup_missile" parent="LevelGeometry/NorthernChamber" instance=ExtResource( 6 )]
 transform = Transform( 1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -7.5, 0, 15 )
-visible = false
 respawn_interval = 25.0
 
 [node name="SoutherPlatform" type="CSGCombiner" parent="LevelGeometry"]
@@ -560,13 +560,11 @@ directional_shadow_max_distance = 200.0
 
 [node name="pickup_rail" parent="Pickups" instance=ExtResource( 5 )]
 transform = Transform( -2, 0, -3.01992e-07, 0, 2, 0, 3.01992e-07, 0, -2, 0, 8, 90 )
-visible = false
 respawn_interval = 20.0
 anim_bob = false
 
 [node name="pickup_rail2" parent="Pickups" instance=ExtResource( 5 )]
 transform = Transform( 1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 0, 1.5, 0 )
-visible = false
 respawn_interval = 20.0
 
 [node name="spike" parent="Pickups" instance=ExtResource( 9 )]
@@ -576,23 +574,18 @@ lifespan = 24.0
 
 [node name="small_health2" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1, 0 )
-visible = false
 
 [node name="small_health6" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 1, 0 )
-visible = false
 
 [node name="small_health7" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1, 0 )
-visible = false
 
 [node name="small_health3" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1, 0 )
-visible = false
 
 [node name="small_health4" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 1, 0 )
-visible = false
 
 [node name="small_health5" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 1, 0 )
@@ -600,7 +593,6 @@ visible = false
 
 [node name="medium_health" parent="Pickups" instance=ExtResource( 11 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -58.5, 19.5, -57 )
-visible = false
 
 [node name="medium_health2" parent="Pickups" instance=ExtResource( 11 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 58, 19.5, -57 )
@@ -608,7 +600,6 @@ visible = false
 
 [node name="large_health" parent="Pickups" instance=ExtResource( 12 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -85.5, 35, 0 )
-visible = false
 
 [node name="large_health2" parent="Pickups" instance=ExtResource( 12 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 35, 0 )
@@ -630,3 +621,6 @@ transform = Transform( -0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, -0.5, 58.201, 1
 
 [node name="archgirl" parent="." instance=ExtResource( 13 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 12.0001, -22.5 )
+
+[node name="sniper" parent="." instance=ExtResource( 14 )]
+transform = Transform( -0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, -0.965926, 7.5, 12, -22 )
