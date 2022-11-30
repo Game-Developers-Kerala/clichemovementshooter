@@ -20,6 +20,8 @@ const SLIDESPEED = 20
 const FRICTION_DAMPING = 0.9
 
 var velocity : Vector3 = Vector3.ZERO
+var moving_slow :=false
+const SLOW_THRESHOLD = 10.0
 var snap := Vector3.ZERO
 
 var grapplevec = Vector3.ZERO
@@ -53,6 +55,7 @@ var air_auto_dir = false
 onready var starting_xform := global_transform
 var randgen = RandomNumberGenerator.new()
 
+var dead:=false
 
 var stats = {
 	"health":100,
@@ -95,6 +98,12 @@ const AUD = {
 	"hurt2":{"stream":preload("res://sfx/player_hurt2.ogg"),"source":"mouth"},
 	"hurt3":{"stream":preload("res://sfx/player_hurt3.ogg"),"source":"mouth"},
 	"die":{"stream":preload("res://sfx/player_death.ogg"),"source":"mouth"},
+	"grapple_reel":{"stream":preload("res://sfx/grapple_reel.ogg"),"source":"feet"},
+	"grapple_cant":{"stream":preload("res://sfx/grapple_cant.ogg"),"source":"fx","vol":-12},
+	"grapple_stop":{"stream":preload("res://sfx/grapple_stop.ogg"),"source":"feet"},
+	"chair_roll":{"stream":preload("res://sfx/chair_roll.ogg"),"source":"feet","vol":6},
+	"chair_roll_slow":{"stream":preload("res://sfx/chair_roll_slow.ogg"),"source":"feet"},
+	"wind":{"stream":preload("res://sfx/wind.ogg"),"source":"feet"},
 	}
 
 func _ready():
@@ -108,9 +117,10 @@ func _ready():
 	
 	$Camera/SpikeModel.hide()
 	$floaters/GrappleRay/GrappleMesh.hide()
-	$HUD/BlackOverlay.hide()
+	$HUD/BlackOverlay.show()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
+	random_spawn()
+	
 func _input(event):
 	if event is InputEventMouseMotion:
 		rotate_y(deg2rad(-event.relative.x*mouse_sens))
@@ -198,6 +208,12 @@ func _physics_process(delta):
 			velocity.x = lerp(velocity.x,dir.x*SLIDESPEED,GROUNDACCEL*delta)
 			velocity.z = lerp(velocity.z,dir.z*SLIDESPEED,GROUNDACCEL*delta)
 			velocity.y = 0.0
+			if velocity.length()<SLOW_THRESHOLD and !moving_slow:
+				moving_slow = true
+				play_audio("chair_roll_slow")
+			if moving_slow and velocity.length() > SLOW_THRESHOLD:
+				play_audio("chair_roll")
+				moving_slow = false
 			if !jumping:
 				snap = -floornorm
 			else:
@@ -218,18 +234,21 @@ func _physics_process(delta):
 	
 	if Input.is_action_pressed("shoot"):
 		shoot()
+	if Input.is_action_just_pressed("grapple"):
+		if !can_grapple and $GrappleCancel.is_stopped() and !grappling:
+			play_audio("grapple_cant")
 	if Input.is_action_pressed("grapple"):
 		grapple()
 	if Input.is_action_pressed("use"):
 		shoot_rail()
 	if Input.is_action_pressed("homingmissile"):
 		shoot_missile_pack()
-	if Input.is_action_just_pressed("ui_page_down"):
-		adjust_health(-20)
-		pass
-	if Input.is_action_just_pressed("ui_page_up"):
-#		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-		pass
+#	if Input.is_action_just_pressed("ui_page_down"):
+##		adjust_health(-20)
+#		pass
+#	if Input.is_action_just_pressed("ui_page_up"):
+##		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+#		pass
 	$Label.text = movestates.keys()[movestate]
 #	$Label.text = "\nWallray colliding:"+str(wallsidecheck)
 	$HUD/Mrgn/FPSCounter.text = "FPS\n" + str(Engine.get_frames_per_second())
@@ -273,8 +292,10 @@ func change_movestate(to_state,args:={}):
 		return
 	match to_state:
 		movestates.ground:
+			play_audio("chair_roll")
 			ground_only_slide_velocity = velocity
 		movestates.air:
+			play_audio("wind")
 			if $PredictionSuspend.is_stopped():
 				$PredictionSuspend.start(prediction_suspend_time)
 			if movestate == movestates.ground and !jumping:
@@ -282,6 +303,14 @@ func change_movestate(to_state,args:={}):
 			if args.has("auto_dir"):
 				air_auto_dir = true
 			air_accel = 4.0
+		movestates.wall:
+			air_auto_dir = false
+			$PredictionSuspend.stop()
+			play_audio("chair_roll")
+		movestates.none:
+			air_auto_dir = false
+			$PredictionSuspend.stop()
+			$audioplayers/feet.stop()
 		_:
 			air_auto_dir = false
 			$PredictionSuspend.stop()
@@ -294,6 +323,7 @@ func shoot():
 		return
 	gun_ready = false
 	stop_animation()
+	$Camera/weapon_holder/rocketlauncher/rocket_flash.show_fx()
 	$AnimationPlayer.play("shoot_rocket",0.0)
 	$AnimationPlayer.queue("idle")
 	var rkt = ROCKET.instance()
@@ -311,6 +341,7 @@ func shoot_rail():
 	print(OS.get_ticks_msec()," shot rail")
 	stats.weapon_rail.shoot()
 	stop_animation()
+	$Camera/weapon_holder/railshot_model/rail_flash.show_fx()
 	$AnimationPlayer.play("shoot_rail",0.0)
 	$AnimationPlayer.queue("rail_detach")
 	$AnimationPlayer.queue("idle")
@@ -362,7 +393,7 @@ func pick_up(item:pickup):
 				$HUD/Mrgn/Powerups/Missile/enabled.show()
 				play_audio("missilepickup")
 			"powerup_spikecage":
-				game.emit_signal("announcement","Raging Grapple Berserker")
+				game.emit_signal("announcement","Stab enemies by grappling")
 				$SpikeCountdown.start()
 				spike_time_left = SPIKE_TIME
 				$HUD/Mrgn/Spike/timelabel.text = str(spike_time_left)
@@ -373,6 +404,8 @@ func pick_up(item:pickup):
 
 func get_hit(args:={}):
 #	print("Plyr got hit at:",OS.get_ticks_msec(),"=====\n",args)
+	if dead:
+		return
 	if args.has("dmg"):
 		adjust_health(-args.dmg)
 	if args.has("force"):
@@ -393,11 +426,22 @@ func adjust_health(in_val,max_limit:=STAT_RANGES.health.max):
 	stats.health = clamp(stats.health,0,max_limit)
 	$HUD/Mrgn/Health.text = str(int(stats.health)) 
 	if !stats.health:
+		dead = true
+		play_audio("die")
 		$HUD/BlackOverlay.show()
 		set_process(false)
 		set_physics_process(false)
 		set_process_input(false)
 		game._on_player_death()
+		return
+	if in_val<-50:
+		play_audio("hurt2")
+		return
+	if in_val<-25:
+		play_audio("hurt3")
+		return
+	if in_val<0:
+		play_audio("hurt1")
 
 func get_pushed(push_dict:={}):
 #	print("got pushed")
@@ -452,6 +496,7 @@ func grapple():
 	else:
 		grapple_targ.global_translation = $Camera/AimRay.get_collision_point()
 	grappling = true
+	play_audio("grapple_reel")
 	$floaters/GrappleRay/GrappleMesh.show()
 	$GrappleCancel.start()
 
@@ -459,6 +504,7 @@ func grapple_stop():
 	grappling_enemy = false
 	grappled_enemy = null
 	grappling = false
+	play_audio("grapple_stop")
 	$floaters/GrappleRay/GrappleMesh.hide()
 	$GrappleCancel.start()
 	if spike_active:
@@ -613,3 +659,10 @@ func play_audio(in_aud:String):
 		aud_player.volume_db = AUD[in_aud]["vol"]
 	aud_player.stream = AUD[in_aud]["stream"]
 	aud_player.play()
+
+func random_spawn():
+	var spawn_points = get_tree().get_nodes_in_group("player_respawn_points")
+	if spawn_points:
+		var idx = randgen.randi()%spawn_points.size()
+		global_transform = spawn_points[idx].global_transform
+	$HUD/BlackOverlay.hide()

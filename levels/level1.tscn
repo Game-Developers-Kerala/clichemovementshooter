@@ -1,22 +1,14 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/player.tscn" type="PackedScene" id=1]
-[ext_resource path="res://test/dummyenemy.tscn" type="PackedScene" id=2]
-[ext_resource path="res://assets/models/model_enemy_golem.tscn" type="PackedScene" id=3]
 [ext_resource path="res://levels/ceiling_tile.png" type="Texture" id=4]
 [ext_resource path="res://scenes/player_pickup_railshot.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/player_pickup_missile_pack.tscn" type="PackedScene" id=6]
-[ext_resource path="res://assets/models/model_enemy_flying_hat.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/player_respawn_point.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/player_pickup_spike_cage.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scenes/player_pickup_health_small.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/player_pickup_health_medium.tscn" type="PackedScene" id=11]
 [ext_resource path="res://scenes/player_pickup_health_large.tscn" type="PackedScene" id=12]
-[ext_resource path="res://assets/models/model_enemy_arcgirl.tscn" type="PackedScene" id=13]
-[ext_resource path="res://assets/models/model_enemy_sniper.tscn" type="PackedScene" id=14]
-[ext_resource path="res://assets/models/model_enemy_wizard.tscn" type="PackedScene" id=15]
-[ext_resource path="res://assets/models/model_enemy_megawizard.tscn" type="PackedScene" id=16]
-[ext_resource path="res://scenes/shared/mine_probe_launcher.tscn" type="PackedScene" id=17]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_world_triplanar = true
@@ -537,20 +529,6 @@ width = 32.0
 height = 9.0
 depth = 22.0
 
-[node name="dummies" type="Spatial" parent="."]
-
-[node name="DummyEnemy" parent="dummies" instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 29.5 )
-
-[node name="DummyEnemy5" parent="dummies" instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0, -32.5 )
-
-[node name="model_enemy_golem" parent="dummies" instance=ExtResource( 3 )]
-transform = Transform( 0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, 3.5, 0, 0 )
-
-[node name="model_enemy_golem6" parent="dummies" instance=ExtResource( 3 )]
-transform = Transform( 0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, 0, 0, 22.5 )
-
 [node name="Player" parent="." instance=ExtResource( 1 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 2.5, 0, 36 )
 
@@ -603,6 +581,38 @@ visible = false
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 1, 0 )
 visible = false
 
+[node name="small_health8" parent="Pickups" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 10, -15.5 )
+visible = false
+
+[node name="small_health11" parent="Pickups" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 10, -16 )
+visible = false
+
+[node name="small_health12" parent="Pickups" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 10, 16 )
+visible = false
+
+[node name="small_health13" parent="Pickups" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 10, 16 )
+visible = false
+
+[node name="small_health9" parent="Pickups" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 10, -20 )
+visible = false
+
+[node name="small_health10" parent="Pickups" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 10, -20 )
+visible = false
+
+[node name="small_health14" parent="Pickups" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 10, 20 )
+visible = false
+
+[node name="small_health15" parent="Pickups" instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 10, 20 )
+visible = false
+
 [node name="medium_health" parent="Pickups" instance=ExtResource( 11 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -58.5, 19.5, -57 )
 visible = false
@@ -619,9 +629,6 @@ visible = false
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 35, 0 )
 visible = false
 
-[node name="model_enemy_flying_hat" parent="." instance=ExtResource( 7 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -9, 67, -2.5 )
-
 [node name="PlayerSpawnPoints" type="Node" parent="."]
 
 [node name="player_respawn_point" parent="PlayerSpawnPoints" instance=ExtResource( 8 )]
@@ -632,20 +639,3 @@ transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107,
 
 [node name="player_respawn_point3" parent="PlayerSpawnPoints" instance=ExtResource( 8 )]
 transform = Transform( -0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, -0.5, 58.201, 18, -56.25 )
-
-[node name="archgirl" parent="." instance=ExtResource( 13 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 12.0001, -22.5 )
-
-[node name="sniper" parent="." instance=ExtResource( 14 )]
-transform = Transform( -0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, -0.965926, 7.5, 12, -22 )
-
-[node name="wizard" parent="." instance=ExtResource( 15 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 10 )
-
-[node name="model_enemy_flying_hat2" parent="." instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 1, -7 )
-
-[node name="megawizard" parent="." instance=ExtResource( 16 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, -8 )
-
-[node name="Node" parent="." instance=ExtResource( 17 )]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://shaders/player_rocket_and_launcher.material" type="Material" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://assets/vfx_atlas.png" type="Texture" id=14]
 [ext_resource path="res://shaders/rgb_gradient.png" type="Texture" id=15]
 [ext_resource path="res://shaders/vfx_scrolling_texture.gdshader" type="Shader" id=16]
+[ext_resource path="res://scripts/vfx_fade_sprite.gd" type="Script" id=17]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.56
@@ -440,10 +441,34 @@ mesh = ExtResource( 10 )
 skeleton = NodePath("../..")
 material/0 = ExtResource( 2 )
 
+[node name="rocket_flash" type="Sprite3D" parent="Camera/weapon_holder/rocketlauncher"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -0.260089 )
+pixel_size = 0.005
+texture = ExtResource( 14 )
+region_enabled = true
+region_rect = Rect2( 0, 160, 128, 96 )
+script = ExtResource( 17 )
+single_use = false
+show_on_ready = false
+hold_time = 0.0
+fade_time = 0.1
+
 [node name="railshot_model" parent="Camera/weapon_holder" instance=ExtResource( 11 )]
 transform = Transform( 0.486747, 0, -0.873543, 0, 1, 0, 0.873543, 0, 0.486747, 0.277488, 0.119312, 0.183054 )
 visible = false
 material/0 = SubResource( 13 )
+
+[node name="rail_flash" type="Sprite3D" parent="Camera/weapon_holder/railshot_model"]
+transform = Transform( 0.8, 0, -2.98023e-08, 0, 0.8, 0, 8.9407e-08, 0, 0.73052, -7.45058e-09, 0, -0.13 )
+pixel_size = 0.005
+texture = ExtResource( 14 )
+region_enabled = true
+region_rect = Rect2( 256, 0, 64, 64 )
+script = ExtResource( 17 )
+single_use = false
+show_on_ready = false
+hold_time = 0.0
+fade_time = 0.25
 
 [node name="Position3D" type="Position3D" parent="Camera"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.102785, -0.12, -0.4 )

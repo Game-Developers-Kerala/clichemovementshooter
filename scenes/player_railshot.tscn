@@ -4,7 +4,7 @@
 
 [sub_resource type="CylinderShape" id=1]
 height = 200.0
-radius = 0.4
+radius = 0.5
 
 [node name="RailShot" type="RayCast"]
 enabled = true

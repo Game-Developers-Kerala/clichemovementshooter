@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/grapple_stop.ogg-a3b04b789864cd60919b9d45d99920b4.oggstr"
+
+[deps]
+
+source_file="res://sfx/grapple_stop.ogg"
+dest_files=[ "res://.import/grapple_stop.ogg-a3b04b789864cd60919b9d45d99920b4.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

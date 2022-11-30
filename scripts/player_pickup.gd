@@ -13,7 +13,7 @@ enum types {none,health_small,health_medium,health_large,health_super
 
 const PICKUP_INFO = {
 				"none":{},
-				"health_small":{"health":3,"health_overload":true,"id":"small"},
+				"health_small":{"health":1,"health_overload":true,"id":"small"},
 				"health_medium":{"health":20,"id":"medium"},
 				"health_large":{"health":50,"id":"large"},
 				"health_super":{"health":200,"health_overload":true},

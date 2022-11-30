@@ -25,7 +25,7 @@ func _ready():
 	translation.y = -0.25
 	rotation.x = deg2rad(10)
 	randgen.randomize()
-	print("missile pack activated =========")
+#	print("missile pack activated =========")
 	translate(Vector3.ZERO)
 	force_update_transform()
 	$Timer.start(FIRE_INTERVAL)
@@ -96,7 +96,7 @@ func _on_Timer_timeout():
 		$right.play()
 	missiles_fired += 1
 	if missiles_fired == MISSILE_COUNT:
-		print("all missiles fired")
+#		print("all missiles fired")
 		pack_position_lerp_targ = 0.2
 		$Timer.stop()
 		yield(get_tree().create_timer(0.2),"timeout")
