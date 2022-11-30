@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/models/mesh_vfx_magic_mine_warning.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://shaders/vfx_magic_mine.material" type="Material" id=2]
+
+[node name="vfx_warning_circle" type="MeshInstance"]
+mesh = ExtResource( 1 )
+material/0 = ExtResource( 2 )

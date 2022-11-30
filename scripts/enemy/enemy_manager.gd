@@ -72,3 +72,6 @@ func _get_spawn_points(spawner : Node) -> Array :
 #spawn function
 func start_wave(wave : int):
 	pass
+
+
+

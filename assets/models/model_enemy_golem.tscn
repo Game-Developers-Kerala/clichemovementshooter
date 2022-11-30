@@ -1,8 +1,11 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://shaders/generic_object.shader" type="Shader" id=1]
 [ext_resource path="res://assets/models/texture_enemy_golem_rsm.png" type="Texture" id=2]
 [ext_resource path="res://assets/models/texture_enemy_golem_color.png" type="Texture" id=3]
+[ext_resource path="res://sfx/big_swing.ogg" type="AudioStream" id=4]
+[ext_resource path="res://sfx/rock_hit_1.ogg" type="AudioStream" id=5]
+[ext_resource path="res://sfx/rock_hit_2.ogg" type="AudioStream" id=6]
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "GOlem_PlayerSizeMesh004"
@@ -30,6 +33,9 @@ shader_param/metallic = 0.0
 shader_param/occlusion = 0.0
 shader_param/albedo_tex = ExtResource( 3 )
 shader_param/RSM_tex = ExtResource( 2 )
+
+[sub_resource type="BoxShape" id=19]
+extents = Vector3( 0.691, 0.716, 0.735358 )
 
 [sub_resource type="ArrayMesh" id=2]
 resource_name = "GOlem_PlayerSizeMesh003"
@@ -73,6 +79,9 @@ surfaces/0 = {
 "vertex_count": 96
 }
 
+[sub_resource type="BoxShape" id=20]
+extents = Vector3( 0.334669, 0.87796, 0.462063 )
+
 [sub_resource type="ArrayMesh" id=5]
 resource_name = "GOlem_PlayerSizeMesh009"
 surfaces/0 = {
@@ -104,7 +113,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=6]
 resource_name = "circle_pound"
-length = 1.5
+length = 2.0
 step = 0.01
 tracks/0/type = "transform"
 tracks/0/path = NodePath("Armature/Skeleton:legs")
@@ -148,6 +157,28 @@ tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1.5, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 )
+tracks/6/type = "audio"
+tracks/6/path = NodePath("AudioStreamPlayer3D")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"clips": [ {
+"end_offset": 0.0896549,
+"start_offset": 0.0,
+"stream": ExtResource( 5 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 5 )
+}, {
+"end_offset": 0.396533,
+"start_offset": 0.0,
+"stream": ExtResource( 6 )
+} ],
+"times": PoolRealArray( 0.59, 0.88, 1.5 )
+}
 
 [sub_resource type="Animation" id=7]
 resource_name = "death"
@@ -207,10 +238,29 @@ tracks/6/keys = {
 "update": 1,
 "values": [ true, false, true, false, true, false, true, false, true, false, true, false, true, false ]
 }
+tracks/7/type = "audio"
+tracks/7/path = NodePath("AudioStreamPlayer3D")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 5 )
+}, {
+"end_offset": 0.442702,
+"start_offset": 0.0,
+"stream": ExtResource( 6 )
+} ],
+"times": PoolRealArray( 0, 0.45 )
+}
 
 [sub_resource type="Animation" id=11]
 resource_name = "hit"
 length = 0.416667
+loop = true
 tracks/0/type = "transform"
 tracks/0/path = NodePath("Armature/Skeleton:legs")
 tracks/0/interp = 1
@@ -253,6 +303,20 @@ tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0.416667, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 )
+tracks/6/type = "audio"
+tracks/6/path = NodePath("AudioStreamPlayer3D")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 6 )
+} ],
+"times": PoolRealArray( 0 )
+}
 
 [sub_resource type="Animation" id=12]
 resource_name = "idle"
@@ -315,6 +379,7 @@ tracks/6/keys = {
 [sub_resource type="Animation" id=14]
 resource_name = "melee_l"
 length = 1.125
+step = 0.025
 tracks/0/type = "transform"
 tracks/0/path = NodePath("Armature/Skeleton:legs")
 tracks/0/interp = 1
@@ -357,6 +422,28 @@ tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1.125, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 )
+tracks/6/type = "audio"
+tracks/6/path = NodePath("AudioStreamPlayer3D")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"clips": [ {
+"end_offset": 0.204367,
+"start_offset": 0.1,
+"stream": ExtResource( 5 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 4 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.1,
+"stream": ExtResource( 5 )
+} ],
+"times": PoolRealArray( 0, 0.3, 0.85 )
+}
 
 [sub_resource type="Animation" id=15]
 resource_name = "melee_r"
@@ -403,10 +490,33 @@ tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1.125, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 )
+tracks/6/type = "audio"
+tracks/6/path = NodePath("AudioStreamPlayer3D")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"clips": [ {
+"end_offset": 0.204367,
+"start_offset": 0.1,
+"stream": ExtResource( 5 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 4 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.1,
+"stream": ExtResource( 5 )
+} ],
+"times": PoolRealArray( 0, 0.3, 0.85 )
+}
 
 [sub_resource type="Animation" id=16]
 resource_name = "straight_pound"
 length = 1.5
+step = 0.025
 tracks/0/type = "transform"
 tracks/0/path = NodePath("Armature/Skeleton:legs")
 tracks/0/interp = 1
@@ -449,6 +559,24 @@ tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1.5, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 )
+tracks/6/type = "audio"
+tracks/6/path = NodePath("AudioStreamPlayer3D")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 4 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 6 )
+} ],
+"times": PoolRealArray( 0, 0.725 )
+}
 
 [node name="model_enemy_golem" type="Spatial"]
 
@@ -493,6 +621,15 @@ bone_name = "legs"
 mesh = SubResource( 1 )
 material/0 = SubResource( 17 )
 
+[node name="hurtbox" type="Area" parent="Armature/Skeleton/bone_leg"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/bone_leg/hurtbox"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.839161, 0 )
+shape = SubResource( 19 )
+
 [node name="bone_torso" type="BoneAttachment" parent="Armature/Skeleton"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.22006, 0 )
 bone_name = "torso"
@@ -502,8 +639,16 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0529647, 2.48353e-09 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 17 )
 
+[node name="hurtbox" type="Area" parent="Armature/Skeleton/bone_torso"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/bone_torso/hurtbox"]
+shape = SubResource( 19 )
+
 [node name="bone_head" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( 1, 7.10542e-15, 2.38419e-07, -7.10542e-15, 1, -1.69407e-21, -2.38419e-07, -1.00974e-27, 1, 0, 3.49509, 0 )
+transform = Transform( 1, 0, 2.38419e-07, 0, 1, 0, -2.38419e-07, 0, 1, 0, 3.49509, 0 )
 bone_name = "head"
 
 [node name="head" type="MeshInstance" parent="Armature/Skeleton/bone_head"]
@@ -511,8 +656,16 @@ transform = Transform( 1, 7.10543e-15, -2.38419e-07, -2.13163e-14, 1, -5.96046e-
 mesh = SubResource( 3 )
 material/0 = SubResource( 17 )
 
+[node name="hurtbox" type="Area" parent="Armature/Skeleton/bone_head"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/bone_head/hurtbox"]
+shape = SubResource( 19 )
+
 [node name="bone_hand_r" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -1, -2.23874e-07, 3.74869e-07, 2.23874e-07, -1, 4.2062e-27, 3.74869e-07, 0, 1, 1.07045, 2.59122, 0 )
+transform = Transform( -1, -2.23874e-07, 3.74869e-07, 2.23874e-07, -1, 0, 3.74869e-07, 0, 1, 1.07045, 2.59122, 0 )
 bone_name = "hand_r"
 
 [node name="hand_r" type="MeshInstance" parent="Armature/Skeleton/bone_hand_r"]
@@ -520,14 +673,32 @@ transform = Transform( -1, 2.23874e-07, 3.74869e-07, -2.23874e-07, -1, -2.50597e
 mesh = SubResource( 4 )
 material/0 = SubResource( 17 )
 
+[node name="hurtbox" type="Area" parent="Armature/Skeleton/bone_hand_r"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/bone_hand_r/hurtbox"]
+transform = Transform( 1, 0, 0, 3.14603e-20, 1, 0, 0, 0, 1, 0.0691091, 0.456807, -2.5907e-08 )
+shape = SubResource( 20 )
+
 [node name="bone_hand_l" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -1, 2.23874e-07, -3.74869e-07, -2.23874e-07, -1, 4.2062e-27, -3.74869e-07, 0, 1, -1.07045, 2.59122, 0 )
+transform = Transform( -1, 2.23874e-07, -3.74869e-07, -2.23874e-07, -1, 0, -3.74869e-07, 0, 1, -1.07045, 2.59122, 0 )
 bone_name = "hand_l"
 
 [node name="hand_l" type="MeshInstance" parent="Armature/Skeleton/bone_hand_l"]
 transform = Transform( -1, -2.23874e-07, -3.74869e-07, 2.23874e-07, -1, -2.50597e-14, -3.74869e-07, -1.08983e-13, 1, -0.060659, 0.477585, -1.77722e-08 )
 mesh = SubResource( 5 )
 material/0 = SubResource( 17 )
+
+[node name="hurtbox" type="Area" parent="Armature/Skeleton/bone_hand_l"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/bone_hand_l/hurtbox"]
+transform = Transform( 1, 0, 0, 3.14603e-20, 1, 0, 0, 0, 1, -0.069, 0.457, 0 )
+shape = SubResource( 20 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "idle"
@@ -539,3 +710,10 @@ anims/idle = SubResource( 12 )
 anims/melee_l = SubResource( 14 )
 anims/melee_r = SubResource( 15 )
 anims/straight_pound = SubResource( 16 )
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 6 )
+unit_db = 6.0
+unit_size = 5.0
+max_db = 0.0
+bus = "enemies"

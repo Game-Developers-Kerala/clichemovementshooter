@@ -8,6 +8,7 @@ const CENTER_OF_MASS = Vector3(0,1,0)
 export(NodePath) var path_to_weapon
 export(NodePath) var path_to_nav_agent
 export(NodePath) var path_to_BodyRotationHelper
+export(NodePath) var path_to_model
 export var chase_speed : float = 300
 export var attack_speed : float = 75
 
@@ -17,14 +18,17 @@ var velocity : Vector3 = Vector3.ZERO
 var current_state setget set_state, get_state
 var player : KinematicBody
 
-#onready var player = get_parent().get_node("Player")
+
+onready var model = get_node(path_to_model)
 onready var weapon = get_node(path_to_weapon) as RayCast
 onready var nav_agent = get_node(path_to_nav_agent) as NavigationAgent
 onready var body = get_node(path_to_BodyRotationHelper) as Spatial
 
 #getter and setter functions
 func set_state(new_state) -> void :
+	print("state:" + str(new_state))
 	current_state = new_state
+	enter()
 
 
 func get_state():
@@ -66,4 +70,9 @@ func _aim_at_player():
 
 
 func _calc_vantage_point(target : Vector3):
+	pass
+
+#function called when entered to a new state
+#to play animations
+func enter() -> void:
 	pass

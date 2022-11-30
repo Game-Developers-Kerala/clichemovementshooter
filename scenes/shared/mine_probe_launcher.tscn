@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+const PROBE = preload(\"res://scenes/shared/magic_mine_probe.tscn\")
+
+onready var player = get_tree().get_nodes_in_group(\"player\")[0]
+
+func _ready():
+	pass
+
+
+func _on_Timer_timeout():
+	var probe = PROBE.instance()
+	add_child(probe)
+"
+
+[node name="Node" type="Node"]
+script = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

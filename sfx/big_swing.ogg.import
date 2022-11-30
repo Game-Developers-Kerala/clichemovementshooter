@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/big_swing.ogg-721ffcd6230112a64908b0c5e541d540.oggstr"
+
+[deps]
+
+source_file="res://sfx/big_swing.ogg"
+dest_files=[ "res://.import/big_swing.ogg-721ffcd6230112a64908b0c5e541d540.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

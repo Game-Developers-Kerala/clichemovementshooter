@@ -88,9 +88,13 @@ const AUD = {
 	"spiketimedout":{"stream":preload("res://sfx/spike_timedout.ogg"),"vol":-12},
 	"missilepickup":{"stream":preload("res://sfx/pickup_missilepack.ogg"),"vol":-12},
 	"missileactivate":{"stream":preload("res://sfx/missile_activate.ogg"),"vol":-9},
-	"healthpickupsmall":{"stream":preload("res://sfx/healthpickup_small.ogg"),"vol":-9},
-	"healthpickupmedium":{"stream":preload("res://sfx/healthpickup_medium.ogg"),"vol":-9},
-	"healthpickuplarge":{"stream":preload("res://sfx/healthpickup_large.ogg"),"vol":-9},
+	"healthpickupsmall":{"stream":preload("res://sfx/healthpickup_small.ogg"),"vol":-9,"source":"mouth"},
+	"healthpickupmedium":{"stream":preload("res://sfx/healthpickup_medium.ogg"),"vol":-9,"source":"mouth"},
+	"healthpickuplarge":{"stream":preload("res://sfx/healthpickup_large.ogg"),"vol":-9,"source":"mouth"},
+	"hurt1":{"stream":preload("res://sfx/player_hurt1.ogg"),"source":"mouth"},
+	"hurt2":{"stream":preload("res://sfx/player_hurt2.ogg"),"source":"mouth"},
+	"hurt3":{"stream":preload("res://sfx/player_hurt3.ogg"),"source":"mouth"},
+	"die":{"stream":preload("res://sfx/player_death.ogg"),"source":"mouth"},
 	}
 
 func _ready():
@@ -102,7 +106,9 @@ func _ready():
 	predict_future_pos.resize(12)
 	predict_future_pos.fill(global_translation+CENTER_OF_MASS)
 	
+	$Camera/SpikeModel.hide()
 	$floaters/GrappleRay/GrappleMesh.hide()
+	$HUD/BlackOverlay.hide()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event):
@@ -356,6 +362,7 @@ func pick_up(item:pickup):
 				$HUD/Mrgn/Powerups/Missile/enabled.show()
 				play_audio("missilepickup")
 			"powerup_spikecage":
+				game.emit_signal("announcement","Raging Grapple Berserker")
 				$SpikeCountdown.start()
 				spike_time_left = SPIKE_TIME
 				$HUD/Mrgn/Spike/timelabel.text = str(spike_time_left)
@@ -365,7 +372,7 @@ func pick_up(item:pickup):
 	item.on_pickup()
 
 func get_hit(args:={}):
-	print("Plyr got hit at:",OS.get_ticks_msec(),"=====\n",args)
+#	print("Plyr got hit at:",OS.get_ticks_msec(),"=====\n",args)
 	if args.has("dmg"):
 		adjust_health(-args.dmg)
 	if args.has("force"):
@@ -386,13 +393,14 @@ func adjust_health(in_val,max_limit:=STAT_RANGES.health.max):
 	stats.health = clamp(stats.health,0,max_limit)
 	$HUD/Mrgn/Health.text = str(int(stats.health)) 
 	if !stats.health:
+		$HUD/BlackOverlay.show()
 		set_process(false)
 		set_physics_process(false)
 		set_process_input(false)
 		game._on_player_death()
 
 func get_pushed(push_dict:={}):
-	print("got pushed")
+#	print("got pushed")
 	jumping = true
 	snap = Vector3.ZERO
 	var push_dir:Vector3 = (global_translation+Vector3.UP)-push_dict.origin
@@ -406,7 +414,7 @@ func walljump():
 	if wallsidecheck:
 		perp_vec = $wallsidecheckarea.global_transform.basis.z*Vector3(1,0,1)
 	if movestate == movestates.wall:
-		print("perpvec:",perp_vec, " movestate:",movestates.keys()[movestate])
+#		print("perpvec:",perp_vec, " movestate:",movestates.keys()[movestate])
 		velocity.y = 0.0
 		velocity += Vector3.UP*6+perp_vec*10
 #	else:
@@ -435,6 +443,7 @@ func grapple():
 	var collider = $Camera/AimRay.get_collider()
 	if !$SpikeCountdown.is_stopped():
 		spike_active = true
+		$Camera/SpikeModel.show()
 		$SpikeArea/CollisionShape.disabled = false
 	if collider.get_collision_layer_bit(cmn.colliders.enemy_hurtbox):
 		grappling_enemy = true
@@ -460,11 +469,11 @@ func _on_SpikeArea_body_entered(body):
 		return
 	$SpikeArea/CollisionShape.disabled = true
 	spike_active = false
-	print("enemy body entered")
+#	print("enemy body entered")
 	var atk_dict = SPIKE_ATK_DICT.duplicate()
 	atk_dict.origin = global_translation+CENTER_OF_MASS
 	atk_dict.push_dir = -global_transform.basis.z
-	print("spike hit:",atk_dict)
+#	print("spike hit:",atk_dict)
 	body.get_hit(atk_dict)
 	grapple_stop()
 
@@ -554,6 +563,10 @@ func fall_recover():
 			if point.valid:
 				valid.push_front(point)
 	if valid:
+		$HUD/BlackOverlay.show()
+		adjust_health(-20)
+		yield(get_tree().create_timer(0.2),"timeout")
+		$HUD/BlackOverlay.hide()
 		var idx = randgen.randi()%valid.size()
 		global_transform = valid[idx].global_transform
 
@@ -571,6 +584,8 @@ func _on_SpikeCountdown_timeout():
 		$SpikeCountdown.stop()
 		$HUD/Mrgn/Spike.hide()
 		play_audio("spiketimedout")
+		$SpikeExtend.stop()
+		_on_SpikeExtend_timeout()
 		return
 	if spike_time_left < 6:
 		play_audio("spikecountdown")
@@ -579,6 +594,7 @@ func _on_SpikeCountdown_timeout():
 func _on_SpikeExtend_timeout():
 	spike_active = false
 	$SpikeArea/CollisionShape.disabled = true
+	$Camera/SpikeModel.hide()
 
 func play_audio(in_aud:String):
 	if !AUD.has(in_aud):
