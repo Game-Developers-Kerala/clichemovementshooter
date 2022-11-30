@@ -108,6 +108,7 @@ func _ready():
 	
 	$Camera/SpikeModel.hide()
 	$floaters/GrappleRay/GrappleMesh.hide()
+	$HUD/BlackOverlay.hide()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event):
@@ -361,6 +362,7 @@ func pick_up(item:pickup):
 				$HUD/Mrgn/Powerups/Missile/enabled.show()
 				play_audio("missilepickup")
 			"powerup_spikecage":
+				game.emit_signal("announcement","Raging Grapple Berserker")
 				$SpikeCountdown.start()
 				spike_time_left = SPIKE_TIME
 				$HUD/Mrgn/Spike/timelabel.text = str(spike_time_left)
@@ -391,6 +393,7 @@ func adjust_health(in_val,max_limit:=STAT_RANGES.health.max):
 	stats.health = clamp(stats.health,0,max_limit)
 	$HUD/Mrgn/Health.text = str(int(stats.health)) 
 	if !stats.health:
+		$HUD/BlackOverlay.show()
 		set_process(false)
 		set_physics_process(false)
 		set_process_input(false)
@@ -560,6 +563,10 @@ func fall_recover():
 			if point.valid:
 				valid.push_front(point)
 	if valid:
+		$HUD/BlackOverlay.show()
+		adjust_health(-20)
+		yield(get_tree().create_timer(0.2),"timeout")
+		$HUD/BlackOverlay.hide()
 		var idx = randgen.randi()%valid.size()
 		global_transform = valid[idx].global_transform
 

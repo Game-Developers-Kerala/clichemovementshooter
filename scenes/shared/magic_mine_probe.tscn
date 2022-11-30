@@ -15,28 +15,28 @@ collision_mask = 256
 debug_shape_custom_color = Color( 0.219608, 1, 0, 1 )
 
 [node name="RayCast2" type="RayCast" parent="mine_rays"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0 )
+transform = Transform( 0.984808, 0, -0.173648, 0, 1, 0, 0.173648, 0, 0.984808, 5, 0, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -40 )
 collision_mask = 256
 debug_shape_custom_color = Color( 0.219608, 1, 0, 1 )
 
 [node name="RayCast3" type="RayCast" parent="mine_rays"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+transform = Transform( 1, 0, 0, 0, 0.984808, -0.173648, 0, 0.173648, 0.984808, 0, 5, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -40 )
 collision_mask = 256
 debug_shape_custom_color = Color( 0.219608, 1, 0, 1 )
 
 [node name="RayCast5" type="RayCast" parent="mine_rays"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, 0 )
+transform = Transform( 1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, -5, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -40 )
 collision_mask = 256
 debug_shape_custom_color = Color( 0.219608, 1, 0, 1 )
 
 [node name="RayCast4" type="RayCast" parent="mine_rays"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0 )
+transform = Transform( 0.984808, 0, 0.173648, 0, 1, 0, -0.173648, 0, 0.984808, -5, 0, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -40 )
 collision_mask = 256

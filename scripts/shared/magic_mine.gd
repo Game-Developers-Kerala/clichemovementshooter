@@ -15,7 +15,10 @@ func init(position:Vector3,surface_normal:=Vector3.UP): # orient ot normat
 
 func _ready():
 	global_translation = spawn_pos
-	look_at(spawn_pos+spawn_norm,Vector3.UP)
+	if abs(spawn_norm.dot(Vector3.UP)) > 0.98:
+		rotation.x = PI*0.5
+	else:
+		look_at(spawn_pos+spawn_norm,Vector3.UP)
 	$Timer.start(wait_time)
 
 func _on_Timer_timeout():

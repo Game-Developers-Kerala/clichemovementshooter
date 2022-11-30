@@ -35,6 +35,6 @@ bus = "non_music"
 size_diff = 3.0
 
 [node name="vfx_warning_circle" parent="." instance=ExtResource( 4 )]
-transform = Transform( 2.1, 0, 0, 0, 1, 0, 0, 0, 2.1, 0, 0, 0 )
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
