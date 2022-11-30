@@ -11,7 +11,6 @@ enum states{
 }
 
 var lazer = preload("res://scenes/enemy/sniper/sniper_railshot.tscn")
-var lazer_inst
 
 func _ready() -> void:
 	
@@ -54,15 +53,11 @@ func _physics_process(delta: float) -> void:
 			
 			if $ShootTimer.is_stopped():
 				
-				print("player at sight")
-				lazer_inst = lazer.instance()
-				if weapon.get_collider() == player :
-					var distance = lazer_inst.transform.origin.distance_to(weapon.get_collision_point())
-					lazer_inst.scale.z = distance
-				else :
-					lazer_inst.scale.z = weapon.cast_to.z
-				weapon.add_child(lazer_inst)
-				$ShootTimer.start()
+				if weapon.get_collider() == player:
+					var inst = lazer.instance()
+					add_child(inst)
+					inst.init(global_translation,weapon.get_collision_point())
+					$ShootTimer.start()
 			
 		states.DEATH:
 			pass

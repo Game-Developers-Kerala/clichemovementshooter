@@ -68,10 +68,14 @@ neighbor_dist = 2000.0
 max_neighbors = 2
 
 [node name="ShootTimer" type="Timer" parent="."]
+wait_time = 5.0
 one_shot = true
 
 [node name="AttackCooldown" type="Timer" parent="."]
 wait_time = 3.0
+one_shot = true
+
+[node name="ShootCooldown" type="Timer" parent="."]
 one_shot = true
 
 [connection signal="timeout" from="ShootTimer" to="." method="_on_ShootTimer_timeout"]
