@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://shaders/player_rocket_and_launcher.material" type="Material" id=2]
@@ -8,11 +8,14 @@
 [ext_resource path="res://gui/main.theme" type="Theme" id=6]
 [ext_resource path="res://shaders/generic_object.shader" type="Shader" id=7]
 [ext_resource path="res://sfx/rocket_shoot.ogg" type="AudioStream" id=8]
+[ext_resource path="res://assets/models/mesh_vfx_spike_in_view.obj" type="ArrayMesh" id=9]
 [ext_resource path="res://assets/models/mesh_rocket_launcher.obj" type="ArrayMesh" id=10]
 [ext_resource path="res://assets/models/model_railshot.tscn" type="PackedScene" id=11]
 [ext_resource path="res://assets/models/texture_weapon_railshot_color.png" type="Texture" id=12]
 [ext_resource path="res://assets/models/texture_weapon_railshot_emission.png" type="Texture" id=13]
 [ext_resource path="res://assets/vfx_atlas.png" type="Texture" id=14]
+[ext_resource path="res://shaders/rgb_gradient.png" type="Texture" id=15]
+[ext_resource path="res://shaders/vfx_scrolling_texture.gdshader" type="Shader" id=16]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.56
@@ -30,6 +33,13 @@ shader_param/metallic = 0.0
 shader_param/occlusion = 0.0
 shader_param/albedo_tex = ExtResource( 12 )
 shader_param/emission_tex = ExtResource( 13 )
+
+[sub_resource type="ShaderMaterial" id=23]
+shader = ExtResource( 16 )
+shader_param/speed = Vector2( 1, -1 )
+shader_param/albedo_color = Color( 1, 1, 1, 1 )
+shader_param/opacity = 1.0
+shader_param/albedo_tex = ExtResource( 15 )
 
 [sub_resource type="SphereShape" id=21]
 radius = 0.57
@@ -437,6 +447,12 @@ material/0 = SubResource( 13 )
 
 [node name="Position3D" type="Position3D" parent="Camera"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.102785, -0.12, -0.4 )
+
+[node name="SpikeModel" type="MeshInstance" parent="Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.201 )
+visible = false
+mesh = ExtResource( 9 )
+material/0 = SubResource( 23 )
 
 [node name="GeneralArea" type="Area" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0 )
