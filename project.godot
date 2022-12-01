@@ -33,7 +33,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Clichemovementshooter"
-run/main_scene="res://levels/level1.tscn"
+run/main_scene="res://levels/testarena.tscn"
 config/icon="res://icon.png"
 
 [autoload]
@@ -71,10 +71,6 @@ texture={
 "size_limit": 0,
 "stream": false,
 "svg/scale": 1.0
-}
-ogg_vorbis={
-"loop": false,
-"loop_offset": 0
 }
 
 [input]
