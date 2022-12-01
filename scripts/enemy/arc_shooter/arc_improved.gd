@@ -2,7 +2,7 @@ extends Spatial
 
 export(float) var speed = 100
 func _ready() -> void:
-	pass
+		pass
 
 func _process(delta: float) -> void:
 	translate_object_local(Vector3.FORWARD*speed*delta)

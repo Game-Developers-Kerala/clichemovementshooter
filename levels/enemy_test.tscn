@@ -2,7 +2,7 @@
 
 [ext_resource path="res://levels/ceiling_tile.png" type="Texture" id=1]
 [ext_resource path="res://scenes/player.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scenes/enemy/ground_pounder/ground_pounder.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/enemy/arc_shooter/arc_shooter.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/flight_path.tres" type="NavigationMesh" id=4]
 
 [sub_resource type="NavigationMesh" id=2]
@@ -58,6 +58,5 @@ transform = Transform( 0.970232, 0, 0.242176, 0, 1, 0, -0.242176, 0, 0.970232, -
 navmesh = ExtResource( 4 )
 navigation_layers = 2
 
-[node name="GroundPounder" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -14.8447, 0.671572, 0 )
-attack_speed = 75.0
+[node name="ArcShooter" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9877, -6.56265 )

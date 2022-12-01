@@ -26,9 +26,6 @@ func _process(delta: float) -> void:
 	
 	_aim_at_player()
 	
-	#if player.grappling:
-	#	set_state(states.PREDICT_AIM)
-				
 	nav_agent.set_target_location(player.global_translation)
 	model.vertical_look_at(player.global_translation)
 	
@@ -118,7 +115,7 @@ func _predicted_shoot():
 
 #return a value from already predicted player pos
 func _predict_player_movement() -> Vector3:
-	return player.predict_future_pos[8]
+	return player.predict_future_pos[3]
 
 
 func _on_ShootTimer_timeout() -> void:
