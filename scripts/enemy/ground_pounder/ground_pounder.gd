@@ -133,7 +133,7 @@ func enter():
 				anim.play("straight_pound")
 		states.DEATH:
 			if is_anim_done() == false:
-				if $Death.is_stopped():
+				if !$Death.is_stopped():
 					$Death.start()
 					anim.play("death")
 

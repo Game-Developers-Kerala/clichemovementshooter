@@ -59,6 +59,8 @@ wait_time = 6.0
 one_shot = true
 
 [node name="MeeleAttack" type="Area" parent="."]
+collision_layer = 0
+monitorable = false
 
 [node name="CollisionShape" type="CollisionShape" parent="MeeleAttack"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.749116, 0 )

@@ -1,6 +1,8 @@
 #heavy gunner
 extends BaseEnemy
 
+const CENTER_OF_MASS = Vector3(0,0.5,0)
+
 enum states{
 	
 	CHASE,
@@ -62,8 +64,8 @@ func _process(delta: float) -> void:
 					_fire_shot(false) #right
 			
 		states.DEATH:
+
 			pass
-		
 		
 		
 func _physics_process(delta: float) -> void:
@@ -82,6 +84,7 @@ func _physics_process(delta: float) -> void:
 			
 		states.DEATH:
 			pass
+
 
 
 func _start_barrage() -> void:
