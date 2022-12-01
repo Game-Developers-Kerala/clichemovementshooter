@@ -14,7 +14,6 @@ path_to_weapon = NodePath("BodyRotationHelper/RayCast")
 path_to_nav_agent = NodePath("NavigationAgent")
 path_to_BodyRotationHelper = NodePath("BodyRotationHelper")
 path_to_model = NodePath("BodyRotationHelper/archgirl")
-max_shoot_range = 20.0
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1.2, 0, 1, -5.24537e-08, 0, 1.07434, 0 )
@@ -40,3 +39,13 @@ max_neighbors = 2
 [node name="ShootCooldown" type="Timer" parent="."]
 wait_time = 1.5
 one_shot = true
+
+[node name="BowDrawTimeout" type="Timer" parent="."]
+wait_time = 1.25
+one_shot = true
+
+[node name="AttackCooldown" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[connection signal="timeout" from="BowDrawTimeout" to="." method="_on_BowDrawTimeout_timeout"]

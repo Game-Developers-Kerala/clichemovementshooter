@@ -7,32 +7,30 @@ enum states{
 	CHASE,
 	BOW_AIM,
 	BOW_RELEASE,
-	ATTACK,
 	DAMAGE,
 	DEATH
 
 }
 
-var dist
-
-export(float) var max_shoot_range = 25
-export(float) var max_aim_range = 50
-
 onready var label = $BodyRotationHelper/Label3D as Label3D
-onready var ARC = preload("res://scenes/enemy/arc_shooter/arc.tscn")
+onready var ARC = preload("res://scenes/enemy/arc_shooter/ArcImporved.tscn")
 onready var cut_grapple = preload("res://scenes/enemy/arc_shooter/grapple_cut_projectile.tscn") 
 
 func _ready() -> void:
 	
-	player = get_tree().current_scene.get_node('Player')
+	player = get_tree().get_nodes_in_group("player")[0]
 	set_state(states.CHASE)
 
 
 func _process(delta: float) -> void:
 	
-	nav_agent.set_target_location(player.global_transform.origin)
-	if weapon.get_collider() == player:
-		dist = (weapon.get_collision_point() - global_translation).length()
+	_aim_at_player()
+	
+	#if player.grappling:
+	#	set_state(states.PREDICT_AIM)
+				
+	nav_agent.set_target_location(player.global_translation)
+	model.vertical_look_at(player.global_translation)
 	
 	match get_state():
 		
@@ -43,22 +41,19 @@ func _process(delta: float) -> void:
 		
 		states.BOW_AIM:
 			
-			if dist < max_shoot_range:
-				set_state(states.BOW_RELEASE)
-			else:
-				set_state(states.CHASE)
+			if weapon.get_collider() == player:
+				if $BowDrawTimeout.is_stopped():
+					$BowDrawTimeout.start()
 		
 		states.BOW_RELEASE:
 			
 			if weapon.get_collider() != player:
 				set_state(states.CHASE)
-				
+
 		states.DEATH:
 			pass
 				
 func _physics_process(delta: float) -> void:
-	
-	_aim_at_player()
 	
 	match get_state():
 		
@@ -72,10 +67,8 @@ func _physics_process(delta: float) -> void:
 		
 		states.BOW_RELEASE:
 			
-			if $ShootCooldown.is_stopped():
-				if player.grappling:
-					_predicted_shoot()
-				else:
+			if weapon.get_collider() == player:
+				if $ShootCooldown.is_stopped():
 					_shoot()
 					
 		states.DEATH:
@@ -95,13 +88,18 @@ func enter():
 		states.BOW_RELEASE:
 			print("anim played" + str(get_state()))
 			model.get_node("AnimationPlayer").play("shoot1_release")
+		states.DAMAGE:
+			print("anim played" + str(get_state()))
+			model.get_node("AnimationPlayer").play("hit")
 		states.DEATH:
-			pass
+			print("anim played" + str(get_state()))
+			model.get_node("AnimationPlayer").play("dead")
 			
 
 #signals
 func _shoot():
 	
+		print("shoots")
 		var inst = ARC.instance()
 		get_tree().current_scene.add_child(inst)
 		inst.look_at_from_position(global_translation,player.global_translation,Vector3.UP)
@@ -126,3 +124,8 @@ func _predict_player_movement() -> Vector3:
 func _on_ShootTimer_timeout() -> void:
 	print("times up")
 	set_state(states.BOW_RELEASE)
+
+
+func _on_BowDrawTimeout_timeout() -> void:
+	set_state(states.BOW_RELEASE)
+

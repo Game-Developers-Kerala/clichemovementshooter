@@ -33,6 +33,9 @@ func _process(delta: float) -> void:
 			
 			nav_agent.set_target_location(player.global_transform.origin)
 			_aim_at_player()
+			
+			if weapon.get_collider() == player:
+				set_state(states.ATTACK)
 			#=== testing projectile in chase state itself==
 #			if $GunCoolTimer.is_stopped():
 #				_start_barrage()
@@ -44,8 +47,12 @@ func _process(delta: float) -> void:
 			
 		states.ATTACK:
 			
+			if weapon.get_collider() != player:
+				set_state(states.ATTACK)
+			
 			nav_agent.set_target_location(player.global_transform.origin)
 			_aim_at_player()
+			
 			if $GunCoolTimer.is_stopped():
 				_start_barrage()
 			elif !$GunBarrageTimer.is_stopped(): # barrage is ongoing
