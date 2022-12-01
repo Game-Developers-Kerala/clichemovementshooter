@@ -45,7 +45,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Clichemovementshooter"
-run/main_scene="res://levels/testarena.tscn"
+run/main_scene="res://levels/level1.tscn"
 config/icon="res://icon.png"
 
 [autoload]
