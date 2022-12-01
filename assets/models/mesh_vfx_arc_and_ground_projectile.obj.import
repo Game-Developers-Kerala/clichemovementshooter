@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/mesh_vfx_arc_and_ground_projectile.obj-78290e418d661d72d45d97b06dad9e59.mesh"
+
+[deps]
+
+files=[ "res://.import/mesh_vfx_arc_and_ground_projectile.obj-78290e418d661d72d45d97b06dad9e59.mesh" ]
+
+source_file="res://assets/models/mesh_vfx_arc_and_ground_projectile.obj"
+dest_files=[ "res://.import/mesh_vfx_arc_and_ground_projectile.obj-78290e418d661d72d45d97b06dad9e59.mesh", "res://.import/mesh_vfx_arc_and_ground_projectile.obj-78290e418d661d72d45d97b06dad9e59.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286
