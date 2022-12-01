@@ -19,8 +19,11 @@ func _ready():
 		if sniper.has(point):
 			sniper_room_points.push_back(point)
 
+func get_sniper_vantage_point(idx)->Node:
+	return get_node(sniper[idx])
 
-func get_sniper_vantage_point()->Vector3:
+
+func get_random_sniper_vantage_position()->Vector3:
 	if player_in_room:
 		var idx = random.randi()%sniper_room_points.size()
 		return get_node(sniper_room_points[idx]).global_translation

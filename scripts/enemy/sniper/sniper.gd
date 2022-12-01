@@ -3,8 +3,8 @@ extends KinematicBody
 export(float) var speed = 3
 export(int) var max_health = 150
 var health :int = max_health
-export(float) var atk_cool_time = 5
-export(float) var atk_dmg = 40
+export(float) var atk_cool_time = 7
+export(float) var atk_dmg = 20
 export(float) var atk_push_force = 75
 
 
@@ -114,7 +114,7 @@ func change_state(to_state:int,args:={}):
 			$ray_aim.enabled=false
 			var vantageholder = get_tree().get_nodes_in_group("vantage_points")[0]
 			if vantageholder:
-				var new_nav_point = vantageholder.get_sniper_vantage_point()
+				var new_nav_point = vantageholder.get_random_sniper_vantage_position()
 				$NavigationAgent.set_target_location(new_nav_point)
 				nav = true
 				anim.play("run")
@@ -150,6 +150,7 @@ func change_state(to_state:int,args:={}):
 			$ray_aim.enabled = false
 			$CollisionShape.disabled = true
 			anim.play("dead")
+			game.emit_signal("enemy_killed")
 			pass
 	state = to_state
 	if state_times.has(states.keys()[state]):

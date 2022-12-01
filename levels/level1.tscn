@@ -136,32 +136,25 @@ depth = 10.0
 
 [node name="pickup_missile" parent="Zigzap_Jump" instance=ExtResource( 6 )]
 transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0 )
-visible = false
 respawn_interval = 40.0
 
 [node name="small_health" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 3.5 )
-visible = false
 
 [node name="small_health2" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -3.5 )
-visible = false
 
 [node name="small_health3" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 3.5 )
-visible = false
 
 [node name="small_health4" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -3.5 )
-visible = false
 
 [node name="small_health5" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, 3.5 )
-visible = false
 
 [node name="small_health6" parent="Zigzap_Jump" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, -3.5 )
-visible = false
 
 [node name="LevelGeometry" type="CSGCombiner" parent="." groups=["navmesh"]]
 material_override = SubResource( 1 )
@@ -617,7 +610,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 58, 19.5, -57 )
 
 [node name="large_health" parent="Pickups" instance=ExtResource( 12 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -85.5, 35, 0 )
-visible = false
 
 [node name="large_health2" parent="Pickups" instance=ExtResource( 12 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 35, 0 )
