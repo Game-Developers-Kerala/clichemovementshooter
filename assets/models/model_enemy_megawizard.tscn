@@ -1,9 +1,12 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://shaders/generic_object.shader" type="Shader" id=1]
 [ext_resource path="res://assets/models/texture_enemy_megawizard_color.png" type="Texture" id=2]
 [ext_resource path="res://assets/models/texture_enemy_megawizard_rsm.png" type="Texture" id=3]
 [ext_resource path="res://scripts/enemy/hurtbox_by_owner.gd" type="Script" id=4]
+[ext_resource path="res://sfx/megawiz_footstep.ogg" type="AudioStream" id=5]
+[ext_resource path="res://sfx/megawiz_hit2.ogg" type="AudioStream" id=6]
+[ext_resource path="res://sfx/megawiz_die.ogg" type="AudioStream" id=7]
 
 [sub_resource type="GDScript" id=22]
 script/source = "extends Spatial
@@ -158,6 +161,21 @@ radius = 0.4
 height = 3.0
 radius = 0.4
 
+[sub_resource type="Animation" id=23]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+
 [sub_resource type="Animation" id=7]
 resource_name = "cast_over"
 length = 1.66667
@@ -252,6 +270,20 @@ tracks/12/loop_wrap = true
 tracks/12/imported = false
 tracks/12/enabled = true
 tracks/12/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 8.01581e-21, 0, 1, 1, 1, 1, 1.66667, 1, 0, 0, 0, 0, 8.01581e-21, 0, 1, 1, 1, 1 )
+tracks/13/type = "audio"
+tracks/13/path = NodePath("AudioStreamPlayer3D")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 5 )
+} ],
+"times": PoolRealArray( 0.8 )
+}
 
 [sub_resource type="Animation" id=8]
 resource_name = "cast_start"
@@ -443,10 +475,21 @@ tracks/12/loop_wrap = true
 tracks/12/imported = false
 tracks/12/enabled = true
 tracks/12/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 8.01581e-21, 0, 1, 1, 1, 1, 1.66667, 1, 0, 0, 0, 0, 8.01581e-21, 0, 1, 1, 1, 1 )
+tracks/13/type = "audio"
+tracks/13/path = NodePath("AudioStreamPlayer3D")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"clips": [  ],
+"times": PoolRealArray(  )
+}
 
 [sub_resource type="Animation" id=10]
 resource_name = "dead"
 length = 4.16667
+step = 0.05
 tracks/0/type = "transform"
 tracks/0/path = NodePath("Armature/Skeleton:fArm_l")
 tracks/0/interp = 1
@@ -538,6 +581,32 @@ tracks/12/loop_wrap = true
 tracks/12/imported = false
 tracks/12/enabled = true
 tracks/12/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 8.01581e-21, 0, 1, 1, 1, 1, 4.16667, 1, 0, 0, 0, 0, 8.01581e-21, 0, 1, 1, 1, 1 )
+tracks/13/type = "audio"
+tracks/13/path = NodePath("AudioStreamPlayer3D")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 7 )
+} ],
+"times": PoolRealArray( 0 )
+}
+tracks/14/type = "value"
+tracks/14/path = NodePath(".:visible")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/keys = {
+"times": PoolRealArray( 0, 3, 3.05, 3.25, 3.3, 3.45, 3.5, 3.6, 3.65, 3.7, 3.75, 3.8, 3.85, 3.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true, false, true, false, true, false, true, false, true, false, true, false ]
+}
 
 [sub_resource type="Animation" id=11]
 resource_name = "hit"
@@ -633,6 +702,20 @@ tracks/12/loop_wrap = true
 tracks/12/imported = false
 tracks/12/enabled = true
 tracks/12/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 8.01581e-21, 0, 1, 1, 1, 1, 1.25, 1, 0, 0, 0, 0, 8.01581e-21, 0, 1, 1, 1, 1 )
+tracks/13/type = "audio"
+tracks/13/path = NodePath("AudioStreamPlayer3D")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 6 )
+} ],
+"times": PoolRealArray( 0 )
+}
 
 [sub_resource type="Animation" id=12]
 resource_name = "idle"
@@ -825,6 +908,28 @@ tracks/12/loop_wrap = true
 tracks/12/imported = false
 tracks/12/enabled = true
 tracks/12/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 8.01581e-21, 0, 1, 1, 1, 1, 2, 1, 0, 0, 0, 0, 8.01581e-21, 0, 1, 1, 1, 1 )
+tracks/13/type = "audio"
+tracks/13/path = NodePath("AudioStreamPlayer3D")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 5 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 5 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 5 )
+} ],
+"times": PoolRealArray( 0, 0.8, 1.4 )
+}
 
 [node name="megawizard" type="Spatial"]
 script = SubResource( 22 )
@@ -841,37 +946,37 @@ bones/1/name = "body"
 bones/1/parent = 0
 bones/1/rest = Transform( 1, -1.50996e-07, 6.3573e-08, -6.3573e-08, 0, 1, -1.50996e-07, -1, 0, -6.50536e-07, 0, -4.30831 )
 bones/1/enabled = true
-bones/1/bound_children = [  ]
+bones/1/bound_children = [ NodePath("body") ]
 bones/2/name = "uArm_l"
 bones/2/parent = 1
 bones/2/rest = Transform( 0.659672, 0.487212, -0.572239, 0.181964, -0.842295, -0.507374, -0.729192, 0.230574, -0.644293, 0.573245, 0.420548, 0.323077 )
 bones/2/enabled = true
-bones/2/bound_children = [  ]
+bones/2/bound_children = [ NodePath("uArm_l") ]
 bones/3/name = "fArm_l"
 bones/3/parent = 2
 bones/3/rest = Transform( 0.976331, -0.181745, 0.117242, 0.216039, 0.845105, -0.489004, -0.010208, 0.502759, 0.864366, 5.96046e-08, 1.83307, 5.96046e-08 )
 bones/3/enabled = true
-bones/3/bound_children = [  ]
+bones/3/bound_children = [ NodePath("lArm_l") ]
 bones/4/name = "thigh"
 bones/4/parent = 1
 bones/4/rest = Transform( 1, 2.12259e-07, 1.19273e-06, -4.7217e-07, -0.838389, 0.545073, 1.11567e-06, -0.545072, -0.838389, 2.53443e-07, 0.433887, -0.65083 )
 bones/4/enabled = true
-bones/4/bound_children = [  ]
+bones/4/bound_children = [ NodePath("thigh") ]
 bones/5/name = "shin"
 bones/5/parent = 4
 bones/5/rest = Transform( 1, 4.72681e-07, 1.40328e-07, -4.72681e-07, 0.838005, 0.545662, 1.40328e-07, -0.545662, 0.838005, 2.00145e-13, 1.91606, -1.19209e-07 )
 bones/5/enabled = true
-bones/5/bound_children = [  ]
+bones/5/bound_children = [ NodePath("shin") ]
 bones/6/name = "uArm_r"
 bones/6/parent = 1
 bones/6/rest = Transform( 0.659672, -0.487212, 0.572239, -0.181964, -0.842295, -0.507374, 0.729193, 0.230573, -0.644293, -0.573245, 0.420548, 0.323076 )
 bones/6/enabled = true
-bones/6/bound_children = [  ]
+bones/6/bound_children = [ NodePath("uArm_r") ]
 bones/7/name = "fArm_r"
 bones/7/parent = 6
 bones/7/rest = Transform( 0.976331, 0.181745, -0.117243, -0.216039, 0.845105, -0.489004, 0.0102081, 0.502759, 0.864366, 1.19209e-07, 1.83307, -1.19209e-07 )
 bones/7/enabled = true
-bones/7/bound_children = [  ]
+bones/7/bound_children = [ NodePath("lArm_r") ]
 bones/8/name = "ik_arm_l"
 bones/8/parent = 0
 bones/8/rest = Transform( 0.757958, -3.55806e-07, -0.652303, 2.69686e-07, 1, -2.32094e-07, 0.652303, 4.9738e-14, 0.757958, 1.47957, 0.75676, -2.23409e-07 )
@@ -904,7 +1009,7 @@ skin = SubResource( 3 )
 material/0 = SubResource( 14 )
 
 [node name="body" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -1, 0, -3.89414e-07, 0, 1, -9.59927e-15, 3.89414e-07, -4.92007e-14, -1, -1.59162e-12, 4.30831, -2.11971e-13 )
+transform = Transform( -1, -4.40536e-13, -3.89414e-07, -2.01208e-07, 0.856171, 0.516693, 3.33405e-07, 0.516693, -0.856171, 3.41061e-13, 4.5076, 1.20235 )
 bone_name = "body"
 
 [node name="bonecorrection" type="Spatial" parent="Armature/Skeleton/body"]
@@ -958,7 +1063,7 @@ transform = Transform( -0.462954, 0.453153, -0.761791, -0.640856, 0.422619, 0.64
 shape = SubResource( 17 )
 
 [node name="thigh" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -1, -3.2685e-13, -8.6625e-07, -4.7217e-07, -0.838389, 0.545073, -7.26256e-07, 0.545072, 0.838389, -2.30216e-12, 4.7422, 0.65083 )
+transform = Transform( -1, 1.08002e-12, -8.6625e-07, -4.29974e-07, -0.868116, 0.496361, -7.52008e-07, 0.496361, 0.868117, -1.7053e-13, 4.5428, 1.98376 )
 bone_name = "thigh"
 
 [node name="Hurtbox" type="Area" parent="Armature/Skeleton/thigh"]
@@ -972,7 +1077,7 @@ transform = Transform( 1, 0, 5.68434e-14, 2.84217e-14, 1, 0, 1.13687e-13, 0, 1, 
 shape = SubResource( 20 )
 
 [node name="shin" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -1, -1.81899e-12, -8.6625e-07, 6.09546e-10, -1, -0.000703126, -8.66252e-07, -0.000703931, 0.999999, -3.0253e-12, 3.13579, 1.69522 )
+transform = Transform( -1, 2.27374e-13, -8.66249e-07, 3.43041e-07, -0.918247, -0.396007, -7.95434e-07, -0.396008, 0.918246, 1.18713e-12, 2.87944, 2.93482 )
 bone_name = "shin"
 
 [node name="Hurtbox" type="Area" parent="Armature/Skeleton/shin"]
@@ -986,7 +1091,7 @@ transform = Transform( 1, 0, -1.7053e-13, 2.84217e-14, 1, 0, 1.13687e-13, 2.3283
 shape = SubResource( 21 )
 
 [node name="uArm_l" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -0.659672, -0.487212, 0.572239, 0.181964, -0.842295, -0.507374, 0.729192, -0.230574, 0.644293, -0.573245, 4.72886, -0.323077 )
+transform = Transform( 0.519707, -0.445466, -0.729017, -0.17059, -0.890229, 0.422364, -0.83714, -0.0951435, -0.53865, -0.573245, 5.03459, 1.14304 )
 bone_name = "uArm_l"
 
 [node name="Hurtbox" type="Area" parent="Armature/Skeleton/uArm_l"]
@@ -1000,7 +1105,7 @@ transform = Transform( 1, 0, 5.68434e-14, 2.84217e-14, 1, 0, 1.13687e-13, 0, 1, 
 shape = SubResource( 20 )
 
 [node name="lArm_l" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -0.755156, -0.00415492, 0.655532, 0.000867787, -0.999986, -0.00533739, 0.655543, -0.00346214, 0.755148, -1.46634, 3.18487, -0.745735 )
+transform = Transform( -0.137396, -0.397752, 0.907147, -0.182535, 0.910314, 0.371495, -0.973552, -0.114543, -0.197676, -1.38982, 3.40274, 0.96863 )
 bone_name = "fArm_l"
 
 [node name="Hurtbox" type="Area" parent="Armature/Skeleton/lArm_l"]
@@ -1014,7 +1119,7 @@ transform = Transform( 1, 0, -1.7053e-13, 2.84217e-14, 1, 0, 1.13687e-13, 2.3283
 shape = SubResource( 21 )
 
 [node name="uArm_r" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -0.659672, 0.487212, -0.572239, -0.181964, -0.842295, -0.507374, -0.729193, -0.230573, 0.644293, 0.573245, 4.72886, -0.323076 )
+transform = Transform( 0.519706, 0.445468, 0.729016, 0.170589, -0.890229, 0.422365, 0.83714, -0.0951438, -0.538649, 0.573245, 5.03459, 1.14304 )
 bone_name = "uArm_r"
 
 [node name="Hurtbox" type="Area" parent="Armature/Skeleton/uArm_r"]
@@ -1028,7 +1133,7 @@ transform = Transform( 1, 0, 5.68434e-14, 2.84217e-14, 1, 0, 1.13687e-13, 0, 1, 
 shape = SubResource( 20 )
 
 [node name="lArm_r" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -0.755157, 0.00415489, -0.65553, -0.000867838, -0.999986, -0.00533721, -0.655544, -0.00346145, 0.755149, 1.46634, 3.18487, -0.745733 )
+transform = Transform( -0.137396, 0.397751, -0.907147, 0.182534, 0.910314, 0.371495, 0.973551, -0.114544, -0.197676, 1.38982, 3.40274, 0.96863 )
 bone_name = "fArm_r"
 
 [node name="Hurtbox" type="Area" parent="Armature/Skeleton/lArm_r"]
@@ -1043,6 +1148,7 @@ shape = SubResource( 21 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "idle"
+anims/RESET = SubResource( 23 )
 anims/cast_over = SubResource( 7 )
 anims/cast_start = SubResource( 8 )
 anims/casting = SubResource( 9 )
@@ -1050,3 +1156,11 @@ anims/dead = SubResource( 10 )
 anims/hit = SubResource( 11 )
 anims/idle = SubResource( 12 )
 anims/walk = SubResource( 13 )
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0 )
+stream = ExtResource( 5 )
+unit_db = 2.0
+unit_size = 2.0
+max_db = -3.0
+bus = "enemies"
