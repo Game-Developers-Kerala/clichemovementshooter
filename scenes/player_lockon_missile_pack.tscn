@@ -1,0 +1,77 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scripts/player_lockon_missile_pack.gd" type="Script" id=1]
+[ext_resource path="res://assets/models/mesh_missile_pack.obj" type="ArrayMesh" id=2]
+[ext_resource path="res://shaders/player_missile_and_pack.material" type="Material" id=3]
+[ext_resource path="res://sfx/rocket_shoot.ogg" type="AudioStream" id=4]
+[ext_resource path="res://sfx/lockon_indicator.ogg" type="AudioStream" id=5]
+[ext_resource path="res://assets/vfx_atlas.png" type="Texture" id=6]
+
+[sub_resource type="ConvexPolygonShape" id=1]
+points = PoolVector3Array( 0, 0, 0, -30, 30, -100, 30, 30, -100, -30, -30, -100, 30, -30, -100 )
+
+[node name="player_lockon_missile_pack" type="Area"]
+collision_layer = 0
+collision_mask = 4098
+monitorable = false
+script = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="RayCast" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 0, 0, -200 )
+collision_mask = 4354
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="PackMeshes" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0, -0.023, -0.214 )
+
+[node name="left" type="MeshInstance" parent="PackMeshes"]
+transform = Transform( 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.4, -0.36, 0, 0 )
+mesh = ExtResource( 2 )
+material/0 = ExtResource( 3 )
+
+[node name="right" type="MeshInstance" parent="PackMeshes"]
+transform = Transform( 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.4, 0.36, 0, 0 )
+mesh = ExtResource( 2 )
+material/0 = ExtResource( 3 )
+
+[node name="Control" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+
+[node name="Sprite" type="Sprite" parent="Control"]
+modulate = Color( 0, 0.784314, 0.0862745, 1 )
+scale = Vector2( 11, 11 )
+texture = ExtResource( 6 )
+region_enabled = true
+region_rect = Rect2( 32, 0, 32, 32 )
+
+[node name="left" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.330937, 0, -0.140734 )
+stream = ExtResource( 4 )
+attenuation_model = 3
+unit_db = -6.0
+max_db = -3.0
+bus = "non_music"
+
+[node name="right" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.331, 0, -0.141 )
+stream = ExtResource( 4 )
+attenuation_model = 3
+unit_db = -6.0
+max_db = -3.0
+bus = "non_music"
+
+[node name="fx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+volume_db = -9.0
+bus = "non_music"
+
+[connection signal="body_entered" from="." to="." method="_on_player_lockon_missile_pack_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

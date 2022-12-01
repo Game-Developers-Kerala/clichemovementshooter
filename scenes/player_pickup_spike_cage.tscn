@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://scripts/player_pickup.gd" type="Script" id=1]
+[ext_resource path="res://shaders/vfx_scrolling_texture.gdshader" type="Shader" id=2]
+[ext_resource path="res://shaders/rgb_gradient.png" type="Texture" id=3]
+[ext_resource path="res://assets/models/mesh_spike_cage.obj" type="ArrayMesh" id=4]
+
+[sub_resource type="SphereShape" id=1]
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 2 )
+shader_param/speed = Vector2( 1, 1 )
+shader_param/albedo_color = Color( 1, 1, 1, 1 )
+shader_param/opacity = 1.0
+shader_param/albedo_tex = ExtResource( 3 )
+
+[node name="player_pickup_spike_cage" type="Area"]
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource( 1 )
+type = 7
+model_node = NodePath("spikemesh")
+respawning = true
+respawn_interval = 30.0
+lifespan = 10
+anim_rotate = true
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="VisibilityNotifier" type="VisibilityEnabler" parent="."]
+
+[node name="spikemesh" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
+cast_shadow = 0
+mesh = ExtResource( 4 )
+material/0 = SubResource( 2 )
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="camera_entered" from="VisibilityNotifier" to="." method="_on_VisibilityNotifier_camera_entered"]
+[connection signal="camera_exited" from="VisibilityNotifier" to="." method="_on_VisibilityNotifier_camera_exited"]

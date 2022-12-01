@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Spatial
+
+var arr = [0,1,2,3,4,5,6,7,8,9]
+
+func _ready():
+	for i in arr:
+		if !i%3:
+			arr.erase(i)
+	print(arr)
+"
+
+[node name="Spatial" type="Spatial"]
+script = SubResource( 1 )

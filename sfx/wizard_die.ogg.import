@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/wizard_die.ogg-968008546f4bd88653e055d03e21af6d.oggstr"
+
+[deps]
+
+source_file="res://sfx/wizard_die.ogg"
+dest_files=[ "res://.import/wizard_die.ogg-968008546f4bd88653e055d03e21af6d.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

@@ -1,0 +1,81 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scripts/enemy/ground_pounder/ground_pounder.gd" type="Script" id=3]
+[ext_resource path="res://assets/models/model_enemy_golem.tscn" type="PackedScene" id=4]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 0.4
+
+[sub_resource type="CylinderShape" id=4]
+
+[sub_resource type="CylinderShape" id=5]
+height = 1.5023
+radius = 3.04742
+
+[node name="GroundPounder" type="KinematicBody"]
+collision_layer = 2
+collision_mask = 258
+script = ExtResource( 3 )
+path_to_weapon = NodePath("BodyRotationHelper/RayCast")
+path_to_nav_agent = NodePath("NavigationAgent")
+path_to_BodyRotationHelper = NodePath("BodyRotationHelper")
+path_to_model = NodePath("BodyRotationHelper/model_enemy_golem")
+chase_speed = 100.0
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.9, 0 )
+shape = SubResource( 1 )
+
+[node name="BodyRotationHelper" type="Spatial" parent="."]
+
+[node name="model_enemy_golem" parent="BodyRotationHelper" instance=ExtResource( 4 )]
+
+[node name="RayCast" type="RayCast" parent="BodyRotationHelper"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.40177, 0 )
+enabled = true
+cast_to = Vector3( 0, 0, -200 )
+
+[node name="NavigationAgent" type="NavigationAgent" parent="."]
+path_desired_distance = 3.0
+target_desired_distance = 10.0
+path_max_distance = 7.0
+neighbor_dist = 2000.0
+max_neighbors = 1
+
+[node name="AttackArea" type="Area" parent="."]
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape" type="CollisionShape" parent="AttackArea"]
+transform = Transform( 8, 0, 0, 0, 1, 0, 0, 0, 8, 0, 0.953815, 0 )
+shape = SubResource( 4 )
+
+[node name="circlewaveCooldown" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="StraightWaveCooldown" type="Timer" parent="."]
+wait_time = 6.0
+one_shot = true
+
+[node name="MeeleAttack" type="Area" parent="."]
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape" type="CollisionShape" parent="MeeleAttack"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.749116, 0 )
+shape = SubResource( 5 )
+
+[node name="MeleeCooldown" type="Timer" parent="."]
+wait_time = 0.75
+one_shot = true
+
+[node name="Death" type="Timer" parent="."]
+wait_time = 2.0
+
+[connection signal="npc_hurt" from="." to="." method="_on_GroundPounder_npc_hurt"]
+[connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]
+[connection signal="body_exited" from="AttackArea" to="." method="_on_AttackArea_body_exited"]
+[connection signal="body_entered" from="MeeleAttack" to="." method="_on_MeeleAttack_body_entered"]
+[connection signal="body_exited" from="MeeleAttack" to="." method="_on_MeeleAttack_body_exited"]
+[connection signal="timeout" from="Death" to="." method="_on_Death_timeout"]

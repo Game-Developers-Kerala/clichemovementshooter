@@ -1,0 +1,70 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://scenes/vfx_glow_base.tscn" type="PackedScene" id=1]
+[ext_resource path="res://shaders/glow.shader" type="Shader" id=2]
+[ext_resource path="res://scripts/player_pickup.gd" type="Script" id=3]
+[ext_resource path="res://shaders/texture_gradient_beam_rgb_32.png" type="Texture" id=4]
+[ext_resource path="res://shaders/generic_object.shader" type="Shader" id=5]
+[ext_resource path="res://assets/models/model_railshot.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/models/texture_weapon_railshot_color.png" type="Texture" id=7]
+[ext_resource path="res://assets/models/texture_weapon_railshot_emission.png" type="Texture" id=8]
+
+[sub_resource type="SphereShape" id=1]
+radius = 1.616
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/emission_color = Color( 1, 1, 1, 1 )
+shader_param/emission = 1.0
+shader_param/roughness = 0.8
+shader_param/specular = 0.5
+shader_param/metallic = 0.0
+shader_param/occlusion = 0.0
+shader_param/albedo_tex = ExtResource( 7 )
+shader_param/emission_tex = ExtResource( 8 )
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = ExtResource( 2 )
+shader_param/opacity = 0.621
+shader_param/color1 = Color( 1, 0, 0, 0.266667 )
+shader_param/color2 = Color( 1, 0.184314, 0.184314, 0.545098 )
+shader_param/color3 = Color( 1, 1, 1, 0.721569 )
+shader_param/anim_size = 0.1
+shader_param/anim_speed = 3.0
+shader_param/gradient = ExtResource( 4 )
+
+[node name="pickup_rail" type="Area"]
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource( 3 )
+type = 5
+model_node = NodePath("railshot_model")
+respawning = true
+respawn_interval = 10.0
+lifespan = 10
+anim_rotate = true
+anim_bob = true
+glow = NodePath("vfx_glow")
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="VisibilityNotifier" type="VisibilityEnabler" parent="."]
+
+[node name="railshot_model" parent="." instance=ExtResource( 6 )]
+transform = Transform( 2.48848, 0, 0, 0, 1.7013, -1.81608, 0, 1.81608, 1.7013, 0, 0, 0 )
+material/0 = SubResource( 2 )
+
+[node name="vfx_glow" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.753011, 0, 0, 0, 0.753011, 0, 0, 0, 0.753011, 0, 0, 0 )
+material/0 = SubResource( 3 )
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="camera_entered" from="VisibilityNotifier" to="." method="_on_VisibilityNotifier_camera_entered"]
+[connection signal="camera_exited" from="VisibilityNotifier" to="." method="_on_VisibilityNotifier_camera_exited"]

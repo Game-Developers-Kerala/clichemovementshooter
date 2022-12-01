@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/wizard_hurt.ogg-35441adb0cb5fce08240b6e4c3d1e3f2.oggstr"
+
+[deps]
+
+source_file="res://sfx/wizard_hurt.ogg"
+dest_files=[ "res://.import/wizard_hurt.ogg-35441adb0cb5fce08240b6e4c3d1e3f2.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/mesh_vfx_enemy_snipershot_warn.obj-6b86bd9b3d99275f83757495a0394fda.mesh"
+
+[deps]
+
+files=[ "res://.import/mesh_vfx_enemy_snipershot_warn.obj-6b86bd9b3d99275f83757495a0394fda.mesh" ]
+
+source_file="res://assets/models/mesh_vfx_enemy_snipershot_warn.obj"
+dest_files=[ "res://.import/mesh_vfx_enemy_snipershot_warn.obj-6b86bd9b3d99275f83757495a0394fda.mesh", "res://.import/mesh_vfx_enemy_snipershot_warn.obj-6b86bd9b3d99275f83757495a0394fda.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

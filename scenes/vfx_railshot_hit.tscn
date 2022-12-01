@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/vfx_atlas.png" type="Texture" id=1]
+[ext_resource path="res://scripts/vfx_fade_sprite.gd" type="Script" id=2]
+
+[node name="Sprite3D" type="Sprite3D"]
+pixel_size = 0.04
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 256, 0, 64, 64 )
+script = ExtResource( 2 )
+hold_time = 0.2
+fade_time = 0.6

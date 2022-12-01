@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scripts/shared/projectile_straight_area.gd" type="Script" id=1]
+[ext_resource path="res://scenes/shared/single_direct_hit.tscn" type="PackedScene" id=2]
+
+[sub_resource type="PrismMesh" id=1]
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 1, 1, 0.712346 )
+
+[node name="Arc" type="Spatial"]
+script = ExtResource( 1 )
+detect_npc = false
+detect_player = true
+direct_hit = NodePath("single_direct_hit")
+
+[node name="RayCast" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 0, 0, -1 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="Body" type="MeshInstance" parent="."]
+transform = Transform( 2, 0, 0, 0, -3.27835e-08, 1, 0, -0.75, -4.37114e-08, 0, 0, 0 )
+mesh = SubResource( 1 )
+
+[node name="single_direct_hit" parent="." instance=ExtResource( 2 )]
+damage = 10.0
+force = 5.0
+dir_replace = true
+
+[node name="Area" type="Area" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="Area"]
+transform = Transform( 2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0274954 )
+shape = SubResource( 2 )
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

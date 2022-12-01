@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/megawiz_die.ogg-3d74349c3314c290650c307bf86d2efb.oggstr"
+
+[deps]
+
+source_file="res://sfx/megawiz_die.ogg"
+dest_files=[ "res://.import/megawiz_die.ogg-3d74349c3314c290650c307bf86d2efb.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

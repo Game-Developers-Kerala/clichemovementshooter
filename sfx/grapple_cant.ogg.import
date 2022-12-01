@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/grapple_cant.ogg-1041dc285df03ccbe7d1a2f50a9c9954.oggstr"
+
+[deps]
+
+source_file="res://sfx/grapple_cant.ogg"
+dest_files=[ "res://.import/grapple_cant.ogg-1041dc285df03ccbe7d1a2f50a9c9954.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0
