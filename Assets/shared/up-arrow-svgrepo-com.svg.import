@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/up-arrow-svgrepo-com.svg-b2d62129dece203d88ddc7bbf12958c3.s3tc.stex"
-path.etc="res://.import/up-arrow-svgrepo-com.svg-b2d62129dece203d88ddc7bbf12958c3.etc.stex"
+path.s3tc="res://.import/up-arrow-svgrepo-com.svg-f1cedaf9fb0cd97397cb886656cd99c8.s3tc.stex"
+path.etc="res://.import/up-arrow-svgrepo-com.svg-f1cedaf9fb0cd97397cb886656cd99c8.etc.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Assets/shared/up-arrow-svgrepo-com.svg"
-dest_files=[ "res://.import/up-arrow-svgrepo-com.svg-b2d62129dece203d88ddc7bbf12958c3.s3tc.stex", "res://.import/up-arrow-svgrepo-com.svg-b2d62129dece203d88ddc7bbf12958c3.etc.stex" ]
+source_file="res://assets/shared/up-arrow-svgrepo-com.svg"
+dest_files=[ "res://.import/up-arrow-svgrepo-com.svg-f1cedaf9fb0cd97397cb886656cd99c8.s3tc.stex", "res://.import/up-arrow-svgrepo-com.svg-f1cedaf9fb0cd97397cb886656cd99c8.etc.stex" ]
 
 [params]
 
