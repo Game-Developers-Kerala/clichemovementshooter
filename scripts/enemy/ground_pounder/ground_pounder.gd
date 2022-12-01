@@ -18,7 +18,6 @@ var shockwave = preload("res://scenes/enemy/ground_pounder/circular_wave.tscn")
 var straight_wave = preload("res://scenes/enemy/ground_pounder/straight_wave.tscn")
 var single_hit = preload("res://scenes/shared/single_direct_hit.tscn")
 
-onready var label : Label3D = $BodyRotationHelper/Label3D
 onready var attack_area : Area = $AttackArea
 
 
@@ -175,4 +174,6 @@ func _on_Death_timeout() -> void:
 
 
 func _on_GroundPounder_npc_hurt() -> void:
-	anim.play("hit")
+	
+		if is_anim_done() == false:
+			anim.play("hit")
