@@ -138,6 +138,7 @@ func change_state(to_state:int,args:={}):
 			anim.play("cast_start")
 		states.casting:
 			$Castfx.show()
+			$magic.play()
 			$mines_cooldown.start(mines_cool_time)
 			var probe = MINEPROBE.instance()
 			get_tree().current_scene.add_child(probe)
@@ -180,6 +181,8 @@ func get_hit(dict):
 #	print(dict)
 	var old_health = health
 	health = max(health-dict["dmg"],0)
+	if dict["dmg"]>30:
+		$body.play()
 	if !health:
 		change_state(states.dead)
 		return
@@ -242,6 +245,7 @@ func _on_gun_cooldown_timeout():
 
 
 func fire_guns():
+	$guns.play()
 	var inst = BULLET.instance()
 	get_tree().current_scene.add_child(inst)
 	inst.look_at_from_position(muzzle_left.global_translation,target_pos,Vector3.UP)
@@ -251,17 +255,6 @@ func fire_guns():
 	pass
 
 func set_predicted_position():
-#	var got_pred_pos:=false
-#	for i in player.predict_future_pos.size():
-#		var dist = get_eye_pos().distance_to(player.predict_future_pos[i])
-#		var proj_time = dist/float(projectile_speed)
-#		var pred_time = (i * player.predict_blink_timer.wait_time) + player.predict_blink_timer.time_left
-#		if proj_time > pred_time:
-#			continue
-#		target_pos = player.predict_future_pos[i]
-#		got_pred_pos = true
-#	if !got_pred_pos:
-#		print("notpos")
 	target_pos = player.predict_future_pos[2]
 	$wall_check_ray.look_at_from_position(get_eye_pos(),target_pos,Vector3.UP)
 	$wall_check_ray.force_raycast_update()

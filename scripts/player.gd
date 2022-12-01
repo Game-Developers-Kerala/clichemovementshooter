@@ -101,6 +101,7 @@ const AUD = {
 	"grapple_reel":{"stream":preload("res://sfx/grapple_reel.ogg"),"source":"feet"},
 	"grapple_cant":{"stream":preload("res://sfx/grapple_cant.ogg"),"source":"fx","vol":-12},
 	"grapple_stop":{"stream":preload("res://sfx/grapple_stop.ogg"),"source":"feet"},
+	"spike_hit":{"stream":preload("res://sfx/spike_hit.ogg"),"source":"mouth"},
 	"chair_roll":{"stream":preload("res://sfx/chair_roll.ogg"),"source":"feet","vol":6},
 	"chair_roll_slow":{"stream":preload("res://sfx/chair_roll_slow.ogg"),"source":"feet"},
 	"wind":{"stream":preload("res://sfx/wind.ogg"),"source":"feet"},
@@ -521,6 +522,7 @@ func _on_SpikeArea_body_entered(body):
 	atk_dict.push_dir = -global_transform.basis.z
 #	print("spike hit:",atk_dict)
 	body.get_hit(atk_dict)
+	play_audio("spike_hit")
 	grapple_stop()
 
 
