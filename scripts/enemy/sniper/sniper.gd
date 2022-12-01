@@ -5,7 +5,7 @@ export(int) var max_health = 150
 var health :int = max_health
 export(float) var atk_cool_time = 7
 export(float) var atk_dmg = 20
-export(float) var atk_push_force = 75
+export(float) var atk_push_force = 60
 
 
 onready var player = get_tree().get_nodes_in_group("player")[0]
@@ -199,6 +199,7 @@ func damage_player():
 					#dir_replace = true,
 					}
 	player.get_hit(atk_dict)
+
 
 func _on_NavigationAgent_target_reached():
 	change_state(states.idle)

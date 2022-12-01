@@ -65,7 +65,7 @@ shader_param/albedo_tex = ExtResource( 4 )
 [node name="sniper" type="KinematicBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0 )
 collision_layer = 2
-collision_mask = 258
+collision_mask = 2
 script = ExtResource( 2 )
 
 [node name="model" parent="." instance=ExtResource( 1 )]
@@ -94,7 +94,7 @@ collision_mask = 257
 
 [node name="ray_aim" type="RayCast" parent="."]
 cast_to = Vector3( 0, 0, -200 )
-collision_mask = 257
+collision_mask = 259
 
 [node name="ray_vfx_holder" type="Spatial" parent="ray_aim"]
 
