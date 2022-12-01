@@ -2258,7 +2258,7 @@ skin = SubResource( 2 )
 material/0 = SubResource( 15 )
 
 [node name="HipBone" type="BoneAttachment" parent="Legs/Skeleton"]
-transform = Transform( -0.218282, -4.77453e-08, -0.975886, -4.77454e-08, -1, 5.96046e-08, -0.975886, 5.96046e-08, 0.218282, 0, 1.13409, 0 )
+transform = Transform( -0.20112, -6.28486e-08, -0.979567, -5.31867e-08, -1, 7.50796e-08, -0.979567, 6.71999e-08, 0.20112, 0.00542602, 0.966753, 0.180156 )
 bone_name = "hip"
 
 [node name="RemoteTransform" type="RemoteTransform" parent="Legs/Skeleton/HipBone"]
@@ -2276,7 +2276,7 @@ transform = Transform( 1, 1.42109e-14, 0, -1.42109e-14, 1, 1.33227e-14, 0, -3.55
 shape = SubResource( 18 )
 
 [node name="shin_l" type="BoneAttachment" parent="Legs/Skeleton"]
-transform = Transform( -0.998269, 0.0582756, -0.00791144, -0.0588103, -0.989194, 0.134295, 2.23517e-07, 0.134528, 0.990911, -0.109396, 0.526024, 0.00515355 )
+transform = Transform( -0.756929, 0.159305, 0.633783, 0.0442794, -0.955101, 0.292952, 0.651996, 0.249807, 0.715889, -0.338327, 0.512503, -0.0514035 )
 bone_name = "shin.L"
 
 [node name="hurtbox" type="Area" parent="Legs/Skeleton/shin_l"]
@@ -2290,7 +2290,7 @@ transform = Transform( 1, 1.42109e-14, 0, -1.42109e-14, 1, 1.33227e-14, 0, -3.55
 shape = SubResource( 19 )
 
 [node name="shin_r" type="BoneAttachment" parent="Legs/Skeleton"]
-transform = Transform( -0.998269, -0.0582758, 0.00791098, 0.0588104, -0.989195, 0.134295, 2.08616e-07, 0.134528, 0.990911, 0.109396, 0.526024, 0.00515368 )
+transform = Transform( -0.86386, -0.0143482, -0.503529, -0.36694, -0.666906, 0.648531, -0.345111, 0.745003, 0.570849, 0.335101, 0.494499, -0.0398538 )
 bone_name = "shin.R"
 
 [node name="hurtbox" type="Area" parent="Legs/Skeleton/shin_r"]
@@ -2304,7 +2304,7 @@ transform = Transform( 1, 1.42109e-14, 0, -1.42109e-14, 1, 1.33227e-14, 0, -3.55
 shape = SubResource( 19 )
 
 [node name="body" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13409, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00542602, 0.966753, 0.180156 )
 
 [node name="Skeleton2" type="Skeleton" parent="body"]
 bones/0/name = "torso"
@@ -2379,7 +2379,7 @@ skin = SubResource( 4 )
 material/0 = SubResource( 15 )
 
 [node name="head" type="BoneAttachment" parent="body/Skeleton2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.469817, 0.0457304 )
+transform = Transform( 0.984217, 0.0872615, 0.153958, 0.0123359, 0.834031, -0.551579, -0.176537, 0.544773, 0.819791, 0.0190325, 0.424373, 0.205826 )
 bone_name = "head"
 
 [node name="hurtbox" type="Area" parent="body/Skeleton2/head"]
@@ -2393,6 +2393,7 @@ transform = Transform( 1, 1.42109e-14, 0, -1.42109e-14, 1, 1.33227e-14, 0, -3.55
 shape = SubResource( 20 )
 
 [node name="chest" type="BoneAttachment" parent="body/Skeleton2"]
+transform = Transform( 0.996143, 0.0325806, 0.0814691, -0.00213219, 0.937219, -0.348736, -0.0877164, 0.347217, 0.933674, 0, 0, 0 )
 bone_name = "torso"
 
 [node name="hurtbox" type="Area" parent="body/Skeleton2/chest"]
@@ -2406,7 +2407,7 @@ transform = Transform( 1, 1.42109e-14, 0, -1.42109e-14, 1, 1.33227e-14, 0, -3.55
 shape = SubResource( 20 )
 
 [node name="f_arm_l" type="BoneAttachment" parent="body/Skeleton2"]
-transform = Transform( 0.0169337, -0.999856, 0.00117056, 0.997476, 0.0169742, 0.0689557, -0.0689656, 1.67638e-08, 0.99762, -0.413868, 0.300265, 0.041764 )
+transform = Transform( 0.731297, -0.585396, -0.350022, 0.576146, 0.255525, 0.776379, -0.36505, -0.769428, 0.524138, -0.339893, 0.226855, -0.0206803 )
 bone_name = "fArm.L"
 
 [node name="hurtbox" type="Area" parent="body/Skeleton2/f_arm_l"]
@@ -2420,7 +2421,7 @@ transform = Transform( 1, 7.4887e-10, 0, 6.67983e-09, 1, 4.98943e-11, 7.45058e-0
 shape = SubResource( 21 )
 
 [node name="f_arm_r" type="BoneAttachment" parent="body/Skeleton2"]
-transform = Transform( 0.0169337, 0.999856, -0.00117056, -0.997476, 0.0169742, 0.0689557, 0.0689656, 1.67638e-08, 0.99762, 0.413868, 0.300265, 0.041764 )
+transform = Transform( 0.685397, 0.286827, -0.669298, -0.409177, 0.91202, -0.0281737, 0.602333, 0.293172, 0.742459, 0.390868, 0.128616, 0.191061 )
 bone_name = "lArm.R"
 
 [node name="hurtbox" type="Area" parent="body/Skeleton2/f_arm_r"]
@@ -2434,7 +2435,7 @@ transform = Transform( 1, -7.6998e-10, 0, 4.49604e-09, 1, 4.98943e-11, 0, -1.074
 shape = SubResource( 22 )
 
 [node name="hand_l" type="BoneAttachment" parent="body/Skeleton2"]
-transform = Transform( 0.00430678, -0.99999, 0.000297661, 0.99761, 0.00431712, 0.0689651, -0.0689656, 1.76369e-08, 0.99762, -0.753626, 0.306033, 0.041764 )
+transform = Transform( 0.814326, -0.550209, -0.184775, 0.464191, 0.426278, 0.776412, -0.348424, -0.718024, 0.602531, -0.538814, 0.313684, -0.282137 )
 bone_name = "hand.L"
 
 [node name="hurtbox" type="Area" parent="body/Skeleton2/hand_l"]
@@ -2463,7 +2464,7 @@ anims/shoot2_release = SubResource( 14 )
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
-stream = ExtResource( 5 )
+stream = ExtResource( 7 )
 unit_size = 2.0
 max_db = -3.0
 bus = "enemies"

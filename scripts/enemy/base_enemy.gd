@@ -3,6 +3,7 @@ extends KinematicBody
 
 const CENTER_OF_MASS = Vector3(0,1,0)
 
+signal npc_hurt
 
 #export(NodePath) var path_to_player
 export(NodePath) var path_to_weapon
@@ -13,7 +14,7 @@ export var chase_speed : float = 300
 export var attack_speed : float = 75
 
 
-var health : float = 100
+var health : float = 100 setget _set_health,get_health
 var velocity : Vector3 = Vector3.ZERO 
 var current_state setget set_state, get_state
 var player : KinematicBody
@@ -40,7 +41,7 @@ func get_hit(args={}):
 	
 	print("Plyr got hit at:",OS.get_ticks_msec(),"=====\n",args)
 	if args.has("dmg"):
-		health = -args.dmg
+		_set_health(args.dmg)
 	if args.has("force"):
 		if args.has("push_dir"):
 			if args.has("dir_replace"):
@@ -76,3 +77,10 @@ func _calc_vantage_point(target : Vector3):
 #to play animations
 func enter() -> void:
 	pass
+
+func get_health():
+	return health
+	
+func _set_health(val):
+	emit_signal("npc_hurt")
+	health -= val

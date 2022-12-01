@@ -48,4 +48,10 @@ one_shot = true
 wait_time = 3.0
 one_shot = true
 
+[node name="Death" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
+
+[connection signal="npc_hurt" from="." to="." method="_on_ArcShooter_npc_hurt"]
 [connection signal="timeout" from="BowDrawTimeout" to="." method="_on_BowDrawTimeout_timeout"]
+[connection signal="timeout" from="Death" to="." method="_on_Death_timeout"]

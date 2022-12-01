@@ -12,7 +12,6 @@ enum states{
 
 }
 
-onready var label = $BodyRotationHelper/Label3D as Label3D
 onready var ARC = preload("res://scenes/enemy/arc_shooter/ArcImporved.tscn")
 onready var cut_grapple = preload("res://scenes/enemy/arc_shooter/grapple_cut_projectile.tscn") 
 
@@ -24,6 +23,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	
+	if get_health() < 0:
+		set_state(states.DEATH)
+		
 	_aim_at_player()
 	
 	nav_agent.set_target_location(player.global_translation)
@@ -48,7 +50,8 @@ func _process(delta: float) -> void:
 				set_state(states.CHASE)
 
 		states.DEATH:
-			pass
+			
+			weapon.enabled = false
 				
 func _physics_process(delta: float) -> void:
 	
@@ -66,8 +69,7 @@ func _physics_process(delta: float) -> void:
 			
 			if weapon.get_collider() == player:
 				if $ShootCooldown.is_stopped():
-					_shoot()
-					
+						_shoot()
 		states.DEATH:
 			pass
 
@@ -88,10 +90,12 @@ func enter():
 		states.DAMAGE:
 			print("anim played" + str(get_state()))
 			model.get_node("AnimationPlayer").play("hit")
-		states.DEATH:
-			print("anim played" + str(get_state()))
-			model.get_node("AnimationPlayer").play("dead")
 			
+		states.DEATH:
+			if $Death.is_stopped():
+				print("anim played" + str(get_state()))
+				$Death.start()
+				model.get_node("AnimationPlayer").play("dead")
 
 #signals
 func _shoot():
@@ -126,3 +130,12 @@ func _on_ShootTimer_timeout() -> void:
 func _on_BowDrawTimeout_timeout() -> void:
 	set_state(states.BOW_RELEASE)
 
+
+func _on_Death_timeout() -> void:
+	queue_free()
+
+
+func _on_ArcShooter_npc_hurt() -> void:
+	if get_health() > 0:
+		model.get_node("AnimationPlayer").play("hit")
+	print("NPC hurt")
