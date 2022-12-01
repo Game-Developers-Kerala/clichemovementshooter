@@ -27,7 +27,7 @@ func _ready():
 func get_sniper_vantage_point(idx)->Node:
 	return get_node(sniper[idx])
 
-func get_sniper_random_vantage_point(idx)->Node:
+func get_sniper_random_vantage_point()->Node:
 	return get_node(sniper[random.randi()%sniper.size()])
 
 func get_random_sniper_vantage_position()->Vector3:
@@ -44,7 +44,7 @@ func get_megawizard_vantage_point(idx)->Node:
 	return get_node(megawizard[idx])
 
 func get_megawizard_random_vantage_point()->Node:
-	return get_node(megawizard[random.randi%megawizard.size()])
+	return get_node(megawizard[random.randi()%megawizard.size()])
 
 func get_random_megawizard_vantage_position()->Vector3:
 	if player_in_room:

@@ -12,7 +12,7 @@ points = PoolVector3Array( 0, 0, 0, -30, 30, -100, 30, 30, -100, -30, -30, -100,
 
 [node name="player_lockon_missile_pack" type="Area"]
 collision_layer = 0
-collision_mask = 2
+collision_mask = 4098
 monitorable = false
 script = ExtResource( 1 )
 
@@ -22,7 +22,7 @@ shape = SubResource( 1 )
 [node name="RayCast" type="RayCast" parent="."]
 enabled = true
 cast_to = Vector3( 0, 0, -200 )
-collision_mask = 258
+collision_mask = 4354
 
 [node name="Timer" type="Timer" parent="."]
 

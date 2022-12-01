@@ -3,12 +3,12 @@ extends KinematicBody
 export(float) var speed = 2
 export(int) var max_health = 1000
 var health :int = max_health
-export(float) var guns_cool_time = 5
+export(float) var guns_cool_time = 3
 export(float) var guns_shots_count = 5
 export(float) var guns_shots_interval = 0.1
-export(float) var mines_cool_time = 10
+export(float) var mines_cool_time = 15
 
-
+const STUN_THRESHOLDS = [15,25,40,65,75,85,90,95]
 
 onready var player = get_tree().get_nodes_in_group("player")[0]
 
@@ -18,6 +18,8 @@ onready var muzzle_left = $model/Armature/Skeleton/body/bonecorrection/Guns/muzz
 onready var muzzle_right = $model/Armature/Skeleton/body/bonecorrection/Guns/muzzle_right
 const CENTER_OF_MASS = Vector3(0,6.5,0)
 
+var projectile_speed :=  80
+
 var random = RandomNumberGenerator.new()
 enum states {idle,repositioning,cast_start,casting,cast_end,stunned,dead}
 var state:int = states.idle
@@ -25,9 +27,12 @@ var gun_shooting := false
 var gun_barrage_shots := 0
 enum gun_cooling_states {none,barrage_ongoing,barrage_over}
 var gun_cooling_state = gun_cooling_states.none
+var player_in_view:= false
+var target_pos := Vector3.ZERO
+
 
 var state_times = {
-					"cast_start":1.5,"casting":4,"cast_end":1.65,
+					"cast_start":1.5,"casting":1.2,"cast_end":1.65,
 					"stunned":2,"dead":2.0
 					}
 
@@ -45,8 +50,6 @@ func get_player_pos()->Vector3:
 	return player.global_translation + player.CENTER_OF_MASS
 
 func _ready():
-	$ray_aim/ray_vfx_holder/shot.hide()
-	$ray_aim/ray_vfx_holder/warn.hide()
 	random.randomize()
 	yield(get_tree().create_timer(random.randf_range(0,$blink_timer.wait_time)),"timeout")
 	$blink_timer.start()
@@ -62,15 +65,19 @@ func _physics_process(delta):
 func _process(delta):
 	if state == states.stunned or state == states.dead:
 		return
-	if nav:
+	if player_in_view:
+		if is_shooting_guns():
+			face_position(target_pos)
+		else:
+			face_position(get_player_pos())
+	elif nav:
 		face_heading(delta)
-	else:
-		face_player()
 
 
-func face_player():
+func face_position(position:Vector3):
 	look_at(get_player_pos(),Vector3.UP)
 	rotation.x = 0
+
 
 func face_heading(delta):
 	var lerp_rate = 2
@@ -83,23 +90,33 @@ func face_heading(delta):
 	rotation.y = lerp_angle(rotation.y,rotation.y-angle,delta*lerp_rate)
 
 func _on_blink_timer_timeout():
+	check_player_in_sight()
+#	print("player in view ", player_in_view)
 	match state:
 		states.idle:
 			change_state(states.repositioning)
 		states.repositioning:
-			if is_player_attackable():
+			if is_player_shootable():
+#				print("yes shootable")
+				set_predicted_position()
 				start_gun_barrage()
-			elif $mines_cooldown.is_stopped():
+			elif $mines_cooldown.is_stopped() and !is_shooting_guns():
 				change_state(states.cast_start)
 
-func is_player_attackable():
-	if is_in_casting_state() or !is_gun_ready():
-		return false
+func check_player_in_sight():
 	$ray_sight.look_at_from_position(get_eye_pos(),get_player_pos(),Vector3.UP)
 	$ray_sight.force_raycast_update()
 	if $ray_sight.is_colliding():
 		if $ray_sight.get_collider() == player:
-			return true
+			player_in_view = true
+			return
+	player_in_view = false
+
+func is_player_shootable():
+	
+	if player_in_view and is_gun_ready() and !is_in_casting_state():
+#		print("gun ",is_gun_ready()," casting ",is_in_casting_state())
+		return true
 	return false
 
 func change_state(to_state:int,args:={}):
@@ -170,11 +187,10 @@ func get_hit(dict):
 		return
 	var percentage_old = get_percentage(old_health,max_health)
 	var percentage_curr = get_percentage(health,max_health)
-	if percentage_old > 66 and  percentage_curr < 66: #in percentage
-		change_state(states.stunned)
-		return
-	if percentage_old > 33 and  percentage_curr < 33: #in percentage
-		change_state(states.stunned)
+	for thresh in STUN_THRESHOLDS:
+		if percentage_old > thresh and  percentage_curr < thresh:
+			change_state(states.stunned)
+			return
 		
 
 func get_percentage(value,out_of):
@@ -204,7 +220,7 @@ func _on_NavigationAgent_target_reached():
 	change_state(states.idle)
 
 func start_gun_barrage():
-	gun_barrage_shots = 0
+	gun_barrage_shots = guns_shots_count
 	gun_cooling_state = gun_cooling_states.barrage_ongoing
 	_on_gun_cooldown_timeout()
 
@@ -213,9 +229,9 @@ func _on_gun_cooldown_timeout():
 		gun_cooling_states.none:
 			pass
 		gun_cooling_states.barrage_ongoing:
-			if gun_barrage_shots<guns_shots_count:
+			if gun_barrage_shots:
 				$gun_cooldown.start(guns_shots_interval)
-				#fireshots
+				fire_guns()
 				gun_barrage_shots -=1
 			else:
 				gun_cooling_state = gun_cooling_states.barrage_over
@@ -224,11 +240,34 @@ func _on_gun_cooldown_timeout():
 			gun_cooling_state = gun_cooling_states.none
 			pass
 
+
 func fire_guns():
 	var inst = BULLET.instance()
 	get_tree().current_scene.add_child(inst)
-	inst.look_at_from_position(muzzle_left.global_translation,-global_transform.basis.z,Vector3.UP)
+	inst.look_at_from_position(muzzle_left.global_translation,target_pos,Vector3.UP)
 	inst = BULLET.instance()
 	get_tree().current_scene.add_child(inst)
-	inst.look_at_from_position(muzzle_right.global_translation,-global_transform.basis.z,Vector3.UP)
+	inst.look_at_from_position(muzzle_right.global_translation,target_pos,Vector3.UP)
 	pass
+
+func set_predicted_position():
+#	var got_pred_pos:=false
+#	for i in player.predict_future_pos.size():
+#		var dist = get_eye_pos().distance_to(player.predict_future_pos[i])
+#		var proj_time = dist/float(projectile_speed)
+#		var pred_time = (i * player.predict_blink_timer.wait_time) + player.predict_blink_timer.time_left
+#		if proj_time > pred_time:
+#			continue
+#		target_pos = player.predict_future_pos[i]
+#		got_pred_pos = true
+#	if !got_pred_pos:
+#		print("notpos")
+	target_pos = player.predict_future_pos[2]
+	$wall_check_ray.look_at_from_position(get_eye_pos(),target_pos,Vector3.UP)
+	$wall_check_ray.force_raycast_update()
+	if $wall_check_ray.is_colliding():
+		var point = $wall_check_ray.get_collision_point()
+		var norm = $wall_check_ray.get_collision_normal()
+		if norm.dot(Vector3.UP)>0.98:
+			if get_eye_pos().distance_to(target_pos)>get_eye_pos().distance_to(point):
+				target_pos = get_player_pos()

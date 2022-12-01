@@ -42,7 +42,7 @@ func _ready():
 
 func _on_wave_start(wave_idx):
 	enemy_count = 0
-	spawn_enemies([1,0,0,2,0,0])
+	spawn_enemies([1,0,0,1,0,0])
 	game.emit_signal("enemy_count_changed",enemy_count)
 
 
@@ -52,9 +52,9 @@ func spawn_enemies(counts:=[]):
 	if !counts:
 		return
 	for enemy_by_order in counts.size():
-		var enemy_dict = get_enemy_dict_from_spawn_order(enemy_by_order)
 		if !counts[enemy_by_order]:
 			continue
+		var enemy_dict = get_enemy_dict_from_spawn_order(enemy_by_order)
 		for i in counts[enemy_by_order]:
 			var spawned = false
 			while !spawned:
@@ -74,17 +74,4 @@ func spawn_at_point(enemy_scene:PackedScene,point:Node):
 func _on_enemy_killed():
 	enemy_count -= 1
 	game.emit_signal("enemy_count_changed",enemy_count)
-#
-#func spawn_snipers(count:int):
-#	var assigned_spawn_points :=[]
-#	count = clamp(count,0,20)
-#	if !count:
-#		return
-#	var max_idx = vantage_points.sniper.size()-1
-#	while assigned_spawn_points.size()<count:
-#		var number = random.randi()%max_idx
-#		if !assigned_spawn_points.has(number):
-#			assigned_spawn_points.push_back(number)
-#	if assigned_spawn_points:
-#		for point_idx in assigned_spawn_points:
-#			pass
+

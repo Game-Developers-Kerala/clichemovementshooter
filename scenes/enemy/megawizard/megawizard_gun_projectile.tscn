@@ -15,8 +15,11 @@ shader_param/opacity = 1.0
 
 [node name="projectile" instance=ExtResource( 3 )]
 script = ExtResource( 5 )
+speed = 80.0
+lifespan = 3.0
 detect_npc = false
 detect_player = true
+direct_hit = NodePath("single_direct_hit")
 
 [node name="RayCast" type="RayCast" parent="." index="1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.00589597 )
@@ -30,5 +33,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, -1.00904 )
 material/0 = SubResource( 1 )
 
 [node name="single_direct_hit" parent="." index="3" instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.645816 )
 damage = 10.0
 force = 10.0

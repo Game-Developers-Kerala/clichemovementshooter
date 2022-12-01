@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://scenes/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/enemy/EnemyManager_Test.gd" type="Script" id=2]
@@ -6,7 +6,6 @@
 [ext_resource path="res://levels/ceiling_tile.png" type="Texture" id=4]
 [ext_resource path="res://scenes/player_pickup_railshot.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/player_pickup_missile_pack.tscn" type="PackedScene" id=6]
-[ext_resource path="res://scenes/enemy/megawizard/megawizard.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/player_respawn_point.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/player_pickup_spike_cage.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scenes/player_pickup_health_small.tscn" type="PackedScene" id=10]
@@ -249,6 +248,7 @@ depth = 1.0
 
 [node name="pickup_missile" parent="LevelGeometry/NorthernChamber" instance=ExtResource( 6 )]
 transform = Transform( 1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -7.5, 0, 15 )
+visible = false
 respawn_interval = 25.0
 
 [node name="SoutherPlatform" type="CSGCombiner" parent="LevelGeometry"]
@@ -564,11 +564,13 @@ directional_shadow_max_distance = 200.0
 
 [node name="pickup_rail" parent="Pickups" instance=ExtResource( 5 )]
 transform = Transform( -2, 0, -3.01992e-07, 0, 2, 0, 3.01992e-07, 0, -2, 0, 8, 90 )
+visible = false
 respawn_interval = 20.0
 anim_bob = false
 
 [node name="pickup_rail2" parent="Pickups" instance=ExtResource( 5 )]
 transform = Transform( 1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 0, 1.5, 0 )
+visible = false
 respawn_interval = 20.0
 
 [node name="spike" parent="Pickups" instance=ExtResource( 9 )]
@@ -579,15 +581,18 @@ lifespan = 24.0
 
 [node name="small_health2" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1, 0 )
+visible = false
 
 [node name="small_health6" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 1, 0 )
+visible = false
 
 [node name="small_health7" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1, 0 )
 
 [node name="small_health3" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1, 0 )
+visible = false
 
 [node name="small_health4" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 1, 0 )
@@ -607,9 +612,11 @@ visible = false
 
 [node name="small_health12" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 10, 16 )
+visible = false
 
 [node name="small_health13" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 10, 16 )
+visible = false
 
 [node name="small_health9" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 10, -20 )
@@ -621,9 +628,11 @@ visible = false
 
 [node name="small_health14" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 10, 20 )
+visible = false
 
 [node name="small_health15" parent="Pickups" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 10, 20 )
+visible = false
 
 [node name="medium_health" parent="Pickups" instance=ExtResource( 11 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -58.5, 19.5, -57 )
@@ -796,8 +805,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.5 )
 shape = SubResource( 4 )
 
 [node name="NPC" type="Node" parent="."]
-
-[node name="MegaWizard" parent="." instance=ExtResource( 7 )]
 
 [connection signal="body_entered" from="VantagePoints/RegionAreas/roomarea" to="VantagePoints" method="_on_roomarea_body_entered"]
 [connection signal="body_exited" from="VantagePoints/RegionAreas/roomarea" to="VantagePoints" method="_on_roomarea_body_exited"]

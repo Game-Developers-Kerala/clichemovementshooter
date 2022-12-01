@@ -50,9 +50,16 @@ one_shot = true
 [node name="ray_sight" type="RayCast" parent="."]
 cast_to = Vector3( 0, 0, -200 )
 collision_mask = 257
+debug_shape_custom_color = Color( 0.909804, 0.0156863, 0.984314, 1 )
 
 [node name="Castfx" parent="." instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0 )
 visible = false
 
+[node name="wall_check_ray" type="RayCast" parent="."]
+cast_to = Vector3( 0, 0, -200 )
+collision_mask = 256
+
+[connection signal="timeout" from="blink_timer" to="." method="_on_blink_timer_timeout"]
+[connection signal="timeout" from="state_timer" to="." method="_on_state_timer_timeout"]
 [connection signal="timeout" from="gun_cooldown" to="." method="_on_gun_cooldown_timeout"]

@@ -42,25 +42,25 @@ func _process(delta):
 		if enemy[0]==popped:
 			already_locked = true
 	if already_locked:
-#		print("already locked:",popped.name)
+		print("already locked:",popped.name)
 		return
 #	print("raychecking:",popped.name)
-	$RayCast.look_at(popped.global_translation+Vector3.UP,Vector3.UP)
+	$RayCast.look_at(popped.global_translation+popped.CENTER_OF_MASS,Vector3.UP)
 	$RayCast.force_raycast_update()
 	if $RayCast.is_colliding():
 		if $RayCast.get_collider() == popped:
-#			print("ray colliding:",popped.name)
+			print("ray colliding:",popped.name)
 			# adding the enemy to locked enemies and the number of times fired at as an array
 			$fx.play()
 			var indic = LOCK_INDICATOR.instance()
 			popped.add_child(indic)
 			indic.translation = Vector3.UP
 			locked_enemies.push_back([popped,0]) # 0 means the enemy was shot at 0 times as of now
-#			print("locked enemy:",popped.name)
+			print("locked enemy:",popped.name)
 
 func _on_player_lockon_missile_pack_body_entered(body):
 	detect_queue.push_back(body)
-#	print("detected:",body.name)
+	print("detected:",body.name)
 
 func _on_Timer_timeout():
 	var minfiredat = 12
@@ -73,7 +73,7 @@ func _on_Timer_timeout():
 			if enemy[1] == minfiredat:
 				enemy[1]+=1
 				targ = enemy[0]
-#				print("fired at:",enemy[0].name," ",enemy[1]," times.")
+				print("fired at:",enemy[0].name," ",enemy[1]," times.")
 				break
 	var missile = MISSILE.instance()
 	missile.target = targ
