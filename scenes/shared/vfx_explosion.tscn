@@ -14,5 +14,6 @@ shader_param/opacity = 0.598
 
 [node name="Vfx_Explosion" type="MeshInstance"]
 mesh = SubResource( 5 )
+skeleton = NodePath("")
 material/0 = SubResource( 6 )
 script = ExtResource( 2 )

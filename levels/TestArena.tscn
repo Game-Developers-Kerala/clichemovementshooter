@@ -16,91 +16,108 @@ albedo_texture = ExtResource( 2 )
 
 [node name="TestArena" type="Spatial"]
 
-[node name="CSGCombiner" type="CSGCombiner" parent="."]
+[node name="NavigationMeshInstance" type="NavigationMeshInstance" parent="."]
+navmesh = SubResource( 2 )
+
+[node name="CSGCombiner" type="CSGCombiner" parent="NavigationMeshInstance"]
 material_override = SubResource( 1 )
 use_collision = true
 collision_layer = 256
 collision_mask = 0
 
-[node name="CSGBox" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0 )
 width = 46.0
 depth = 42.0
 
-[node name="CSGBox2" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox2" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 21.5985, 0 )
 width = 4.0
 height = 4.0
 depth = 4.0
 
-[node name="CSGBox3" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox3" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 3.59851, 16 )
 width = 8.0
 height = 8.0
 depth = 8.0
 
-[node name="CSGBox4" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox4" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.59851, -16 )
 width = 8.0
 height = 8.0
 depth = 8.0
 
-[node name="CSGBox5" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox5" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.684025, 3.59851, -2.73928 )
 width = 8.0
 height = 8.0
 depth = 2.34926
 
-[node name="CSGBox6" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox6" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18.926, 13.2433, 4.54693 )
 width = 8.0
 height = 8.0
 depth = 2.34926
 
-[node name="CSGBox7" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox7" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.3262, 13.2433, -6.39787 )
 width = 8.0
 height = 8.0
 depth = 2.34926
 
-[node name="CSGBox8" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox8" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.15403, 13.2433, 4.54693 )
 width = 8.0
 height = 8.0
 depth = 2.34926
 
-[node name="CSGBox9" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox9" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6.44585, 13.2433, -6.39787 )
 width = 8.0
 height = 8.0
 depth = 2.34926
 
-[node name="CSGBox10" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox10" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -12.1115, 13.2433, 4.54693 )
 width = 8.0
 height = 8.0
 depth = 2.34926
 
-[node name="CSGBox11" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox11" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -20.7114, 13.2433, -6.39787 )
 width = 8.0
 height = 8.0
 depth = 2.34926
 
-[node name="CSGCombiner" type="CSGCombiner" parent="CSGCombiner"]
+[node name="CSGCombiner" type="CSGCombiner" parent="NavigationMeshInstance/CSGCombiner"]
 
-[node name="CSGCylinder" type="CSGCylinder" parent="CSGCombiner/CSGCombiner"]
+[node name="CSGCylinder" type="CSGCylinder" parent="NavigationMeshInstance/CSGCombiner/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0 )
 radius = 35.0
 height = 3.0
 sides = 24
 
-[node name="CSGCylinder2" type="CSGCylinder" parent="CSGCombiner/CSGCombiner"]
+[node name="CSGCylinder2" type="CSGCylinder" parent="NavigationMeshInstance/CSGCombiner/CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0 )
 operation = 2
 radius = 30.0
 height = 4.0
 sides = 24
+
+[node name="CSGCombiner2" type="CSGCombiner" parent="NavigationMeshInstance/CSGCombiner"]
+
+[node name="CSGBox13" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner/CSGCombiner2"]
+transform = Transform( 0.999966, 0.00829023, 0, -0.00829023, 0.999966, 0, 0, 0, 1, 13.8022, 1.04702, -7.55466 )
+width = 8.0
+height = 6.86336
+depth = 2.38439
+
+[node name="CSGBox12" type="CSGBox" parent="NavigationMeshInstance/CSGCombiner/CSGCombiner2"]
+transform = Transform( 0.806538, -0.591183, 0, 0.591183, 0.806538, 0, 0, 0, 1, 8.90511, -1.05278, -7.58498 )
+width = 8.0
+height = 8.0
+depth = 2.34926
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 12 )

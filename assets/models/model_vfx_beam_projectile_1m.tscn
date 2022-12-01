@@ -25,6 +25,7 @@ shader = ExtResource( 1 )
 shader_param/color_r = Color( 1, 0.854902, 0, 0.4 )
 shader_param/color_g = Color( 1, 0.854902, 0, 1 )
 shader_param/color_b = Color( 1, 1, 1, 1 )
+shader_param/opacity = 1.0
 
 [node name="model_beam_projectile_1m" type="MeshInstance"]
 mesh = SubResource( 7 )

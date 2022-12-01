@@ -9,6 +9,16 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "KinematicBody",
+"class": "BaseEnemy",
+"language": "GDScript",
+"path": "res://scripts/enemy/base_enemy.gd"
+}, {
+"base": "Node",
+"class": "EnemyManager",
+"language": "GDScript",
+"path": "res://scripts/enemy/enemy_manager.gd"
+}, {
 "base": "Node",
 "class": "cmn",
 "language": "GDScript",
@@ -25,6 +35,8 @@ _global_script_classes=[ {
 "path": "res://scripts/shared/projectile.gd"
 } ]
 _global_script_class_icons={
+"BaseEnemy": "",
+"EnemyManager": "",
 "cmn": "",
 "pickup": "",
 "projectile": ""
@@ -33,7 +45,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Clichemovementshooter"
-run/main_scene="res://levels/level1.tscn"
+run/main_scene="res://levels/testarena.tscn"
 config/icon="res://icon.png"
 
 [autoload]
@@ -71,10 +83,6 @@ texture={
 "size_limit": 0,
 "stream": false,
 "svg/scale": 1.0
-}
-ogg_vorbis={
-"loop": false,
-"loop_offset": 0
 }
 
 [input]
