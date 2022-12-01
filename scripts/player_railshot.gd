@@ -23,7 +23,7 @@ func shoot():
 		for area in areas:
 			if !receivers.has(area.hit_receiver):
 				receivers.push_front(area.hit_receiver)
-				area.hit_receiver.get_hit({dmg=70.0,push_dir=Vector3.ZERO,force=0,
+				area.hit_receiver.get_hit({dmg=110.0,push_dir=Vector3.ZERO,force=0,
 											origin=global_translation,caused_by_player=true,
 											dir_replace=false})
 				var bodydist = (area.global_translation-from).length()
@@ -35,7 +35,7 @@ func shoot():
 	var vfx = RAIL_VFX.instance()
 	get_tree().current_scene.add_child(vfx)
 	vfx.init(from+vfx_offset,to)
-	print("receivers",receivers)
+#	print("receivers",receivers)
 	queue_free()
 
 func spawn_hit_spot(distance:float):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://shaders/generic_object.shader" type="Shader" id=1]
 [ext_resource path="res://assets/models/texture_enemy_wizard_color.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://sfx/wizard_cast.ogg" type="AudioStream" id=4]
 [ext_resource path="res://sfx/wizard_hurt.ogg" type="AudioStream" id=5]
 [ext_resource path="res://sfx/wizard_windup.ogg" type="AudioStream" id=6]
+[ext_resource path="res://scripts/enemy/hurtbox_by_owner.gd" type="Script" id=7]
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "wizard_Cube001"
@@ -909,12 +910,12 @@ bones/0/name = "chest"
 bones/0/parent = -1
 bones/0/rest = Transform( -1, -3.95789e-09, -3.93557e-07, -2.18954e-08, 0.998961, 0.0455883, 3.92967e-07, 0.0455883, -0.99896, 4.74293e-09, 0.999621, -0.00877448 )
 bones/0/enabled = true
-bones/0/bound_children = [  ]
+bones/0/bound_children = [ NodePath("chest") ]
 bones/1/name = "head"
 bones/1/parent = 0
 bones/1/rest = Transform( 1, 6.70504e-08, 1.90466e-07, -9.31214e-08, 0.9901, 0.140365, -1.79169e-07, -0.140365, 0.9901, 0, 0.404095, 7.45058e-09 )
 bones/1/enabled = true
-bones/1/bound_children = [  ]
+bones/1/bound_children = [ NodePath("head") ]
 bones/2/name = "upper_arm.L"
 bones/2/parent = 0
 bones/2/rest = Transform( -0.0704347, 0.989624, 0.125236, -0.990601, -0.0546352, -0.125399, -0.117256, -0.132891, 0.98417, 0.146517, 0.35652, -0.0151326 )
@@ -924,7 +925,7 @@ bones/3/name = "forearm.L"
 bones/3/parent = 2
 bones/3/rest = Transform( 0.988515, -0.085306, -0.12474, 0.0584147, 0.976973, -0.20521, 0.139373, 0.195566, 0.970736, 7.68341e-08, 0.401496, -7.45058e-09 )
 bones/3/enabled = true
-bones/3/bound_children = [  ]
+bones/3/bound_children = [ NodePath("arm_l") ]
 bones/4/name = "hand.L"
 bones/4/parent = 3
 bones/4/rest = Transform( 0.999685, 0.0202682, 0.0148118, -0.0208263, 0.99904, 0.0385475, -0.0140163, -0.0388438, 0.999147, -4.56348e-08, 0.460231, 1.11759e-08 )
@@ -939,7 +940,7 @@ bones/6/name = "forearm.R"
 bones/6/parent = 5
 bones/6/rest = Transform( 0.988515, 0.0853061, 0.12474, -0.0584148, 0.976973, -0.20521, -0.139373, 0.195566, 0.970736, -6.28643e-08, 0.401496, 1.49012e-08 )
 bones/6/enabled = true
-bones/6/bound_children = [  ]
+bones/6/bound_children = [ NodePath("arm_r") ]
 bones/7/name = "hand.R"
 bones/7/parent = 6
 bones/7/rest = Transform( 0.999685, -0.0202683, -0.0148118, 0.0208263, 0.99904, 0.0385474, 0.0140163, -0.0388438, 0.999147, -8.21892e-08, 0.460231, 3.72529e-09 )
@@ -949,7 +950,7 @@ bones/8/name = "staff"
 bones/8/parent = 7
 bones/8/rest = Transform( -0.0106412, 0.99895, -0.0445613, -0.99895, -0.012606, -0.0440457, -0.0445612, 0.0440458, 0.998035, -0.00396459, 0.147683, 0.0763749 )
 bones/8/enabled = true
-bones/8/bound_children = [  ]
+bones/8/bound_children = [ NodePath("staff") ]
 bones/9/name = "root"
 bones/9/parent = -1
 bones/9/rest = Transform( -1, -3.55271e-14, -1.50996e-07, 1.50996e-07, 0, -1, 3.55271e-14, -1, 0, 0, 0, 0 )
@@ -959,12 +960,12 @@ bones/10/name = "shin"
 bones/10/parent = 9
 bones/10/rest = Transform( 1, 1.45325e-07, 6.7685e-07, -6.88892e-07, 0.112346, 0.993669, 6.83637e-08, -0.993669, 0.112346, 8.47033e-22, -1.49012e-07, -3.55271e-15 )
 bones/10/enabled = true
-bones/10/bound_children = [  ]
+bones/10/bound_children = [ NodePath("leg1") ]
 bones/11/name = "thigh"
 bones/11/parent = 10
 bones/11/rest = Transform( 1, 1.4303e-07, -6.06043e-08, -1.2745e-07, 0.978487, 0.206309, 8.88088e-08, -0.206309, 0.978487, -4.73121e-15, 0.502995, -9.43375e-10 )
 bones/11/enabled = true
-bones/11/bound_children = [  ]
+bones/11/bound_children = [ NodePath("thigh") ]
 bones/12/name = "clothextend"
 bones/12/parent = 9
 bones/12/rest = Transform( 1, -1.50996e-07, 6.35731e-08, 6.35731e-08, 0, -1, 1.50996e-07, 1, 0, 8.47033e-22, -1.49012e-07, -3.55271e-15 )
@@ -984,6 +985,7 @@ bone_name = "head"
 collision_layer = 32
 collision_mask = 0
 monitoring = false
+script = ExtResource( 7 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/head/hurtbox"]
 transform = Transform( 1, 4.65661e-09, 3.72529e-09, 1.07684e-09, 1, -1.86265e-09, 0, -2.79397e-09, 1, 1.86265e-08, 0.5, 0.05 )
@@ -997,6 +999,7 @@ bone_name = "chest"
 collision_layer = 32
 collision_mask = 0
 monitoring = false
+script = ExtResource( 7 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/chest/hurtbox"]
 transform = Transform( 0.6, 2.79397e-10, 1.249e-17, -2.79397e-10, 0.6, -8.9407e-09, -1.66534e-17, 8.9407e-09, 0.6, 1.96742e-08, 0.349999, 0.05 )
@@ -1010,6 +1013,7 @@ bone_name = "forearm.L"
 collision_layer = 32
 collision_mask = 0
 monitoring = false
+script = ExtResource( 7 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/arm_l/hurtbox"]
 transform = Transform( 0.6, 7.45058e-09, 0, 2.23517e-08, 0.6, 0, -2.08616e-07, 5.21541e-08, 0.6, 2.98023e-08, 0.25, 0.1 )
@@ -1024,6 +1028,7 @@ transform = Transform( 1, -1.19209e-07, 0, 2.98023e-08, 1, -2.23517e-08, 4.47035
 collision_layer = 32
 collision_mask = 0
 monitoring = false
+script = ExtResource( 7 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/arm_r/hurtbox"]
 transform = Transform( 0.6, 7.45058e-09, 0, 2.23517e-08, 0.6, 0, -2.08616e-07, 5.21541e-08, 0.6, 2.98023e-08, 0.25, 0.1 )
@@ -1045,6 +1050,7 @@ transform = Transform( 1, 0, 1.16415e-10, 1.16415e-10, 1, 0, 0, 0, 1, 0, 0, 0 )
 collision_layer = 32
 collision_mask = 0
 monitoring = false
+script = ExtResource( 7 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/leg1/hurtbox"]
 transform = Transform( 0.6, 9.60426e-10, -1.16415e-10, -7.27596e-10, 0.600001, -5.96046e-08, 0, 0, 0.600001, 1.97856e-08, 0.2, -0.0499999 )
@@ -1059,6 +1065,7 @@ transform = Transform( 1, 0, 1.16415e-10, 1.16415e-10, 1, 0, 0, 0, 1, 0, 0, 0 )
 collision_layer = 32
 collision_mask = 0
 monitoring = false
+script = ExtResource( 7 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Armature/Skeleton/thigh/hurtbox"]
 transform = Transform( 0.4, 4.85064e-10, 1.92747e-18, -4.85064e-10, 0.4, 0, -1.92747e-18, -2.33736e-27, 0.4, 1.97856e-08, 0.2, -0.0499999 )

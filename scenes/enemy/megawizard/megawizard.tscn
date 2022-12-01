@@ -60,6 +60,16 @@ visible = false
 cast_to = Vector3( 0, 0, -200 )
 collision_mask = 256
 
+[node name="body" type="AudioStreamPlayer3D" parent="."]
+unit_db = 4.0
+unit_size = 4.0
+max_db = -3.0
+
+[node name="guns" type="AudioStreamPlayer3D" parent="."]
+unit_db = 4.0
+unit_size = 4.0
+max_db = -1.0
+
 [connection signal="timeout" from="blink_timer" to="." method="_on_blink_timer_timeout"]
 [connection signal="timeout" from="state_timer" to="." method="_on_state_timer_timeout"]
 [connection signal="timeout" from="gun_cooldown" to="." method="_on_gun_cooldown_timeout"]

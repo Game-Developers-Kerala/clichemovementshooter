@@ -23,6 +23,15 @@ const ENEMY_DICT = {
 			"scene":preload("res://scenes/enemy/sniper/sniper.tscn"),
 			"get_spawn_point":"get_sniper_random_vantage_point"
 			},
+#			get_ufo_random_spawn_point()
+		"ufo":{
+#			"scene":preload(""),
+			"get_spawn_point":"get_ufo_random_spawn_point",
+			},
+		"wizard":{
+			"scene":preload("res://scenes/enemy/wizard/wizard.tscn"),
+			"get_spawn_point":"get_sniper_random_vantage_point"
+			}
 		}
 
 func get_enemy_dict(enemy_type:int)->Dictionary:
@@ -42,7 +51,7 @@ func _ready():
 
 func _on_wave_start(wave_idx):
 	enemy_count = 0
-	spawn_enemies([1,0,0,1,0,0])
+	spawn_enemies([1,0,1,1,0,0])
 	game.emit_signal("enemy_count_changed",enemy_count)
 
 

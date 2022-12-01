@@ -8,7 +8,6 @@ radius = 0.25
 
 [node name="projectile" instance=ExtResource( 2 )]
 script = ExtResource( 1 )
-lifespan = 7.0
 steering = 0.4
 launch_time = 0.1
 

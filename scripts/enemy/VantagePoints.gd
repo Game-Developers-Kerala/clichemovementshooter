@@ -9,10 +9,15 @@ export(Array, NodePath) var sniper
 export(Array, NodePath) var megawizard
 
 export(Array, NodePath) var room_points
+
+export(NodePath) var ufo_spawn_points
+
 var sniper_room_points :=[]
 var megawizard_room_points :=[]
 
 var random =  RandomNumberGenerator.new()
+
+
 
 func _ready():
 	random.randomize()
@@ -53,6 +58,11 @@ func get_random_megawizard_vantage_position()->Vector3:
 	else:
 		var idx = random.randi()%megawizard.size()
 		return get_node(megawizard[idx]).global_translation
+
+#UFO=============
+func get_ufo_random_spawn_point()->Node:
+	var array = get_node(ufo_spawn_points).get_children()
+	return array[random.randi()%array.size()]
 
 func _on_roomarea_body_entered(body):
 	player_in_room = true
