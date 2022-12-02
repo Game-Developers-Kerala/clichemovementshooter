@@ -632,7 +632,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.839161, 0 )
 shape = SubResource( 19 )
 
 [node name="bone_torso" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( 1, 0, 0, 0, 0.984841, -0.17346, 0, 0.17346, 0.984841, 4.07454e-10, 2.29512, 0.0793688 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.22006, 0 )
 bone_name = "torso"
 
 [node name="torso" type="MeshInstance" parent="Armature/Skeleton/bone_torso"]
@@ -650,7 +650,7 @@ script = ExtResource( 7 )
 shape = SubResource( 19 )
 
 [node name="bone_head" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( 1, 5.68434e-14, 2.38419e-07, 6.51235e-08, 0.961972, -0.273148, -2.29352e-07, 0.273148, 0.961972, 9.31326e-10, 3.64022, 0.227232 )
+transform = Transform( 1, 0, 2.38419e-07, 0, 1, 0, -2.38419e-07, 0, 1, 0, 3.49509, 0 )
 bone_name = "head"
 
 [node name="head" type="MeshInstance" parent="Armature/Skeleton/bone_head"]
@@ -668,7 +668,7 @@ script = ExtResource( 7 )
 shape = SubResource( 19 )
 
 [node name="bone_hand_r" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -0.990064, -0.137673, -0.0286384, 0.138606, -0.989776, -0.0336502, -0.0237128, -0.0372852, 0.999023, 1.24179, 2.67187, 0.0287117 )
+transform = Transform( -1, -2.23874e-07, 3.74869e-07, 2.23874e-07, -1, 0, 3.74869e-07, 0, 1, 1.07045, 2.59122, 0 )
 bone_name = "hand_r"
 
 [node name="hand_r" type="MeshInstance" parent="Armature/Skeleton/bone_hand_r"]
@@ -687,7 +687,7 @@ transform = Transform( 1, 0, 0, 3.14603e-20, 1, 0, 0, 0, 1, 0.0691091, 0.456807,
 shape = SubResource( 20 )
 
 [node name="bone_hand_l" type="BoneAttachment" parent="Armature/Skeleton"]
-transform = Transform( -0.993839, 0.10897, 0.020227, -0.109047, -0.994033, -0.00271244, 0.0198107, -0.00490142, 0.999792, -1.19493, 2.62884, -0.00256219 )
+transform = Transform( -1, 2.23874e-07, -3.74869e-07, -2.23874e-07, -1, 0, -3.74869e-07, 0, 1, -1.07045, 2.59122, 0 )
 bone_name = "hand_l"
 
 [node name="hand_l" type="MeshInstance" parent="Armature/Skeleton/bone_hand_l"]

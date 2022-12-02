@@ -25,7 +25,7 @@ onready var body = get_node(path_to_BodyRotationHelper) as Spatial
 
 #getter and setter functions
 func set_state(new_state) -> void :
-	print("state:" + str(new_state))
+#	print("state:" + str(new_state))
 	current_state = new_state
 	enter()
 

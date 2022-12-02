@@ -27,8 +27,6 @@ func _process(delta: float) -> void:
 	
 	_aim_at_player()
 	
-	if get_health() < 0:
-		set_state(states.DEATH)
 	
 	nav_agent.set_target_location(player.global_translation)
 	model.vertical_look_at(player.global_translation)
@@ -94,10 +92,10 @@ func enter():
 			model.get_node("AnimationPlayer").play("hit")
 			
 		states.DEATH:
-			if $Death.is_stopped():
-				print("anim played" + str(get_state()))
-				$Death.start()
-				model.get_node("AnimationPlayer").play("dead")
+			print("anim played" + str(get_state()))
+			$Death.start()
+			game.emit_signal("enemy_killed")
+			model.get_node("AnimationPlayer").play("dead")
 
 #signals
 func _shoot():
@@ -105,7 +103,7 @@ func _shoot():
 		print("shoots")
 		var inst = ARC.instance()
 		get_tree().current_scene.add_child(inst)
-		inst.look_at_from_position(global_translation,player.global_translation,Vector3.UP)
+		inst.look_at_from_position(global_translation+CENTER_OF_MASS,player.global_translation+player.CENTER_OF_MASS,Vector3.UP)
 		$ShootCooldown.start()
 		set_state(states.BOW_AIM)
 
@@ -114,7 +112,7 @@ func _predicted_shoot():
 	
 	var inst = cut_grapple.instance()
 	get_tree().current_scene.add_child(inst)
-	inst.look_at_from_position(global_translation,_predict_player_movement(),Vector3.UP)
+	inst.look_at_from_position(global_translation+CENTER_OF_MASS,_predict_player_movement(),Vector3.UP)
 	$ShootCooldown.start()
 	set_state(states.BOW_AIM)
 
@@ -138,6 +136,11 @@ func _on_Death_timeout() -> void:
 
 
 func _on_ArcShooter_npc_hurt() -> void:
+	if get_state() == states.DEATH:
+		return
+	if get_health() <= 0:
+		set_state(states.DEATH)
+		return
 	if get_health() > 0:
 		model.get_node("AnimationPlayer").play("hit")
 	print("NPC hurt")

@@ -85,10 +85,26 @@ func _physics_process(delta: float) -> void:
 		states.DEATH:
 			pass
 
-
+func enter() -> void:
+	match get_state():
+		states.DEATH:
+			game.emit_signal("enemy_killed")
+			model.get_node("AnimationPlayer").play("death")
+			yield(get_tree().create_timer(2),"timeout")
+			queue_free()
 
 func _start_barrage() -> void:
 	$GunCoolTimer.start()
 	$GunBarrageTimer.start()
 	$GunshotIntervalTimer.start()
 	pass
+
+
+func _on_HeavyGunner_npc_hurt():
+	if get_state() == states.DEATH:
+		return
+	if get_health() <= 0:
+		set_state(states.DEATH)
+		return
+	if get_health() > 0:
+		model.get_node("AnimationPlayer").play("hit_front")

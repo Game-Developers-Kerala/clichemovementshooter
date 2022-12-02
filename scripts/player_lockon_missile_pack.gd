@@ -49,7 +49,7 @@ func _process(delta):
 	$RayCast.force_raycast_update()
 	if $RayCast.is_colliding():
 		if $RayCast.get_collider() == popped:
-#			print("ray colliding:",popped.name)
+			print("ray colliding:",popped.name)
 			# adding the enemy to locked enemies and the number of times fired at as an array
 			$fx.play()
 			var indic = LOCK_INDICATOR.instance()
@@ -60,7 +60,7 @@ func _process(delta):
 
 func _on_player_lockon_missile_pack_body_entered(body):
 	detect_queue.push_back(body)
-#	print("detected:",body.name)
+	print("detected:",body.name)
 
 func _on_Timer_timeout():
 	var minfiredat = 12
