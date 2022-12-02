@@ -22,14 +22,12 @@ onready var attack_area : Area = $AttackArea
 
 
 func _ready() -> void:
+	health = 400
 	anim.connect("animation_finished",self,"on_anim_finished")
 	player = get_tree().current_scene.get_node('Player')
 	set_state(states.CHASE)
 	
 func _process(delta: float) -> void:
-	
-	if get_health() < 0:
-		set_state(states.DEATH)
 	
 	nav_agent.set_target_location(player.global_transform.origin)
 	_aim_at_player()
@@ -132,10 +130,9 @@ func enter():
 			if is_anim_done() == false:
 				anim.play("straight_pound")
 		states.DEATH:
-			if is_anim_done() == false:
-				if !$Death.is_stopped():
-					$Death.start()
-					anim.play("death")
+			game.emit_signal("enemy_killed")
+			$Death.start()
+			anim.play("death")
 
 
 func _on_MeeleAttack_body_entered(body: Node) -> void:
@@ -174,6 +171,10 @@ func _on_Death_timeout() -> void:
 
 
 func _on_GroundPounder_npc_hurt() -> void:
-	
-		if is_anim_done() == false:
-			anim.play("hit")
+	if get_state() == states.DEATH:
+		return
+	if get_health() <= 0:
+		set_state(states.DEATH)
+		return
+	if is_anim_done() == false:
+		anim.play("hit")
